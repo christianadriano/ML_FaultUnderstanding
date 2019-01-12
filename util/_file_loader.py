@@ -4,7 +4,10 @@ import arff
 
 #from pandas import pandas
 
-file_path = 'C:/Users/Christian/Documents/GitHub/ML_FaultUnderstanding/data/consolidated_Final_Experiment_1_ANSI.arff'
+file_path = 'C:/Users/Christian/Documents/GitHub/ML_FaultUnderstanding/data/'
+file_1 = 'consolidated_Final_Experiment_1.arff'
+file_2 = 'consolidated_Final_Experiment_2.arff'
+file_path +=file_2
 
 # with open(file_path) as file:
 #     print(file.readline())
