@@ -1,6 +1,7 @@
 # from scipy.io import arff
 # from Lib import *
 import arff
+import pandas as pd
 
 #from pandas import pandas
 
@@ -18,3 +19,5 @@ file_object = open(file_path)
 file_content = file_object.read()
 print(file_content)
 data = arff.loads(file_content,encode_nominal=True)
+#df = pd.DataFrame(data)
+#df.describe()
