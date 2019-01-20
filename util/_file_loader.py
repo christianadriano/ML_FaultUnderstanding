@@ -1,7 +1,7 @@
-# from scipy.io import arff
+#from scipy.io import arff #String attributes not supported by scipy.io arff...
 # from Lib import *
-import arff
-import pandas as pd
+import arff, numpy as np
+#import pandas as pd
 
 #from pandas import pandas
 
@@ -17,7 +17,22 @@ file_path +=file_2
 
 file_object = open(file_path)
 file_content = file_object.read()
-print(file_content)
-data = arff.loads(file_content,encode_nominal=True)
-#df = pd.DataFrame(data)
+#print(file_content)
+dataset = arff.loads(file_content,encode_nominal=True,return_type=arff.DENSE)
+#data = np.array(dataset['data'])
+print(dataset['description'])
+print(dataset['relation'])
+print(dataset['attributes'])
+print(dataset['data'][0])
+
+
+#for row in arff.loads(file_content,encode_nominal=True):
+ #   print(row)
+  #  print(row[-1])
+
+#print(list(arff.loads(file_content,encode_nominal=True,return_type=arff.DENSE)))
+
+#df = pd.DataFrame(dt[0])
 #df.describe()
+
+
