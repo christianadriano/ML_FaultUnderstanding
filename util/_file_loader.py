@@ -8,7 +8,7 @@ import arff, numpy as np
 file_path = 'C:/Users/Christian/Documents/GitHub/ML_FaultUnderstanding/data/'
 file_1 = 'consolidated_Final_Experiment_1.arff'
 file_2 = 'consolidated_Final_Experiment_2.arff'
-file_path +=file_2
+file_path +=file_1
 
 # with open(file_path) as file:
 #     print(file.readline())
@@ -24,6 +24,8 @@ print(dataset['description'])
 print(dataset['relation'])
 print(dataset['attributes'])
 print(dataset['data'][0])
+
+print(dataset['data'].__len__())
 
 
 #for row in arff.loads(file_content,encode_nominal=True):
