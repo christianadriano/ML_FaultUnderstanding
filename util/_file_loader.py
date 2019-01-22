@@ -22,7 +22,7 @@ print(dataset['description'])
 print(dataset['relation'])
 print(dataset['attributes'])
 print(dataset['data'][0])
-print("numer of lines".+ dataset['data'].__len__())
+print("number of imported lines: " + str(dataset['data'].__len__()))
 
 #label data frame columns
 #https://pandas.pydata.org/pandas-docs/stable/10min.html
