@@ -8,7 +8,7 @@ import pandas as pd
 file_path = 'C:/Users/Christian/Documents/GitHub/ML_FaultUnderstanding/data/'
 file_1 = 'consolidated_Final_Experiment_1.arff'
 file_2 = 'consolidated_Final_Experiment_2.arff'
-file_path +=file_1
+file_path +=file_2
 
 # with open(file_path) as file:
 #     print(file.readline())
@@ -28,7 +28,11 @@ print("number of imported lines: " + str(dataset['data'].__len__()))
 #https://pandas.pydata.org/pandas-docs/stable/10min.html
 df = pd.DataFrame(dataset['data'])
 df_labels = pd.DataFrame(dataset['attributes'])
-df.rename(index=str,columns=df_labels[0]) 
+df.columns = df_labels[0] 
+
+#selecting confidence by profession
+#df_professionlas = df['experience'].isin(['Professional_Developer'])
+
 
 #Compute correlations 
 #https://www.datascience.com/learn-data-science/fundamentals/introduction-to-correlation-python-data-science
