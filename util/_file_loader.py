@@ -31,7 +31,11 @@ df_labels = pd.DataFrame(dataset['attributes'])
 df.columns = df_labels[0] 
 
 #selecting confidence by profession
-#df_professionlas = df['experience'].isin(['Professional_Developer'])
+df_professionals = df[df['experience'].isin(['Professional_Developer'])]
+df_graduates = df[df['experience'].isin(['Graduate_Student'])]
+df_undergraduates = df[df['experience'].isin(['Undergraduate_Student'])]
+df_hobbyist = df[df['experience'].isin(['Hobbyist'])]
+df_other = df[df['experience'].str.startswith(['Other'])]
 
 
 #Compute correlations 
