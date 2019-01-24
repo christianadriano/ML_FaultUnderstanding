@@ -13,41 +13,24 @@ class FileLoader(object):
         '''
         Constructor
         '''
+        file_path = 'C:/Users/Christian/Documents/GitHub/ML_FaultUnderstanding/data/'
+        self.file_1 = file_path  + 'consolidated_Final_Experiment_1.arff'
+        self.file_2 = file_path  + 'consolidated_Final_Experiment_2.arff'
+    
+    'Returns a panda Dataframe'
+    def __load__file(self,file_path): 
+        file_object = open(file_path)
+        file_content = file_object.read()
+        dataset = arff.loads(file_content,encode_nominal=True,return_type=arff.DENSE)
+        #print(dataset['description'])
+        #print(dataset['relation'])
+        #print(dataset['attributes'])
+        #print(dataset['data'][0])
+        #print("number of imported lines: " + str(dataset['data'].__len__()))
 
-
-file_path = 'C:/Users/Christian/Documents/GitHub/ML_FaultUnderstanding/data/'
-file_1 = 'consolidated_Final_Experiment_1.arff'
-file_2 = 'consolidated_Final_Experiment_2.arff'
-file_path +=file_2
-
-# with open(file_path) as file:
-#     print(file.readline())
-
-# file_object_test = open("C:/Users/Christian/Documents/GitHub/ML_FaultUnderstanding/data/weather.arff")
-
-file_object = open(file_path)
-file_content = file_object.read()
-dataset = arff.loads(file_content,encode_nominal=True,return_type=arff.DENSE)
-print(dataset['description'])
-print(dataset['relation'])
-print(dataset['attributes'])
-print(dataset['data'][0])
-print("number of imported lines: " + str(dataset['data'].__len__()))
-
-#label data frame columns
-#https://pandas.pydata.org/pandas-docs/stable/10min.html
-df = pd.DataFrame(dataset['data'])
-df_labels = pd.DataFrame(dataset['attributes'])
-df.columns = df_labels[0] 
-
-#selecting confidence by profession
-df_professionals = df[df['experience'].isin(['Professional_Developer'])]
-df_graduates = df[df['experience'].isin(['Graduate_Student'])]
-df_undergraduates = df[df['experience'].isin(['Undergraduate_Student'])]
-df_hobbyist = df[df['experience'].isin(['Hobbyist'])]
-df_other = df[df['experience'].str.startswith(['Other'])]
-
-
-#Compute correlations 
-#https://www.datascience.com/learn-data-science/fundamentals/introduction-to-correlation-python-data-science
-
+        #label data frame columns
+        #https://pandas.pydata.org/pandas-docs/stable/10min.html
+        df = pd.DataFrame(dataset['data'])
+        df_labels = pd.DataFrame(dataset['attributes'])
+        df.columns = df_labels[0]
+        return df
