@@ -11,6 +11,8 @@ from util._file_loader import FileLoader
 class CorrelationAnalysis(object):
     '''
     classdocs
+    #Compute correlations 
+    #https://www.datascience.com/learn-data-science/fundamentals/introduction-to-correlation-python-data-science
     '''
 
 
@@ -19,12 +21,10 @@ class CorrelationAnalysis(object):
         Constructor
         '''
     def _compute_correlations_exp_2(self):
-            _file_loader.__init__()
             loader = FileLoader()
             
             
     def _load_by_profession(self,df):
-        #selecting confidence by profession
         self.df_professionals = df[df['experience'].isin(['Professional_Developer'])]
         self.df_graduates = df[df['experience'].isin(['Graduate_Student'])]
         self.df_undergraduates = df[df['experience'].isin(['Undergraduate_Student'])]
