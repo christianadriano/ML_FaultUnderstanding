@@ -3,7 +3,17 @@
 import arff, numpy as np
 import pandas as pd
 
-#from pandas import pandas
+class FileLoader(object):
+    '''
+    classdocs
+    '''
+
+
+    def __init__(self, params):
+        '''
+        Constructor
+        '''
+
 
 file_path = 'C:/Users/Christian/Documents/GitHub/ML_FaultUnderstanding/data/'
 file_1 = 'consolidated_Final_Experiment_1.arff'
