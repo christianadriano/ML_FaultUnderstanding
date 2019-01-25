@@ -17,6 +17,9 @@ class FileLoader(object):
         self.file_1 = file_path  + 'consolidated_Final_Experiment_1.arff'
         self.file_2 = file_path  + 'consolidated_Final_Experiment_2.arff'
     
+    def _load_file_2(self):
+        self.__load__file(self.file_2)
+    
     'Returns a panda Dataframe'
     def __load__file(self,file_path): 
         file_object = open(file_path)
