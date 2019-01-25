@@ -33,4 +33,6 @@ class CorrelationAnalysis(object):
         self.df_other = df[df['experience'].str.startswith(['Other'])]
         
     
-#main
+#CONTROLLER CODE
+analyzer = CorrelationAnalysis()
+analyzer._compute_correlations_exp_2()
