@@ -22,6 +22,7 @@ class CorrelationAnalysis(object):
         '''
     def _compute_correlations_exp_2(self):
             loader = FileLoader()
+            self.df = loader._load_file_2()
             
             
     def _load_by_profession(self,df):
@@ -30,3 +31,6 @@ class CorrelationAnalysis(object):
         self.df_undergraduates = df[df['experience'].isin(['Undergraduate_Student'])]
         self.df_hobbyist = df[df['experience'].isin(['Hobbyist'])]
         self.df_other = df[df['experience'].str.startswith(['Other'])]
+        
+    
+#main
