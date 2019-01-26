@@ -16,13 +16,14 @@ class CorrelationAnalysis(object):
     '''
 
 
-    def __init__(self, params):
+    def __init__(self):
         '''
         Constructor
         '''
     def _compute_correlations_exp_2(self):
             loader = FileLoader()
             self.df = loader._load_file_2()
+            self._load_by_profession(self.df)
             
             
     def _load_by_profession(self,df):
@@ -31,8 +32,10 @@ class CorrelationAnalysis(object):
         self.df_undergraduates = df[df['experience'].isin(['Undergraduate_Student'])]
         self.df_hobbyist = df[df['experience'].isin(['Hobbyist'])]
         self.df_other = df[df['experience'].str.startswith(['Other'])]
-        
+      
+   
     
 #CONTROLLER CODE
 analyzer = CorrelationAnalysis()
 analyzer._compute_correlations_exp_2()
+analyzer._print_dataframes()
