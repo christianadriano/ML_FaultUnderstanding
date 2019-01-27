@@ -31,7 +31,7 @@ class CorrelationAnalysis(object):
         self.df_graduates = df[df['experience'].isin(['Graduate_Student'])]
         self.df_undergraduates = df[df['experience'].isin(['Undergraduate_Student'])]
         self.df_hobbyist = df[df['experience'].isin(['Hobbyist'])]
-        self.df_other = df[df['experience'].str.startswith(['Other'])]
+        self.df_other = df[df['experience'].str.startswith('Other')]
       
     def _print_dataframes(self):
         print("Professionals dataframe: " + self.df_professionals.head())  
