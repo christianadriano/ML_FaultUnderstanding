@@ -34,7 +34,8 @@ class CorrelationAnalysis(object):
         self.df_other = df[df['experience'].str.startswith('Other')]
       
     def _print_dataframes(self):
-        print("Professionals dataframe: " + self.df_professionals.head())  
+        print("Professionals dataframe: ")
+        print(self.df_professionals.head())  
     
 #CONTROLLER CODE
 analyzer = CorrelationAnalysis()
