@@ -36,8 +36,12 @@ class CorrelationAnalysis(object):
     def _print_dataframes(self):
         print("Professionals dataframe: ")
         print(self.df_professionals.head())  
+        
+    def _correlation_confidence_difficulty(self):
+        self.df_graduates['confidence','difficulty'].corr(method='kendall')
     
 #CONTROLLER CODE
 analyzer = CorrelationAnalysis()
 analyzer._compute_correlations_exp_2()
 analyzer._print_dataframes()
+analyzer._correlation_confidence_difficulty()
