@@ -20,10 +20,9 @@ class CorrelationAnalysis(object):
         '''
         Constructor
         '''
-    def _compute_correlations_exp_2(self):
-            loader = FileLoader()
-            self.df = loader._load_file_2()
-            self._load_by_profession(self.df)
+        loader = FileLoader()
+        self.df = loader._load_file_2()
+        self._load_by_profession(self.df)
             
             
     def _load_by_profession(self,df):
@@ -35,10 +34,12 @@ class CorrelationAnalysis(object):
       
     def _print_dataframes(self):
         print("Professionals dataframe: ")
-        print(self.df_professionals.head())  
+        print(self.df_professionals.keys())
+       # print(self.dt_professionals['difficulty'])
+       # print(self.df_professionals.head())  
         
     def _correlation_confidence_difficulty(self):
-        self.df_graduates['confidence','difficulty'].corr(method='kendall')
+        self.df['confidence','difficulty'].corr(method='kendall')
     
 #CONTROLLER CODE
 analyzer = CorrelationAnalysis()
