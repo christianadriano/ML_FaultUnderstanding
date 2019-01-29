@@ -5,6 +5,7 @@ Computes the correlations between several pairs of variables
 '''
 
 import pandas as pd
+import scipy.stats as stats 
 from util import _file_loader
 from util._file_loader import FileLoader
 
@@ -42,7 +43,9 @@ class CorrelationAnalysis(object):
         k = pd.DataFrame() 
         k['X'] = self.df['confidence']
         k['Y'] = self.df['difficulty']
-        print (k.corr(method='kendall'))
+        tau, p_value = stats.kendalltau(k['X'],k['Y'])       
+        print ("tau: " + str(tau)) #k.corr(method='kendall'))
+        print ("p_value: " + str(p_value))
     
 #CONTROLLER CODE
 analyzer = CorrelationAnalysis()
