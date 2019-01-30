@@ -33,21 +33,23 @@ class CorrelationAnalysis(object):
         self.df_hobbyist = df[df['experience'].isin(['Hobbyist'])]
         self.df_other = df[df['experience'].str.startswith('Other')]
       
-    def _print_dataframes(self):
-        print("Professionals dataframe: ")
-       # print(self.df_professionals.keys())
-        #print(self.df_professionals['difficulty'])
-       # print(self.df_professionals.head())  
+    def _compute_correlations(self):
+        self._correlation_confidence_difficulty_by_profession(self.df_professionals, 'Professional_Developer')
+        self._correlation_confidence_difficulty_by_profession(self.df_hobbyist, 'Hobbyist')
+        self._correlation_confidence_difficulty_by_profession(self.df_graduates, 'Graduate_Student')
+        self._correlation_confidence_difficulty_by_profession(self.df_undergraduates, 'Undergraduate_Student')
+        self._correlation_confidence_difficulty_by_profession(self.df_other, 'Other')
         
-    def _correlation_confidence_difficulty(self):
+    def _correlation_confidence_difficulty_by_profession(self,dframe,profession):
         k = pd.DataFrame() 
-        k['X'] = self.df['confidence']
-        k['Y'] = self.df['difficulty']
-        tau, p_value = stats.kendalltau(k['X'],k['Y'])       
+        k['X'] = dframe['confidence']
+        k['Y'] = dframe['difficulty']
+        tau, p_value = stats.kendalltau(k['X'],k['Y'])  
+        print(profession)     
         print ("tau: " + str(tau)) #k.corr(method='kendall'))
         print ("p_value: " + str(p_value))
+        
     
 #CONTROLLER CODE
 analyzer = CorrelationAnalysis()
-analyzer._print_dataframes()
-analyzer._correlation_confidence_difficulty()
+analyzer._compute_correlations()
