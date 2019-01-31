@@ -45,9 +45,19 @@ class CorrelationAnalysis(object):
         k['X'] = dframe['confidence']
         k['Y'] = dframe['difficulty']
         tau, p_value = stats.kendalltau(k['X'],k['Y'])  
-        print(profession)     
+        print("Correlations confidence x difficulty for " + profession)     
         print ("tau: " + str(tau)) #k.corr(method='kendall'))
         print ("p_value: " + str(p_value))
+        
+    def _correlation_confidence_duration_by_profession(self,dframe,profession):
+        k = pd.DataFrame() 
+        k['X'] = dframe['confidence']
+        k['Y'] = dframe['duration']
+        tau, p_value = stats.kendalltau(k['X'],k['Y'])  
+        print("Correlations confidence x duration for " + profession)     
+        print ("tau: " + str(tau)) #k.corr(method='kendall'))
+        print ("p_value: " + str(p_value))
+        
         
     
 #CONTROLLER CODE
