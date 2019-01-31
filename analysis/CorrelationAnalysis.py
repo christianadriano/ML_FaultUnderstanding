@@ -39,7 +39,13 @@ class CorrelationAnalysis(object):
         self._correlation_confidence_difficulty_by_profession(self.df_graduates, 'Graduate_Student')
         self._correlation_confidence_difficulty_by_profession(self.df_undergraduates, 'Undergraduate_Student')
         self._correlation_confidence_difficulty_by_profession(self.df_other, 'Other')
-        
+    
+        self._correlation_confidence_duration_by_profession(self.df_professionals, 'Professional_Developer')
+        self._correlation_confidence_duration_by_profession(self.df_hobbyist, 'Hobbyist')
+        self._correlation_confidence_duration_by_profession(self.df_graduates, 'Graduate_Student')
+        self._correlation_confidence_duration_by_profession(self.df_undergraduates, 'Undergraduate_Student')
+        self._correlation_confidence_duration_by_profession(self.df_other, 'Other')
+    
     def _correlation_confidence_difficulty_by_profession(self,dframe,profession):
         k = pd.DataFrame() 
         k['X'] = dframe['confidence']
