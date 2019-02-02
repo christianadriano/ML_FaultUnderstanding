@@ -25,6 +25,13 @@ class CorrelationAnalysis(object):
         self.df = loader._load_file_2()
         self._load_by_profession(self.df)
             
+    def _select_first_answers(self):
+        '''
+        Filter out second and third answers from the same session
+        This is necessary to mitigate the speed bias, because 2nd and 3rd answers are faster
+        '''
+        is_first_answer = self.df['answer_index']==1
+        self.df = self.df[is_first_answer]
             
     def _load_by_profession(self,df):
         self.df_professionals = df[df['experience'].isin(['Professional_Developer'])]
@@ -69,3 +76,4 @@ class CorrelationAnalysis(object):
 #CONTROLLER CODE
 analyzer = CorrelationAnalysis()
 analyzer._compute_correlations()
+analyzer._select_first_answers()
