@@ -23,7 +23,6 @@ class CorrelationAnalysis(object):
         '''
         loader = FileLoader()
         self.df = loader._load_file_2()
-        self._load_by_profession(self.df)
             
     def _select_first_answers(self):
         '''
@@ -33,12 +32,12 @@ class CorrelationAnalysis(object):
         is_first_answer = self.df['answer_index']==1
         self.df = self.df[is_first_answer]
             
-    def _load_by_profession(self,df):
-        self.df_professionals = df[df['experience'].isin(['Professional_Developer'])]
-        self.df_graduates = df[df['experience'].isin(['Graduate_Student'])]
-        self.df_undergraduates = df[df['experience'].isin(['Undergraduate_Student'])]
-        self.df_hobbyist = df[df['experience'].isin(['Hobbyist'])]
-        self.df_other = df[df['experience'].str.startswith('Other')]
+    def _load_by_profession(self):
+        self.df_professionals = self.df[self.df['experience'].isin(['Professional_Developer'])]
+        self.df_graduates = self.df[self.df['experience'].isin(['Graduate_Student'])]
+        self.df_undergraduates = self.df[self.df['experience'].isin(['Undergraduate_Student'])]
+        self.df_hobbyist = self.df[self.df['experience'].isin(['Hobbyist'])]
+        self.df_other = self.df[self.df['experience'].str.startswith('Other')]
       
     def _compute_correlations(self):
         self._correlation_confidence_difficulty_by_profession(self.df_professionals, 'Professional_Developer')
@@ -75,5 +74,8 @@ class CorrelationAnalysis(object):
     
 #CONTROLLER CODE
 analyzer = CorrelationAnalysis()
-analyzer._compute_correlations()
 analyzer._select_first_answers()
+analyzer._load_by_profession()
+analyzer._compute_correlations()
+
+
