@@ -74,7 +74,7 @@ class CorrelationAnalysis(object):
     
 #CONTROLLER CODE
 analyzer = CorrelationAnalysis()
-analyzer._select_first_answers()
+#analyzer._select_first_answers()
 analyzer._load_by_profession()
 analyzer._compute_correlations()
 
