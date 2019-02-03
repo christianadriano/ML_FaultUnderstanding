@@ -17,6 +17,9 @@ class FileLoader(object):
         self.file_1 = file_path  + 'consolidated_Final_Experiment_1.arff'
         self.file_2 = file_path  + 'consolidated_Final_Experiment_2.arff'
     
+    def _load_file_1(self):
+        return self.__load__file(self.file_1) 
+    
     def _load_file_2(self):
         return self.__load__file(self.file_2) 
     
