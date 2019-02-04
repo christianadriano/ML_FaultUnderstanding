@@ -42,7 +42,7 @@ class TaskUptakeRate(object):
         d_df_1['time_stamp'] = self.df_1['time_stamp']
         d_df_1['duration'] = self.df_1['duration']
         d_df_1['date_formatted'] = self.df_1['time_stamp']
-        d_df_1['microtask_id'] = self.df_1['microtask_id']
+        d_df_1['worker_id'] = self.df_1['worker_id']
                       
         first_dt = parse(d_df_1['time_stamp'][0])
         current_day = 24 #experiment started on October 24, 2014
@@ -72,12 +72,13 @@ class TaskUptakeRate(object):
                             ":"+str(second)+"."+str(microsecond))
         
             dt_previous = dt #reset previous date
-            date_formatted_list.append(dt.strftime("%Y %m %d %H:%M:%S.%f")) #save new date
+            date_formatted_list.append(str(dt.strftime("%Y %m %d %H:%M:%S.%f"))) #save new date
         
         #update dataframe with new data formatter list
         temp_df = pd.DataFrame({'date_formatted':date_formatted_list})
         d_df_1.update(temp_df)
-        self.remove_gap_between_batches(d_df_1)
+        d_df_1 = self.remove_gap_between_batches(d_df_1)
+        #print(d_df_1.head(2950))
 
    
     def update_date(self,dt,dt_previous): 
@@ -116,22 +117,20 @@ class TaskUptakeRate(object):
         date_updated_list = []
         fill_gap_min = 215  #it will be zero until reaches batch-2 data
         
-        for i in range(1,length-1):
+        for i in range(0,length-1):
             dt = parse(d_df_1['date_formatted'][i])
             #check if crossed from batch-1 to batch-2, so we can discount the number of hours.
-            if(d_df_1['microtask_id'][i].endswith("_2")):
-                #subtracts 221 min gap (between batches) - 6 min (task uptake rate batch1)
-                #so subtracts 215 min from every time stamp
+            if(d_df_1['worker_id'][i].endswith("_2")):
                 dt = dt - datetime.timedelta(minutes=fill_gap_min)  
-            date_updated_list.append(dt) #save new date
+            date_updated_list.append(dt.strftime("%Y %m %d %H:%M:%S.%f")) #save new date
         
         #update dataframe with new data formatter list
         temp_df = pd.DataFrame({'date_formatted':date_updated_list})
         d_df_1.update(temp_df)
         
-        print(d_df_1['date_formatted'][2925])
-        print(d_df_1['date_formatted'][2926])
-        print(d_df_1['date_formatted'][2927])
+        for i in range(2924,2930):
+            print(d_df_1['date_formatted'][i])
+        
         return (d_df_1)
 
 
