@@ -56,7 +56,7 @@ class TaskUptakeRate(object):
         #print(dt_previous.strftime('%Y-%m-%d %H:%M:%S.%f'))
         
         length = d_df_1.shape[0]
-        date_formatted_list = []
+        date_formatted_list = [dt_previous.strftime("%Y %m %d %H:%M:%S.%f")]
                 
         for i in range(1,length-1):
             dt = parse(d_df_1['time_stamp'][i])
@@ -120,16 +120,20 @@ class TaskUptakeRate(object):
         for i in range(0,length-1):
             dt = parse(d_df_1['date_formatted'][i])
             #check if crossed from batch-1 to batch-2, so we can discount the number of hours.
+            #print("dt="+str(dt.strftime("%Y %m %d %H:%M:%S.%f")))
+            #print("worker_id="+d_df_1['worker_id'][i])
             if(d_df_1['worker_id'][i].endswith("_2")):
-                dt = dt - datetime.timedelta(minutes=fill_gap_min)  
+                dt = dt - datetime.timedelta(minutes=fill_gap_min) 
+             #   print("dg="+str(dg.strftime("%Y %m %d %H:%M:%S.%f"))) 
+            
             date_updated_list.append(dt.strftime("%Y %m %d %H:%M:%S.%f")) #save new date
         
         #update dataframe with new data formatter list
         temp_df = pd.DataFrame({'date_formatted':date_updated_list})
         d_df_1.update(temp_df)
         
-        for i in range(2924,2930):
-            print(d_df_1['date_formatted'][i])
+        #for i in range(2920,2930):
+        #    print(d_df_1['date_formatted'][i])
         
         return (d_df_1)
 
