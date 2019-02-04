@@ -38,10 +38,10 @@ class TaskUptakeRate(object):
         '''
         
         '''
-        d_df_1 = pd.DataFrame(columns=['time_stamp', 'duration','date_formated'])
+        d_df_1 = pd.DataFrame(columns=['time_stamp', 'duration','date_formatted'])
         d_df_1['time_stamp'] = self.df_1['time_stamp']
         d_df_1['duration'] = self.df_1['duration']
-        d_df_1['date_formated'] = self.df_1['time_stamp']
+        d_df_1['date_formatted'] = self.df_1['time_stamp']
         d_df_1['microtask_id'] = self.df_1['microtask_id']
                       
         first_dt = parse(d_df_1['time_stamp'][0])
@@ -72,10 +72,10 @@ class TaskUptakeRate(object):
                             ":"+str(second)+"."+str(microsecond))
         
             dt_previous = dt #reset previous date
-            date_formatted_list.append(dt) #save new date
+            date_formatted_list.append(dt.strftime("%Y %m %d %H:%M:%S.%f")) #save new date
         
         #update dataframe with new data formatter list
-        temp_df = pd.DataFrame({'date_formated':date_formatted_list})
+        temp_df = pd.DataFrame({'date_formatted':date_formatted_list})
         d_df_1.update(temp_df)
         self.remove_gap_between_batches(d_df_1)
 
@@ -117,21 +117,21 @@ class TaskUptakeRate(object):
         fill_gap_min = 215  #it will be zero until reaches batch-2 data
         
         for i in range(1,length-1):
-            dt = parse(d_df_1['time_stamp'][i])
+            dt = parse(d_df_1['date_formatted'][i])
             #check if crossed from batch-1 to batch-2, so we can discount the number of hours.
-            if(d_df_1['microtask_id'].endsWith("_2")):
+            if(d_df_1['microtask_id'][i].endswith("_2")):
                 #subtracts 221 min gap (between batches) - 6 min (task uptake rate batch1)
                 #so subtracts 215 min from every time stamp
                 dt = dt - datetime.timedelta(minutes=fill_gap_min)  
             date_updated_list.append(dt) #save new date
         
         #update dataframe with new data formatter list
-        temp_df = pd.DataFrame({'date_formated':date_updated_list})
+        temp_df = pd.DataFrame({'date_formatted':date_updated_list})
         d_df_1.update(temp_df)
         
-        print(d_df_1['time_stamp'][2925])
-        print(d_df_1['time_stamp'][2926])
-        print(d_df_1['time_stamp'][2927])
+        print(d_df_1['date_formatted'][2925])
+        print(d_df_1['date_formatted'][2926])
+        print(d_df_1['date_formatted'][2927])
         return (d_df_1)
 
 
