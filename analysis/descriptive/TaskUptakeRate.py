@@ -47,9 +47,10 @@ class TaskUptakeRate(object):
         first_microsecond = first_dt.microsecond
         dt_previous = parse("2014 10 24 "+str(first_hour)+":"+str(first_minute)+
                             ":"+str(first_second)+"."+str(first_microsecond))
-        length = d_df_1.shape[0]-1
+        length = d_df_1.shape[0]
         date_formated_list = []
-        for i in range(length):
+        
+        for i in range(1,length-1):
             dt = parse(d_df_1['time_stamp'][i])
             #check if crossed the day (e.g., current hour smaller than previous hour)
             if(dt.hour<dt_previous.hour):
@@ -61,7 +62,7 @@ class TaskUptakeRate(object):
         #update dataframe with new data formatter list
         temp_df = pd.DataFrame({'date_formated':date_formated_list})
         d_df_1.update(temp_df)
-        #print(d_df_1.head(2500))      
+        print(d_df_1.head(2500))      
         
     def update_date(self,dt,dt_previous): 
         year = str(dt_previous.year)
