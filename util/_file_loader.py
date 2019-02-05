@@ -1,6 +1,7 @@
 #from scipy.io import arff #String attributes not supported by scipy.io arff...
 # from Lib import *
-import arff, numpy as np
+
+import arff
 import pandas as pd
 
 class FileLoader(object):
