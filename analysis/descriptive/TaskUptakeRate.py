@@ -8,7 +8,7 @@ from dateutil.parser import parse
 import datetime
 from util._file_loader import FileLoader
 import pandas as pd
-
+import matplotlib.pyplot as plt
 
 class TaskUptakeRate(object):
     '''
@@ -24,13 +24,9 @@ class TaskUptakeRate(object):
         '''
         loader = FileLoader()
         self.df_1 = loader._load_file_1()
-        self.df_2 = loader._load_file_2()
+        self.df_1 = self.remove_gap_between_batches(self.df_1)   
         
-    def build_timestamp_lists(self):
-        '''
-        builds a list for each experiment data file
-        '''
-        self.df_1 = self.remove_gap_between_batches(self.df_1)        
+        self.df_2 = loader._load_file_2()
 
     
     def remove_gap_between_batches(self, d_df_1):
@@ -71,6 +67,12 @@ class TaskUptakeRate(object):
         
         return (d_df_1)
 
+    def plot_task_uptake(self):
+        '''
+        Task taken by their time stamp
+        '''
+        plt.plot(self.df_1['time_stamp'],color="blue")
+        plt.show()
 
 tur = TaskUptakeRate()
-tur.build_timestamp_lists()   
+tur.plot_task_uptake()
