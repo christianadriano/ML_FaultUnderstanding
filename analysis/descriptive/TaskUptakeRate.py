@@ -67,11 +67,11 @@ class TaskUptakeRate(object):
         
         return (d_df_1)
     
-    def generate_tasks_per_hour(self):
+    def generate_tasks_per_hour(self,df):
         '''
         generates a data series of number of tasks per 1h, 6h, 12h, 24h
         '''
-        date_list = self.df_1['time_stamp']
+        date_list = df['time_stamp']
         previous = parse(date_list[0])
         print("previous=" + str(previous.hour))
 
@@ -89,21 +89,27 @@ class TaskUptakeRate(object):
 
         return (rate_series)
 
-    def compute_tasks_per_window(self, window_size_hours):
+    def compute_tasks_per_window(self):
         '''
         computes number of tasks per window size 
         '''
-        date_list = self.df_1['time_stamp']
-        for date_str in date_list:
-            print(date_str)
+        series_1 = self.generate_tasks_per_hour(self.df_1)
+        series_2 = self.generate_tasks_per_hour(self.df_2)
 
-    def plot_task_uptake(self):
+    def plot_task_uptake(self,series_1, series_2):
         '''
         Task taken by their time stamp
         '''
-        plt.plot(self.df_1['time_stamp'],color="blue")
+        upper = len(series_1)
+        if upper < len(series_2):
+            upper = len(series_2)
+        
+        hours = range(1,upper)
+        
+        plt.plot(series_1, color="blue")
+        plt.plot(series_2, color="red")
         plt.show()
 
 tur = TaskUptakeRate()
 #tur.plot_task_uptake()
-tur.generate_tasks_per_hour()
+tur.compute_tasks_per_window()
