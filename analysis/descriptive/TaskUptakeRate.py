@@ -95,6 +95,7 @@ class TaskUptakeRate(object):
         '''
         series_1 = self.generate_tasks_per_hour(self.df_1)
         series_2 = self.generate_tasks_per_hour(self.df_2)
+        self.plot_task_uptake(series_1, series_2)
 
     def plot_task_uptake(self,series_1, series_2):
         '''
@@ -106,10 +107,11 @@ class TaskUptakeRate(object):
         
         hours = range(1,upper)
         
-        plt.plot(series_1, color="blue")
-        plt.plot(series_2, color="red")
+        plt.plot(range(1,len(series_1)+1), series_1, color="blue")
+        plt.plot(range(1,len(series_2)+1), series_2, color="red")
         plt.show()
 
 tur = TaskUptakeRate()
 #tur.plot_task_uptake()
 tur.compute_tasks_per_window()
+
