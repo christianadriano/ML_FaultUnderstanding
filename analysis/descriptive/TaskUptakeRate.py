@@ -67,6 +67,14 @@ class TaskUptakeRate(object):
         
         return (d_df_1)
 
+    def compute_tasks_per_window(self, window_size_hours):
+        '''
+        computes number of tasks per window size 
+        '''
+        date_list = self.df_1['time_stamp']
+        for date_str in date_list:
+            print(date_str)
+
     def plot_task_uptake(self):
         '''
         Task taken by their time stamp
@@ -75,4 +83,5 @@ class TaskUptakeRate(object):
         plt.show()
 
 tur = TaskUptakeRate()
-tur.plot_task_uptake()
+#tur.plot_task_uptake()
+tur.compute_tasks_per_window(1)
