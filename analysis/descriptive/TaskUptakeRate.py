@@ -9,6 +9,7 @@ import datetime
 from util._file_loader import FileLoader
 import pandas as pd
 import matplotlib.pyplot as plt
+import math
 
 class TaskUptakeRate(object):
     '''
@@ -73,7 +74,7 @@ class TaskUptakeRate(object):
         '''
         date_list = df['time_stamp']
         previous = parse(date_list[0])
-        print("previous=" + str(previous.hour))
+        #print("previous=" + str(previous.hour))
 
         rate_series = [1]
         index = 0
@@ -89,13 +90,52 @@ class TaskUptakeRate(object):
 
         return (rate_series)
 
+    def time_elapsed_for_task_taken(self,series_1,series_2):
+        '''
+        check when 50% and 75%
+        '''
+        
+        total_tasks_exp1 = self.df_1.shape[0]
+        total_tasks_exp2 = self.df_2.shape[0]
+        
+        half_tasks_1 = total_tasks_exp1*0.5
+        three_quarters_tasks_1 = total_tasks_exp1*0.75
+        
+        hour_1_half = self.time_at_total_tasks(half_tasks_1, series_1)
+        hour_1_three_quarters = self.time_at_total_tasks(three_quarters_tasks_1, series_1)
+        
+        half_tasks_2 = total_tasks_exp1*0.5
+        three_quarters_tasks_2 = total_tasks_exp2*0.75
+        
+        hour_2_half = self.time_at_total_tasks(half_tasks_2, series_2)
+        hour_2_three_quarters = self.time_at_total_tasks(three_quarters_tasks_2, series_2)
+        
+        print("75% of tasks experiment 1: " + str(total_tasks_exp1*0.75))
+        print("Time needed for these to have been taken: "+ str(hour_1_three_quarters)) 
+        print("75% of tasks experiment 2:" + str(total_tasks_exp2*0.75))
+        print("Time needed for these to have been taken: "+ str(hour_2_three_quarters)) 
+
+    
+    def time_at_total_tasks(self,target,hour_rate_list):
+        '''
+        for a given number of tasks return the number of hours that were needed
+        '''
+        partial_sum = 0
+        for i in range(0,len(hour_rate_list)):
+            rate = hour_rate_list[i]
+            partial_sum += rate
+            if(partial_sum>=target):
+                return(i)
+        
+
     def compute_tasks_per_window(self):
         '''
         computes number of tasks per window size 
         '''
         series_1 = self.generate_tasks_per_hour(self.df_1)
         series_2 = self.generate_tasks_per_hour(self.df_2)
-        self.plot_task_uptake(series_1, series_2)
+        #self.plot_task_uptake(series_1, series_2)
+        return(series_1,series_2)
 
     def plot_task_uptake(self,series_1, series_2):
         '''
@@ -105,13 +145,12 @@ class TaskUptakeRate(object):
         if upper < len(series_2):
             upper = len(series_2)
         
-        hours = range(1,upper)
-        
         plt.plot(range(1,len(series_1)+1), series_1, color="blue")
         plt.plot(range(1,len(series_2)+1), series_2, color="red")
         plt.show()
 
 tur = TaskUptakeRate()
-#tur.plot_task_uptake()
-tur.compute_tasks_per_window()
+series_1, series_2 = tur.compute_tasks_per_window()
+#tur.plot_task_uptake(series_1, series_2)
+tur.time_elapsed_for_task_taken(series_1,series_2)
 
