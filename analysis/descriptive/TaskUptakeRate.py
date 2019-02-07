@@ -3,11 +3,12 @@ Created on Feb 3, 2019
 
 @author: Christian
 '''
-
+from scipy.stats import morestats,stats
 from dateutil.parser import parse
 import datetime
 from util._file_loader import FileLoader
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns;
 import math
@@ -177,12 +178,37 @@ class TaskUptakeRate(object):
         
         plt.show()
         
+    def test_rate_averages(self, series_1, series_2):
+        ''' 
+        Evaluate if average rates are different
         '''
-        Controller code
-        '''
+            
+        #test if rate series_1 normally distributed
+        result = morestats.shapiro(series_1)
+        print("Shapiro-Wilk test p-value = "+str(result[1]))
+        print("series_1 is probably not normal")
+        #test if rate series_2 normally distributed
+        result = morestats.shapiro(series_2)
+        print("Shapiro-Wilk test p-value = "+str(result[1]))
+        print("series_2 is probably not normal")
+        
+        #Run Wilcoxon rank sum test
+        result = stats.ranksums(series_2,series_1)
+        print("Wilcoxon test:")
+        print(result)
+        print("The p-value<0.05 shows that the experiment-1 and 2 have distinct task uptake rates on average")
+
+        print("Mean hour rate Series_1= "+str(np.mean(series_1)))
+        print("Mean hour rate Series_2= "+str(np.mean(series_2)))
+        
+    '''
+    RanksumsResult(statistic=5.725368740893309, pvalue=1.0320931833598189e-08)
+    Controller code
+    '''
     
     
 tur = TaskUptakeRate()
 series_1, series_2 = tur.compute_tasks_per_window()
-tur.time_elapsed_for_task_taken(series_1,series_2)
-tur.plot_task_uptake(series_1, series_2)
+#tur.time_elapsed_for_task_taken(series_1,series_2)
+#tur.plot_task_uptake(series_1, series_2)
+tur.test_rate_averages(series_1, series_2)
