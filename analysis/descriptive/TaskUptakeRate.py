@@ -9,6 +9,7 @@ import datetime
 from util._file_loader import FileLoader
 import pandas as pd
 import matplotlib.pyplot as plt
+#import seaborn as sns;
 import math
 
 class TaskUptakeRate(object):
@@ -98,14 +99,14 @@ class TaskUptakeRate(object):
         total_tasks_exp1 = self.df_1.shape[0]
         total_tasks_exp2 = self.df_2.shape[0]
         
-        half_tasks_1 = total_tasks_exp1*0.5
-        three_quarters_tasks_1 = total_tasks_exp1*0.75
+        half_tasks_1 = math.modf(total_tasks_exp1*0.5)[1]
+        three_quarters_tasks_1 = math.modf(total_tasks_exp1*0.75)[1]
         
         hour_1_half = self.time_at_total_tasks(half_tasks_1, series_1)
         hour_1_three_quarters = self.time_at_total_tasks(three_quarters_tasks_1, series_1)
         
-        half_tasks_2 = total_tasks_exp2*0.5
-        three_quarters_tasks_2 = total_tasks_exp2*0.75
+        half_tasks_2 = math.modf(total_tasks_exp2*0.5)[1]
+        three_quarters_tasks_2 = math.modf(total_tasks_exp2*0.75)[1]
         
         hour_2_half = self.time_at_total_tasks(half_tasks_2, series_2)
         hour_2_three_quarters = self.time_at_total_tasks(three_quarters_tasks_2, series_2)
@@ -157,6 +158,5 @@ class TaskUptakeRate(object):
 
 tur = TaskUptakeRate()
 series_1, series_2 = tur.compute_tasks_per_window()
-#tur.plot_task_uptake(series_1, series_2)
 tur.time_elapsed_for_task_taken(series_1,series_2)
-
+tur.plot_task_uptake(series_1, series_2)
