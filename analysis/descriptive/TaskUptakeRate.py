@@ -149,22 +149,39 @@ class TaskUptakeRate(object):
         range_1 =range(1,len(series_1)+1) 
         range_2 =range(1,len(series_2)+1)
         
-        d1 = {'hours':range_1,'rates':series_1}
-        d2 = {'hours':range_2,'rates':series_2}
+        print("duration experiment-1: " + str(len(series_1)) + " hours")
+        print("duration experiment-2: " + str(len(series_2)) + " hours")
+        
+        exp_1=[]
+        for i in range(1,len(series_1)+1):
+            exp_1.append("exp-1")
+        
+        exp_2=[]        
+        for i in range(1,len(series_2)+1):
+            exp_2.append("exp-2")
+              
+        d1 = {'hours':range_1,'rates':series_1,'experiment':exp_1}
+        d2 = {'hours':range_2,'rates':series_2,'experiment':exp_2}
         
         df_series1 = pd.DataFrame(d1)
         df_series2 = pd.DataFrame(d2)
+        df_all = df_series1.append(df_series2)
         
-        # Create an lmplot
-        sns.lineplot(x='hours', y='rates', data=df_series1)
-        sns.lineplot(x='hours', y='rates', data=df_series2,
-                    dashes=True, markers=False)
+        sns.lineplot(x='hours', y='rates', data=df_all, hue="experiment",
+                    style="experiment", dashes=True, markers=False,
+                    palette=sns.xkcd_palette(["grey","steel blue"]))
+
+        plt.title('Tasks taken per hour', fontsize=11)
+        plt.ylabel("tasks", fontsize=10)  
+        plt.xlabel("hours", fontsize=10)  
+        
         plt.show()
         
         '''
         Controller code
         '''
-        
+    
+    
 tur = TaskUptakeRate()
 series_1, series_2 = tur.compute_tasks_per_window()
 tur.time_elapsed_for_task_taken(series_1,series_2)
