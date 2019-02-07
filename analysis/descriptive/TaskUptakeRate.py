@@ -9,7 +9,7 @@ import datetime
 from util._file_loader import FileLoader
 import pandas as pd
 import matplotlib.pyplot as plt
-#import seaborn as sns;
+import seaborn as sns;
 import math
 
 class TaskUptakeRate(object):
@@ -140,22 +140,31 @@ class TaskUptakeRate(object):
         '''
         series_1 = self.generate_tasks_per_hour(self.df_1)
         series_2 = self.generate_tasks_per_hour(self.df_2)
-        #self.plot_task_uptake(series_1, series_2)
         return(series_1,series_2)
 
     def plot_task_uptake(self,series_1, series_2):
         '''
         Task taken by their time stamp
         '''
-        upper = len(series_1)
-        if upper < len(series_2):
-            upper = len(series_2)
+        range_1 =range(1,len(series_1)+1) 
+        range_2 =range(1,len(series_2)+1)
         
-        plt.plot(range(1,len(series_1)+1), series_1, color="blue")
-        plt.plot(range(1,len(series_2)+1), series_2, color="red")
-        plt.ylabel("Task uptake per hour", fontsize=11)  
+        d1 = {'hours':range_1,'rates':series_1}
+        d2 = {'hours':range_2,'rates':series_2}
+        
+        df_series1 = pd.DataFrame(d1)
+        df_series2 = pd.DataFrame(d2)
+        
+        # Create an lmplot
+        sns.lineplot(x='hours', y='rates', data=df_series1)
+        sns.lineplot(x='hours', y='rates', data=df_series2,
+                    dashes=True, markers=False)
         plt.show()
-
+        
+        '''
+        Controller code
+        '''
+        
 tur = TaskUptakeRate()
 series_1, series_2 = tur.compute_tasks_per_window()
 tur.time_elapsed_for_task_taken(series_1,series_2)
