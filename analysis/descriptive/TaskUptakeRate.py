@@ -104,7 +104,7 @@ class TaskUptakeRate(object):
         hour_1_half = self.time_at_total_tasks(half_tasks_1, series_1)
         hour_1_three_quarters = self.time_at_total_tasks(three_quarters_tasks_1, series_1)
         
-        half_tasks_2 = total_tasks_exp1*0.5
+        half_tasks_2 = total_tasks_exp2*0.5
         three_quarters_tasks_2 = total_tasks_exp2*0.75
         
         hour_2_half = self.time_at_total_tasks(half_tasks_2, series_2)
@@ -112,8 +112,13 @@ class TaskUptakeRate(object):
         
         print("75% of tasks experiment 1: " + str(total_tasks_exp1*0.75))
         print("Time needed for these to have been taken: "+ str(hour_1_three_quarters)) 
-        print("75% of tasks experiment 2:" + str(total_tasks_exp2*0.75))
+        print("75% of tasks experiment 2: " + str(total_tasks_exp2*0.75))
         print("Time needed for these to have been taken: "+ str(hour_2_three_quarters)) 
+
+        print("50% of tasks experiment 1: " + str(total_tasks_exp1*0.5))
+        print("Time needed for these to have been taken: "+ str(hour_1_half)) 
+        print("50% of tasks experiment 2: " + str(total_tasks_exp2*0.5))
+        print("Time needed for these to have been taken: "+ str(hour_2_half)) 
 
     
     def time_at_total_tasks(self,target,hour_rate_list):
@@ -126,7 +131,7 @@ class TaskUptakeRate(object):
             partial_sum += rate
             if(partial_sum>=target):
                 return(i)
-        
+        print("partial_sum: "+str(partial_sum))
 
     def compute_tasks_per_window(self):
         '''
@@ -147,6 +152,7 @@ class TaskUptakeRate(object):
         
         plt.plot(range(1,len(series_1)+1), series_1, color="blue")
         plt.plot(range(1,len(series_2)+1), series_2, color="red")
+        plt.ylabel("Task uptake per hour", fontsize=11)  
         plt.show()
 
 tur = TaskUptakeRate()
