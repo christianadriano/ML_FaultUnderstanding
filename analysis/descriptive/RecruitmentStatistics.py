@@ -86,9 +86,14 @@ class RecruitmentStatistics(object):
         print("prefer_not_tell="+str(prefer_not_tell_2))
         print("other="+str(other_2))
         
-
         
-    
+        print("size q_df1="+str(q_df1.shape[0]))
+        print("size q_df2="+str(q_df2.shape[0]))
+        
+        '''
+        Exp1 gender numbers do not do add to 777 because participants quit 
+        before answering the demographics survey.
+        '''
     '''
     Controller of main execution
     '''    
