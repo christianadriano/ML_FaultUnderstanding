@@ -100,28 +100,44 @@ class TaskUptakeRate(object):
         total_tasks_exp1 = self.df_1.shape[0]
         total_tasks_exp2 = self.df_2.shape[0]
         
+        one_quarter_tasks_1 = math.modf(total_tasks_exp1*0.25)[1]
         half_tasks_1 = math.modf(total_tasks_exp1*0.5)[1]
         three_quarters_tasks_1 = math.modf(total_tasks_exp1*0.75)[1]
         
+        hour_1_one_quarter = self.time_at_total_tasks(one_quarter_tasks_1, series_1)
         hour_1_half = self.time_at_total_tasks(half_tasks_1, series_1)
         hour_1_three_quarters = self.time_at_total_tasks(three_quarters_tasks_1, series_1)
         
+        print("Experiment-1 results") 
+        print("25% of tasks: " + str(total_tasks_exp1*0.25))
+        print("Time needed for these to have been taken: "+ str(hour_1_one_quarter)) 
+        print("50% of tasks: " + str(total_tasks_exp1*0.5))
+        print("Time needed for these to have been taken: "+ str(hour_1_half)) 
+        print("75% of tasks: " + str(total_tasks_exp1*0.75))
+        print("Time needed for these to have been taken: "+ str(hour_1_three_quarters)) 
+        print("100% of tasks: " + str(total_tasks_exp1))
+        print("Time needed for these to have been taken: "+ str(len(series_1))) 
+        print("----") 
+        
+        one_quarter_tasks_2 = math.modf(total_tasks_exp2*0.25)[1]      
         half_tasks_2 = math.modf(total_tasks_exp2*0.5)[1]
         three_quarters_tasks_2 = math.modf(total_tasks_exp2*0.75)[1]
         
+        hour_2_one_quarter = self.time_at_total_tasks(half_tasks_2, series_2)
         hour_2_half = self.time_at_total_tasks(half_tasks_2, series_2)
         hour_2_three_quarters = self.time_at_total_tasks(three_quarters_tasks_2, series_2)
         
-        print("75% of tasks experiment 1: " + str(total_tasks_exp1*0.75))
-        print("Time needed for these to have been taken: "+ str(hour_1_three_quarters)) 
-        print("75% of tasks experiment 2: " + str(total_tasks_exp2*0.75))
-        print("Time needed for these to have been taken: "+ str(hour_2_three_quarters)) 
 
-        print("50% of tasks experiment 1: " + str(total_tasks_exp1*0.5))
-        print("Time needed for these to have been taken: "+ str(hour_1_half)) 
-        print("50% of tasks experiment 2: " + str(total_tasks_exp2*0.5))
+        print("Experiment-2 results") 
+        print("25% of tasks: " + str(total_tasks_exp2*0.25))
+        print("Time needed for these to have been taken: "+ str(hour_1_one_quarter)) 
+        print("50% of tasks: " + str(total_tasks_exp2*0.5))
         print("Time needed for these to have been taken: "+ str(hour_2_half)) 
-
+        print("75% of tasks: " + str(total_tasks_exp2*0.75))
+        print("Time needed for these to have been taken: "+ str(hour_2_three_quarters)) 
+        print("100% of tasks: " + str(total_tasks_exp2))
+        print("Time needed for these to have been taken: "+ str(len(series_2))) 
+        print("----") 
     
     def time_at_total_tasks(self,target,hour_rate_list):
         '''
@@ -209,6 +225,6 @@ class TaskUptakeRate(object):
     
 tur = TaskUptakeRate()
 series_1, series_2 = tur.compute_tasks_per_window()
-#tur.time_elapsed_for_task_taken(series_1,series_2)
-#tur.plot_task_uptake(series_1, series_2)
+tur.time_elapsed_for_task_taken(series_1,series_2)
+tur.plot_task_uptake(series_1, series_2)
 tur.test_rate_averages(series_1, series_2)
