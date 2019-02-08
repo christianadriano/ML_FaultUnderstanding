@@ -32,8 +32,8 @@ class RecruitmentStatistics(object):
         Computes the number and proportion of participants who qualified with above minimum grade,
         75% for experiment-1 and 80% for experiment-2
         '''
-        high_skill_flags_1 = self.df_1['grade']>=3
-        high_skill_flags_2 = self.df_2['grade']>=4
+        high_skill_flags_1 = self.df_1['qualification_score']>=3
+        high_skill_flags_2 = self.df_2['qualification_score']>=4
 
         hs_df_1 = self.df_1[high_skill_flags_1]
         hs_df_2 = self.df_2[high_skill_flags_2]
