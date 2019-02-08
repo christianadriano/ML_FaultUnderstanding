@@ -52,6 +52,54 @@ class RecruitmentStatistics(object):
         print("Experiment-1, "+str(hs_df1_proportion)+ " out of " +str(total_df_1)+" qualified")
         print("Experiment-2, "+str(hs_df2_proportion)+ " out of " +str(total_df_2)+" qualified")
         
-#Main execution
+    def gender_distribution(self):
+        '''
+        Computes the number and proportion of participants from each gender.
+        This will be both for qualified and not qualified participants.
+        '''
+        qualified_flags_1 = self.df_1['qualification_score']>=2
+        qualified_flags_2 = self.df_2['qualification_score']>=3
+        q_df1 = self.df_1[qualified_flags_1]
+        q_df2 = self.df_2[qualified_flags_2]
+        q_df1= q_df1[['gender','worker_id']].drop_duplicates(keep='last')
+        q_df2 = q_df2[['gender','worker_id']].drop_duplicates(keep='last')
+        
+        #flags = u_q_df1['gender'].contains('Female')
+        #print(flags)
+        #Only two participants with other gender
+        #0     gender          worker_id
+        #816        3   257iC-1e8c9-56_3
+        #1967       3  1035cc-5g1C3-98_3
+        
+        
+        #count Exp-1
+        females_1 = q_df1[q_df1.gender==0].shape[0]
+        males_1 = q_df1[q_df1.gender==1].shape[0]
+        prefer_not_tell_1 = q_df1[q_df1.gender==2].shape[0]
+        
+        print("Experiment-1 results")
+        print("females="+str(females_1))
+        print("males="+str(males_1))
+        print("prefer_not_tell="+str(prefer_not_tell_1))
+        
+        #count Exp-2
+        females_2 = q_df2[q_df2.gender==0].shape[0]
+        males_2 = q_df2[q_df2.gender==1].shape[0]
+        prefer_not_tell_2 = q_df2[q_df2.gender==2].shape[0]
+        other_2 = q_df2[q_df2.gender==3].shape[0]
+    
+        print("Experiment-2 results")
+        print("females="+str(females_2))
+        print("males="+str(males_2))
+        print("prefer_not_tell="+str(prefer_not_tell_2))
+        print("other="+str(other_2))
+        
+
+        
+    
+    '''
+    Controller of main execution
+    '''    
 recruitmentStats = RecruitmentStatistics()
-recruitmentStats.high_skill_rate()
+#recruitmentStats.high_skill_rate()
+recruitmentStats.gender_distribution()
