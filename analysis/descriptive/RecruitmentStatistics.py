@@ -63,15 +63,7 @@ class RecruitmentStatistics(object):
         q_df2 = self.df_2[qualified_flags_2]
         q_df1= q_df1[['gender','worker_id']].drop_duplicates(keep='last')
         q_df2 = q_df2[['gender','worker_id']].drop_duplicates(keep='last')
-        
-        #flags = u_q_df1['gender'].contains('Female')
-        #print(flags)
-        #Only two participants with other gender
-        #0     gender          worker_id
-        #816        3   257iC-1e8c9-56_3
-        #1967       3  1035cc-5g1C3-98_3
-        
-        
+    
         #count Exp-1
         females_1 = q_df1[q_df1.gender==0].shape[0]
         males_1 = q_df1[q_df1.gender==1].shape[0]
