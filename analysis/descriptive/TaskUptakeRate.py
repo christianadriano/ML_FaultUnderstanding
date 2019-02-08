@@ -123,14 +123,14 @@ class TaskUptakeRate(object):
         half_tasks_2 = math.modf(total_tasks_exp2*0.5)[1]
         three_quarters_tasks_2 = math.modf(total_tasks_exp2*0.75)[1]
         
-        hour_2_one_quarter = self.time_at_total_tasks(half_tasks_2, series_2)
+        hour_2_one_quarter = self.time_at_total_tasks(one_quarter_tasks_2, series_2)
         hour_2_half = self.time_at_total_tasks(half_tasks_2, series_2)
         hour_2_three_quarters = self.time_at_total_tasks(three_quarters_tasks_2, series_2)
         
 
         print("Experiment-2 results") 
         print("25% of tasks: " + str(total_tasks_exp2*0.25))
-        print("Time needed for these to have been taken: "+ str(hour_1_one_quarter)) 
+        print("Time needed for these to have been taken: "+ str(hour_2_one_quarter)) 
         print("50% of tasks: " + str(total_tasks_exp2*0.5))
         print("Time needed for these to have been taken: "+ str(hour_2_half)) 
         print("75% of tasks: " + str(total_tasks_exp2*0.75))
