@@ -11,7 +11,11 @@ Created on Feb 3, 2019
 '''
 from util._file_loader import FileLoader
 import seaborn as sns
+import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
+from scipy.stats import morestats,stats
+
 
 class RecruitmentStatistics(object):
     '''
@@ -107,17 +111,35 @@ class RecruitmentStatistics(object):
         qualified_flags_2 = self.df_2['qualification_score']>=3
         q_df1 = self.df_1[qualified_flags_1]
         q_df2 = self.df_2[qualified_flags_2]
-        q_df1= q_df1[['age','worker_id']].drop_duplicates(keep='last')
-        q_df2 = q_df2[['age','worker_id']].drop_duplicates(keep='last')
+        q_df1= q_df1[['age','worker_id']].drop_duplicates(keep='last').dropna()
+        q_df2 = q_df2[['age','worker_id']].drop_duplicates(keep='last').dropna()
+    
+        exp_1=[]
+        for i in range(1,len(q_df1.age)+1):
+            exp_1.append("exp-1")
         
-        #Organize dataframe to plot
-        p_df = pd.DataFrame({"E1":q_df1.age,"E2":q_df2.age})
-        print(p_df.head(30))
+        exp_2=[]        
+        for i in range(1,len(q_df2.age)+1):
+            exp_2.append("exp-2")
+              
+        d1 = {'age':q_df1.age,'experiment':exp_1}
+        d2 = {'age':q_df2.age,'experiment':exp_2}
         
+        df_series1 = pd.DataFrame(d1)
+        df_series2 = pd.DataFrame(d2)
+        df_all = df_series1.append(df_series2)
+            
+        sns.boxplot(x='experiment',y='age',data=df_all,
+                    palette=sns.xkcd_palette(["light grey","steel blue"]))
+        plt.title('Age of participants', fontsize=11)
+        plt.show()
+     
+        return(df_series1.age,df_series2.age)
+ 
     '''
     Controller of main execution
     '''    
 recruitmentStats = RecruitmentStatistics()
 #recruitmentStats.high_skill_rate()
 #recruitmentStats.gender_distribution()
-recruitmentStats.age_distribution()
+series_1, series_2 = recruitmentStats.age_distribution()
