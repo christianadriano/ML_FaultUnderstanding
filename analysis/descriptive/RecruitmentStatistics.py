@@ -171,7 +171,43 @@ class RecruitmentStatistics(object):
         
         return(count_item)        
     
-
+    
+    def profession_distribution(self):
+        '''
+        count the proportion of participants in each of the professions
+        This data is only available for E2.
+        '''
+        qualified_flags_2 = self.df_2['qualification_score']>=3
+        q_df2 = self.df_2[qualified_flags_2]
+        q_df2 = q_df2[['experience','worker_id']].drop_duplicates(keep='last').dropna()
+    
+        #print(q_df2.experience)#.nunique())
+    
+        count_professional=0
+        count_hobbyist=0
+        count_graduate=0
+        count_undergraduate=0
+        count_other=0
+    
+        for item in q_df2.experience:
+            if(item=="Professional_Developer"):
+                count_professional +=1
+            elif (item=="Hobbyist"):
+                count_hobbyist +=1
+            elif (item=="Graduate_Student"):
+                count_graduate +=1
+            elif (item=="Undergraduate_Student"):
+                count_undergraduate +=1
+            else:
+                count_other +=1
+    
+        print("Experiment-2 Professions")
+        print("Profession_Developer:"+str(count_professional))
+        print("Hobbyist:"+str(count_hobbyist))
+        print("Graduate_Student:"+str(count_graduate))
+        print("Undergraduate_Student:"+str(count_undergraduate))
+        print("Other:"+str(count_other))
+    
     '''
     Controller of main execution
     '''    
@@ -181,4 +217,5 @@ recruitmentStats = RecruitmentStatistics()
 #series_1, series_2 = recruitmentStats.age_distribution()
 #signTest = StatisticalSignificanceTest()
 #signTest.statistical_test_averages(series_1,series_2)
-recruitmentStats.count_countries()
+#recruitmentStats.count_countries()
+recruitmentStats.profession_distribution()
