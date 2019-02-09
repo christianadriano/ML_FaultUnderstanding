@@ -10,6 +10,8 @@ Created on Feb 3, 2019
 @author: Christian
 '''
 from util._file_loader import FileLoader
+import seaborn as sns
+import pandas as pd
 
 class RecruitmentStatistics(object):
     '''
@@ -52,6 +54,7 @@ class RecruitmentStatistics(object):
         print("Experiment-1, "+str(hs_df1_proportion)+ " out of " +str(total_df_1)+" qualified")
         print("Experiment-2, "+str(hs_df2_proportion)+ " out of " +str(total_df_2)+" qualified")
         
+   
     def gender_distribution(self):
         '''
         Computes the number and proportion of participants from each gender.
@@ -94,9 +97,27 @@ class RecruitmentStatistics(object):
         Exp1 gender numbers do not do add to 777 because participants quit 
         before answering the demographics survey.
         '''
+        
+    def age_distribution(self):
+        '''
+        List participant ages and plot (boxplot)
+        This will be both for qualified and not qualified participants.
+        '''
+        qualified_flags_1 = self.df_1['qualification_score']>=2
+        qualified_flags_2 = self.df_2['qualification_score']>=3
+        q_df1 = self.df_1[qualified_flags_1]
+        q_df2 = self.df_2[qualified_flags_2]
+        q_df1= q_df1[['age','worker_id']].drop_duplicates(keep='last')
+        q_df2 = q_df2[['age','worker_id']].drop_duplicates(keep='last')
+        
+        #Organize dataframe to plot
+        p_df = pd.DataFrame({"E1":q_df1.age,"E2":q_df2.age})
+        print(p_df.head(30))
+        
     '''
     Controller of main execution
     '''    
 recruitmentStats = RecruitmentStatistics()
 #recruitmentStats.high_skill_rate()
-recruitmentStats.gender_distribution()
+#recruitmentStats.gender_distribution()
+recruitmentStats.age_distribution()
