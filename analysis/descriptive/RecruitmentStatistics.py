@@ -208,6 +208,42 @@ class RecruitmentStatistics(object):
         print("Undergraduate_Student:"+str(count_undergraduate))
         print("Other:"+str(count_other))
     
+    def years_of_experience_distribution(self):
+        '''
+        Years of experience in computer programming
+        '''
+        qualified_flags_2 = self.df_2['qualification_score']>=3
+        q_df2 = self.df_2[qualified_flags_2]
+        q_df2 = q_df2[['years_programming','worker_id','experience']].drop_duplicates(keep='last').dropna()
+    
+        professions_targets = ["Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student"]
+    
+        profession_labels = []
+        #replace
+        for item in q_df2.experience:
+            if(item in professions_targets):
+                profession_labels.append(item)
+            else:
+                profession_labels.append("Other")
+
+        
+              
+        d2 = {'years_programming':q_df2.years_programming,'experience':profession_labels}
+        
+        df_series2 = pd.DataFrame(d2)
+            
+        sns.boxplot(x='experience',y='years_programming',data=df_series2,
+                    palette=sns.xkcd_palette(["light grey","steel blue"]))
+        plt.title('Years of programming experience by profession', fontsize=11)
+        plt.show()
+             
+        np.mean(df_series2.years_programming)
+        professions_targets.append("Other")
+        for item in professions_targets:
+            df = df_series2[df_series2.experience==item]
+            years = df.years_programming
+            print(item+" mean:"+str(np.mean(years))+" median:"+str(np.median(years)))
+            
     '''
     Controller of main execution
     '''    
@@ -218,4 +254,5 @@ recruitmentStats = RecruitmentStatistics()
 #signTest = StatisticalSignificanceTest()
 #signTest.statistical_test_averages(series_1,series_2)
 #recruitmentStats.count_countries()
-recruitmentStats.profession_distribution()
+#recruitmentStats.profession_distribution()
+recruitmentStats.years_of_experience_distribution()
