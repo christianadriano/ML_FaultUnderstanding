@@ -181,8 +181,6 @@ class RecruitmentStatistics(object):
         q_df2 = self.df_2[qualified_flags_2]
         q_df2 = q_df2[['experience','worker_id']].drop_duplicates(keep='last').dropna()
     
-        #print(q_df2.experience)#.nunique())
-    
         count_professional=0
         count_hobbyist=0
         count_graduate=0
@@ -244,6 +242,12 @@ class RecruitmentStatistics(object):
             years = df.years_programming
             print(item+" mean:"+str(np.mean(years))+" median:"+str(np.median(years)))
             
+    
+    def programming_language_distribution(self):
+        '''
+        '''
+        languages_target = ["JAVA","C","PYTHON","BASIC","VB","PASCAL","DELPHI","COBOL"]
+    
     '''
     Controller of main execution
     '''    
