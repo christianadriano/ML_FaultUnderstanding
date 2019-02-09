@@ -246,7 +246,62 @@ class RecruitmentStatistics(object):
     def programming_language_distribution(self):
         '''
         '''
-        languages_target = ["JAVA","C","PYTHON","BASIC","VB","PASCAL","DELPHI","COBOL"]
+        languages_C = ["C","C++","C#"]
+        languages_JS = ["VB","VISUAL BASIC","BASIC"]
+        languages_VB = ["JAVASCRIPT","JS"]
+        
+        qualified_flags_2 = self.df_2['qualification_score']>=3
+        q_df2 = self.df_2[qualified_flags_2]
+        q_df2 = q_df2[['language','worker_id','experience']].drop_duplicates(keep='last').dropna()
+    
+        count_java=0
+        count_python=0
+        count_c=0
+        count_vb=0
+        count_js=0
+        count_perl=0
+        count_html=0
+        count_php=0
+        count_ruby=0
+        count_other=0
+        for item in q_df2.language:
+            if(item.upper() == "JAVA"):
+                count_java +=1
+            elif(item.upper() == "PYTHON"):
+                count_python +=1                
+            elif(item.upper() == "PERL"):
+                count_perl +=1
+            elif(item.upper() == "HTML"):
+                count_html +=1
+            elif(item.upper() == "PHP"):
+                count_php +=1
+            elif(item.upper() == "RUBY"):
+                count_ruby +=1
+            elif (item.upper() in languages_C):
+                count_c +=1
+            elif (item.upper() in languages_VB):
+                count_vb +=1
+            elif (item.upper() in languages_JS):
+                count_js +=1
+            else:
+                count_other
+            
+            #print()
+
+            
+        print("java:"+str(count_java))
+        print("python:"+str(count_python))
+        print("c:"+str(count_c))
+        print("vb:"+str(count_vb))
+        print("js:"+str(count_js))
+        print("perl:"+str(count_perl))
+        print("html:"+str(count_html))
+        print("php:"+str(count_php))
+        print("ruby:"+str(count_ruby))
+        print("other:"+str(count_other))
+
+
+        #print(q_df2.language)
     
     '''
     Controller of main execution
@@ -259,4 +314,5 @@ recruitmentStats = RecruitmentStatistics()
 #signTest.statistical_test_averages(series_1,series_2)
 #recruitmentStats.count_countries()
 #recruitmentStats.profession_distribution()
-recruitmentStats.years_of_experience_distribution()
+#recruitmentStats.years_of_experience_distribution()
+recruitmentStats.programming_language_distribution()
