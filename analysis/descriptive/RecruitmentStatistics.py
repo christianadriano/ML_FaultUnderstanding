@@ -116,11 +116,11 @@ class RecruitmentStatistics(object):
     
         exp_1=[]
         for i in range(1,len(q_df1.age)+1):
-            exp_1.append("exp-1")
+            exp_1.append("E1")
         
         exp_2=[]        
         for i in range(1,len(q_df2.age)+1):
-            exp_2.append("exp-2")
+            exp_2.append("E2")
               
         d1 = {'age':q_df1.age,'experiment':exp_1}
         d2 = {'age':q_df2.age,'experiment':exp_2}
