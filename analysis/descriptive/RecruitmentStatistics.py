@@ -247,12 +247,16 @@ class RecruitmentStatistics(object):
         '''
         '''
         languages_C = ["C","C++","C#"]
-        languages_JS = ["VB","VISUAL BASIC","BASIC"]
-        languages_VB = ["JAVASCRIPT","JS"]
+        languages_JS = "VB VISUAL BASIC BASIC VBA"
+        languages_VB = ["JAVASCRIPT","JS","JAVA SCRIPT"]
         
         qualified_flags_2 = self.df_2['qualification_score']>=3
         q_df2 = self.df_2[qualified_flags_2]
-        q_df2 = q_df2[['language','worker_id','experience']].drop_duplicates(keep='last').dropna()
+        q_df2 = q_df2[['language','worker_id']].drop_duplicates(keep='last').dropna()
+    
+        #print(q_df2.head(50))
+        #print(q_df2.language)
+        #print(df.shape[0])
     
         count_java=0
         count_python=0
@@ -263,28 +267,42 @@ class RecruitmentStatistics(object):
         count_html=0
         count_php=0
         count_ruby=0
-        count_other=0
+        count_sql=0
+        count_plsql=0
+        count_matlab=0
+        count_swift=0
+        count_sas=0
+        
         for item in q_df2.language:
-            if(item.upper() == "JAVA"):
+            if(item.upper() in "JAVA"):
                 count_java +=1
-            elif(item.upper() == "PYTHON"):
+            if(item.upper() in "PYTHON"):
                 count_python +=1                
-            elif(item.upper() == "PERL"):
+            if(item.upper() in "PERL"):
                 count_perl +=1
-            elif(item.upper() == "HTML"):
+            if(item.upper() in "HTML"):
                 count_html +=1
-            elif(item.upper() == "PHP"):
+            if(item.upper() in "PHP"):
                 count_php +=1
-            elif(item.upper() == "RUBY"):
+            if(item.upper() in "RUBY"):
                 count_ruby +=1
-            elif (item.upper() in languages_C):
+            if(item.upper() in "SQL"):
+                count_sql +=1
+            if(item.upper() in "PL/SQL"):
+                count_plsql +=1
+            if(item.upper() in "SWIFT"):
+                count_swift +=1
+            if(item.upper() in "MATLAB"):
+                count_matlab +=1
+            if(item.upper() in "SAS"):
+                count_sas +=1
+            if (item.upper() in languages_C):
                 count_c +=1
-            elif (item.upper() in languages_VB):
+            if (item.upper() in languages_VB):
                 count_vb +=1
-            elif (item.upper() in languages_JS):
+            if (item.upper() in languages_JS):
                 count_js +=1
-            else:
-                count_other
+            
             
             #print()
 
@@ -298,8 +316,11 @@ class RecruitmentStatistics(object):
         print("html:"+str(count_html))
         print("php:"+str(count_php))
         print("ruby:"+str(count_ruby))
-        print("other:"+str(count_other))
-
+        print("sql:"+str(count_sql))
+        print("plsql:"+str(count_plsql))
+        print("swift:"+str(count_swift))
+        print("matlab:"+str(count_matlab))
+        print("sas:"+str(count_sas))
 
         #print(q_df2.language)
     
