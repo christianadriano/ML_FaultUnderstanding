@@ -13,14 +13,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns;
 import math
 
-class MyClass(object):
+class QuitRate(object):
     '''
     Computes how many programmers left the experiment before completing all tasks.
     It also reports on the reasons given for quitting (available in E2)
     '''
 
 
-    def __init__(self, params):
+    def __init__(self):
         '''
         Constructor
         '''
@@ -29,15 +29,21 @@ class MyClass(object):
         self.df_2 = loader._load_file_2()
         
         
-    def count_sessions_incomplete(self, tasks_in_session, df):
+    def count_sessions_incomplete(self, tasks_in_session):
         '''
         Tasks in session is the number of tasks in a session (i.e., an assignment). 
         tasks_in_session is 3 for E2 and 10 for E1. 
         '''
-        df = df['worker_id','session_id','microtask_id']
-        df_unique = df.groupby(['worker_id','session_id']).agg(['count','size','unique'])
+        df = self.df_1[['session_id','microtask_id']]
+        df_sessions = df[['session_id']].drop_duplicates(keep='last').dropna()
+        #,'session_id'
+        df_unique = df.groupby(['session_id']).agg(['count','size','unique'])
         count_list = df_unique[df_unique[('microtask_id','count')]<tasks_in_session]
         print("count = "+str(count_list))
+        print("count = "+str(count_list.count()[1]))
+        print("number of sessions = "+str(df_sessions.shape[0]))
+
+
         '''
         profession_list = ["Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student"]
         
@@ -54,3 +60,5 @@ class MyClass(object):
         session_task_map = {"workerId_session_Id":[],"task_count":[]}
         #for in
         '''
+qrate = QuitRate()
+qrate.count_sessions_incomplete(10)
