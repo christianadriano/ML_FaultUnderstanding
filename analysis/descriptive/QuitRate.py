@@ -70,7 +70,7 @@ class QuitRate(object):
             df_sessions = df_aux[['session_id']].drop_duplicates(keep='last').dropna()
             df_unique = df_aux.groupby(['session_id']).agg(['size','count','unique'])
 
-            count_list = df_unique[df_unique[('microtask_id','count')]<3]
+            count_list = df_unique[df_unique[('microtask_id','count')]<tasks_in_session]
             print("  "+ str(score)+ "="+str(count_list.count()[1])+ ", "+str(df_sessions.shape[0]))
         
 
