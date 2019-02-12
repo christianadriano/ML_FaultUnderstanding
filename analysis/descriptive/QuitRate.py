@@ -67,18 +67,14 @@ class QuitRate(object):
         '''
         print("E2")
         self.compute_quit_rate_by_score(df=self.df_2,tasks_in_session=3,score_list=[3,4,5])
-        print("E1")
-        self.compute_quit_rate_by_score(df=self.df_1,tasks_in_session=10,score_list=[2,3,4])
+        #print("E1")
+        #self.compute_quit_rate_by_score(df=self.df_1,tasks_in_session=10,score_list=[2,3,4])
     
     def compute_quit_rate_by_score(self, df, tasks_in_session, score_list):  
         '''
         Tasks in session is the number of tasks in a session (i.e., an assignment). 
         tasks_in_session is 3 for E2 and 10 for E1. 
         '''
-        
-        df_sessions = df[['worker_id','session_id']].drop_duplicates(keep='last')
-        print("sessions:"+str(df_sessions.shape[0]))
-        
         print("Quit rate by [score]=[incomplete sessions],[total sessions],[average incomplete tasks]")
         for score in score_list:
             df_aux = df[df['qualification_score']==score]
@@ -87,7 +83,7 @@ class QuitRate(object):
             
             df_sessions = df_aux[['worker_id','session_id']].drop_duplicates(keep='last').dropna()
             df_unique = df_aux.groupby(['worker_id','session_id']).agg(['size','count','unique'])
-
+            
             incomplete_session_df = df_unique[df_unique[('microtask_id','count')]<tasks_in_session]
             
             completed_tasks_in_incomplete_sessions = incomplete_session_df[('microtask_id','count')].sum()   
@@ -98,7 +94,41 @@ class QuitRate(object):
             
             print("  "+ str(score)+ " = "+str(total_incomplete_sessions)+ 
                   ","+str(df_sessions.shape[0])+","+str(average_incomplete_tasks))
+        
+    def print_professions_by_session_by_tasks(self):
+            '''
+            compute the distribution of professions by score level for incomplete sessions.
+            group results by incomplete tasks as well. 
+            '''
+            df = self.df_2
+            score_list = [3] #[3, 4, 5]
+            tasks_in_session = 3
+            print("Quit rate by [score]=[incomplete sessions],[total sessions],[average incomplete tasks]")
+            for score in score_list:
+                df_aux = df[df['qualification_score'] == score]
+        
+                df_aux = df_aux[['worker_id', 'experience', 'session_id', 'microtask_id']]
+                
+                df_sessions = df_aux[['worker_id', 'session_id']].drop_duplicates(keep='last').dropna()
+                df_unique = df_aux.groupby(['worker_id', 'session_id','experience']).agg(['size', 'count', 'unique'])
+
+               # print(list(df_unique.columns.values))
+               # print(df_unique[0])
+               # print(df_unique.head(10))
+                
+                #count by profession within same score level
+                dd = pd.DataFrame({"index":df_unique.index.tolist(),"count":df_unique[('microtask_id', 'count')]})
+                profession_list = ["Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student","Other"]
+                print(dd['index'][2][2])
+                print("[profession]:[average incomplete tasks]:[total incomplete sessions]")
+                for profession in profession_list:
+                    dd_prof = dd[dd['index'].apply(lambda row: print(row[2]))]  #row[2].str.contains(profession))]
+                    incomplete_sessions = dd_prof.shape[0]
+                    completed_tasks = dd_prof['count'].sum()
+                    average_incomplete_tasks = tasks_in_session - completed_tasks/incomplete_sessions
+                    print(profession+" : "+str(average_incomplete_tasks)+" : "+str(incomplete_sessions))
                         
 qrate = QuitRate()
-qrate.compute_quit_rate_by_scores_by_experiments()
+#qrate.compute_quit_rate_by_scores_by_experiments()
 #qrate.compute_quit_rate_professions()
+qrate.print_professions_by_session_by_tasks()
