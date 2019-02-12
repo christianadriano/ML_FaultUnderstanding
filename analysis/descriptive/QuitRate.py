@@ -28,6 +28,22 @@ class QuitRate(object):
         self.df_1 = loader._load_file_1()        
         self.df_2 = loader._load_file_2()
         
+    def compute_quit_rate_professions(self):
+        '''
+        compute the quit rate by profession in E2
+        '''
+        profession_list = ["Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student"]
+        print("E2 quit rate by profession")
+        for profession in profession_list:
+            df = self.df_2[self.df_2['experience'] == profession]
+            df = df[['session_id','microtask_id']]
+            
+            df_sessions = df[['session_id']].drop_duplicates(keep='last').dropna()
+            df_unique = df.groupby(['session_id']).agg(['size','count','unique'])
+
+            count_list = df_unique[df_unique[('microtask_id','count')]<3]
+            print(profession+ " incomplete sessions = "+str(count_list.count()[1])+ " out of "+str(df_sessions.shape[0]))
+                   
         
     def count_sessions_incomplete(self, tasks_in_session):
         '''
@@ -39,26 +55,11 @@ class QuitRate(object):
         #,'session_id'
         df_unique = df.groupby(['session_id']).agg(['count','size','unique'])
         count_list = df_unique[df_unique[('microtask_id','count')]<tasks_in_session]
-        print("count = "+str(count_list))
-        print("count = "+str(count_list.count()[1]))
-        print("number of sessions = "+str(df_sessions.shape[0]))
+        print("E1 quit rate")
+        print("Incomplete sessions = "+str(count_list.count()[1]))
+        print("Total of sessions = "+str(df_sessions.shape[0]))
 
 
-        '''
-        profession_list = ["Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student"]
-        
-        for profession in profession_list:
-            df = df['experience' in profession]
-            df = df['worker_id','session_id','microtask_id']
-            df_unique = df.groupby(['worker_id','session_id']).agg(['size','count','unique'])
-            total_sessions = df_
-            df_unique[('microtask_id','count')]<tasks_in_session
-            print(profession+"= "+quit)
-            
-        #count number of tasks for each pair worker_id, session_id
-        #uses a dictionary for that. 
-        session_task_map = {"workerId_session_Id":[],"task_count":[]}
-        #for in
-        '''
 qrate = QuitRate()
-qrate.count_sessions_incomplete(10)
+#qrate.count_sessions_incomplete(10)
+qrate.compute_quit_rate_professions()
