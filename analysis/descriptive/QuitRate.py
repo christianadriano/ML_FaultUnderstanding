@@ -101,9 +101,9 @@ class QuitRate(object):
             group results by incomplete tasks as well. 
             '''
             df = self.df_2
-            score_list = [3] #[3, 4, 5]
+            score_list = [3, 4, 5]
             tasks_in_session = 3
-            print("Quit rate by [score]=[incomplete sessions],[total sessions],[average incomplete tasks]")
+            
             for score in score_list:
                 df_aux = df[df['qualification_score'] == score]
         
@@ -111,18 +111,16 @@ class QuitRate(object):
                 
                 df_sessions = df_aux[['worker_id', 'session_id']].drop_duplicates(keep='last').dropna()
                 df_unique = df_aux.groupby(['worker_id', 'session_id','experience']).agg(['size', 'count', 'unique'])
-
-               # print(list(df_unique.columns.values))
-               # print(df_unique[0])
-               # print(df_unique.head(10))
-                
+                incomplete_session_df = df_unique[df_unique[('microtask_id','count')]<tasks_in_session]
+                print("score: "+str(score))
+            
                 #count by profession within same score level
-                dd = pd.DataFrame({"index":df_unique.index.tolist(),"count":df_unique[('microtask_id', 'count')]})
+                dd = pd.DataFrame({"index":incomplete_session_df.index.tolist(),"count":incomplete_session_df[('microtask_id', 'count')]})
                 profession_list = ["Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student","Other"]
                 
                 print("[profession]:[average incomplete tasks]:[total incomplete sessions]")
                 for profession in profession_list:
-                    flag_profession_rows = dd['index'].apply(lambda row: row[2] in profession)
+                    flag_profession_rows = dd['index'].apply(lambda row: profession in row[2])
                     dd_prof = dd[flag_profession_rows]
                     incomplete_sessions = dd_prof.shape[0]
                     completed_tasks = dd_prof['count'].sum()
