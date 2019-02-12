@@ -12,6 +12,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns;
 import math
+from future.backports.html.parser import incomplete
 
 class QuitRate(object):
     '''
@@ -34,6 +35,7 @@ class QuitRate(object):
         '''
         profession_list = ["Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student"]
         print("E2 quit rate by profession")
+        print("Quit rate by [profession]=[incomplete sessions],[total sessions]")
         for profession in profession_list:
             df = self.df_2[self.df_2['experience'] == profession]
             df = df[['session_id','microtask_id']]
@@ -42,8 +44,8 @@ class QuitRate(object):
             df_unique = df.groupby(['session_id']).agg(['size','count','unique'])
 
             count_list = df_unique[df_unique[('microtask_id','count')]<3]
-            print(profession+ " incomplete sessions = "+str(count_list.count()[1])+ " out of "+str(df_sessions.shape[0]))
-            #print(count_list)  
+            print("  "+ profession+ "="+str(count_list.count()[1])+ ","+str(df_sessions.shape[0]))
+
                 
     
     def compute_quit_rate_by_scores_by_experiments(self):
@@ -55,13 +57,13 @@ class QuitRate(object):
         print("E1")
         self.compute_quit_rate_by_score(df=self.df_1,tasks_in_session=10,score_list=[2,3,4])
     
-    def compute_quit_rate_by_score(self, df, tasks_in_session, score_list): #, 
+    def compute_quit_rate_by_score(self, df, tasks_in_session, score_list):  
         '''
         Tasks in session is the number of tasks in a session (i.e., an assignment). 
         tasks_in_session is 3 for E2 and 10 for E1. 
         '''
         
-        print("Quit rate by [score]=[incomplete sessions],[total sessions]")
+        print("Quit rate by [score]=[incomplete sessions],[total sessions],[average incomplete tasks]")
         for score in score_list:
             df_aux = df[df['qualification_score']==score]
         
@@ -70,10 +72,17 @@ class QuitRate(object):
             df_sessions = df_aux[['session_id']].drop_duplicates(keep='last').dropna()
             df_unique = df_aux.groupby(['session_id']).agg(['size','count','unique'])
 
-            count_list = df_unique[df_unique[('microtask_id','count')]<tasks_in_session]
-            print("  "+ str(score)+ "="+str(count_list.count()[1])+ ", "+str(df_sessions.shape[0]))
-        
-
+            incomplete_session_df = df_unique[df_unique[('microtask_id','count')]<tasks_in_session]
+            
+            completed_tasks_in_incomplete_sessions = incomplete_session_df[('microtask_id','count')].sum()   
+         
+            total_incomplete_sessions = incomplete_session_df[('microtask_id','count')].count()
+            average_completed_tasks = completed_tasks_in_incomplete_sessions / total_incomplete_sessions
+            average_incomplete_tasks = tasks_in_session - average_completed_tasks
+            
+            print("  "+ str(score)+ " = "+str(incomplete_session_df.count()[1])+ 
+                  ","+str(df_sessions.shape[0])+","+str(average_incomplete_tasks))
+                        
 qrate = QuitRate()
 qrate.compute_quit_rate_by_scores_by_experiments()
 #qrate.compute_quit_rate_professions()
