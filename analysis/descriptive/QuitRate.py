@@ -119,10 +119,11 @@ class QuitRate(object):
                 #count by profession within same score level
                 dd = pd.DataFrame({"index":df_unique.index.tolist(),"count":df_unique[('microtask_id', 'count')]})
                 profession_list = ["Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student","Other"]
-                print(dd['index'][2][2])
+                
                 print("[profession]:[average incomplete tasks]:[total incomplete sessions]")
                 for profession in profession_list:
-                    dd_prof = dd[dd['index'].apply(lambda row: print(row[2]))]  #row[2].str.contains(profession))]
+                    flag_profession_rows = dd['index'].apply(lambda row: row[2] in profession)
+                    dd_prof = dd[flag_profession_rows]
                     incomplete_sessions = dd_prof.shape[0]
                     completed_tasks = dd_prof['count'].sum()
                     average_incomplete_tasks = tasks_in_session - completed_tasks/incomplete_sessions
