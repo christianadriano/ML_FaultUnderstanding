@@ -34,11 +34,16 @@ class QuitRate(object):
         compute the quit rate by profession in E2
         '''
         tasks_in_session = 3
-        profession_list = ["Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student"]
+        profession_list = ["Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student","Other"]
         print("E2 quit rate by profession")
         print("Quit rate by [profession]=[incomplete sessions],[total sessions],[average incomplete tasks]")
         for profession in profession_list:
-            df = self.df_2[self.df_2['experience'] == profession]
+            
+            flag_list = self.df_2['experience'].str.contains(profession)
+    
+            #if(profession in "Other"):
+            #    flag_list = list(~np.array(flag_list))
+            df = self.df_2[flag_list]
             df = df[['session_id','microtask_id']]
             
             df_sessions = df[['session_id']].drop_duplicates(keep='last').dropna()
