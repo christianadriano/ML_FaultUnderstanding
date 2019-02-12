@@ -44,10 +44,10 @@ class QuitRate(object):
             #if(profession in "Other"):
             #    flag_list = list(~np.array(flag_list))
             df = self.df_2[flag_list]
-            df = df[['session_id','microtask_id']]
+            df = df[['worker_id','session_id','microtask_id']]
             
-            df_sessions = df[['session_id']].drop_duplicates(keep='last').dropna()
-            df_unique = df.groupby(['session_id']).agg(['size','count','unique'])
+            df_sessions = df[['worker_id','session_id']].drop_duplicates(keep='last').dropna()
+            df_unique = df.groupby(['worker_id','session_id']).agg(['size','count','unique'])
             
             incomplete_session_df = df_unique[df_unique[('microtask_id','count')]<tasks_in_session]
             
@@ -75,14 +75,18 @@ class QuitRate(object):
         Tasks in session is the number of tasks in a session (i.e., an assignment). 
         tasks_in_session is 3 for E2 and 10 for E1. 
         '''
+        
+        df_sessions = df[['worker_id','session_id']].drop_duplicates(keep='last')
+        print("sessions:"+str(df_sessions.shape[0]))
+        
         print("Quit rate by [score]=[incomplete sessions],[total sessions],[average incomplete tasks]")
         for score in score_list:
             df_aux = df[df['qualification_score']==score]
         
-            df_aux = df_aux[['session_id','microtask_id']]
+            df_aux = df_aux[['worker_id','session_id','microtask_id']]
             
-            df_sessions = df_aux[['session_id']].drop_duplicates(keep='last').dropna()
-            df_unique = df_aux.groupby(['session_id']).agg(['size','count','unique'])
+            df_sessions = df_aux[['worker_id','session_id']].drop_duplicates(keep='last').dropna()
+            df_unique = df_aux.groupby(['worker_id','session_id']).agg(['size','count','unique'])
 
             incomplete_session_df = df_unique[df_unique[('microtask_id','count')]<tasks_in_session]
             
@@ -96,5 +100,5 @@ class QuitRate(object):
                   ","+str(df_sessions.shape[0])+","+str(average_incomplete_tasks))
                         
 qrate = QuitRate()
-#qrate.compute_quit_rate_by_scores_by_experiments()
-qrate.compute_quit_rate_professions()
+qrate.compute_quit_rate_by_scores_by_experiments()
+#qrate.compute_quit_rate_professions()
