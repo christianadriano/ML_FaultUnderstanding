@@ -126,8 +126,26 @@ class QuitRate(object):
                     completed_tasks = dd_prof['count'].sum()
                     average_incomplete_tasks = tasks_in_session - completed_tasks/incomplete_sessions
                     print(profession+" : "+str(average_incomplete_tasks)+" : "+str(incomplete_sessions))
+    
+    def compute_distribution_tasks_by_participant(self):
+        '''
+        Compute how many tasks each participant took. This is important to evaluate if the results were not 
+        dominated by a few participants.
+        '''
+        df = self.df_1[['worker_id','session_id','microtask_id']]
+            
+        df_microtasks = df[['worker_id','microtask_id']].drop_duplicates(keep='last').dropna()
+        df_unique = df_microtasks.groupby(['worker_id']).agg(['size','count','unique'])
+        print(df_unique) 
+           
+        '''
+        print("Number of microtasks executed:"+str(df_microtasks.shape[0]))
+        df_unique = df.groupby(['worker_id','microtask_id']).agg(['size','count','unique'])
+        print(df_unique)    
+        '''
                         
 qrate = QuitRate()
 #qrate.compute_quit_rate_by_scores_by_experiments()
 #qrate.compute_quit_rate_professions()
-qrate.print_professions_by_session_by_tasks()
+#qrate.print_professions_by_session_by_tasks()
+qrate.compute_distribution_tasks_by_participant()
