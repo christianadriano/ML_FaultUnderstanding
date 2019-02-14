@@ -173,9 +173,27 @@ class QuitRate(object):
         Method List for E2: { "forOffsetHoursMinutes","getPaint","translate", "updateBounds",
                 "add","addNumber","toClass","toLocale"}
         '''
+        
+        #Sequence of bug files in E1
+        bug_loc_E1 = {"11ByteArrayBuffer_buggy.java":2,"8buggy_AbstractReviewSection_buggy.txt":6,"1buggy_ApacheCamel.txt":62,
+                                "9buggy_Hystrix_buggy.txt":2,"13buggy_VectorClock_buggy.txt":19,"10HashPropertyBuilder_buggy.java":8,
+                                "3buggy_PatchSetContentRemoteFactory_buggy.txt":34,
+                                "7buggy_ReviewTaskMapper_buggy.txt":7,"6ReviewScopeNode_buggy.java":6,"2SelectTranslator_buggy.java":41}
+        
+        df1 = self.df_1[['worker_id','session_id','microtask_id']]    
+        df_microtasks1 = df1[['worker_id','microtask_id']].drop_duplicates(keep='last').dropna()
+        df_unique1 = df_microtasks1.groupby(['worker_id']).agg(['size','count','unique'])
+        df_dist = df_unique1.groupby([('microtask_id','count')]).agg(['size','count','unique'])
+        #print(list(df_dist.columns.values))
+        list_1 = list(df_dist[('microtask_id', 'size', 'count')])
+        list_2 = list(bug_loc_E1.values())
+        print(list_2[2:10])
+        print(list_1[2:10])
+        #print(df_dist)
                                 
 qrate = QuitRate()
 #qrate.compute_quit_rate_by_scores_by_experiments()
 #qrate.compute_quit_rate_professions()
 #qrate.print_professions_by_session_by_tasks()
-qrate.compute_distribution_tasks_by_participant()
+#qrate.compute_distribution_tasks_by_participant()
+qrate.quit_rate_by_loc()
