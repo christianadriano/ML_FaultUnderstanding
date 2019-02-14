@@ -187,9 +187,28 @@ class QuitRate(object):
         #print(list(df_dist.columns.values))
         list_1 = list(df_dist[('microtask_id', 'size', 'count')])
         list_2 = list(bug_loc_E1.values())
-        print(list_2[2:10])
-        print(list_1[2:10])
+        #print(list_2[2:9])
+        #print(list_1[2:9])
+        
+        #compute correlations without outliers
+        results = stats.kendalltau(list_1[2:9], list_2[2:9])
+        #print(results)
         #print(df_dist)
+        
+        #E2
+        df2 = self.df_2[['worker_id','session_id','file_name','microtask_id']]    
+        df_microtasks2 = df2[['worker_id','session_id', 'microtask_id','file_name']].drop_duplicates(keep='last').dropna()
+        #print(df_microtasks2)
+
+        df_unique2 = df_microtasks2.groupby(['worker_id','session_id']).agg(['size','count','unique'])
+        print(df_unique2)
+        df_dist = df_unique2.groupby([('microtask_id','count')]).agg(['size','count','unique'])
+        #print(list(df_dist.columns.values))
+        #print(df_dist)
+        list_1 = list(df_dist[('microtask_id', 'size', 'count')])
+        list_2 = list(bug_loc_E1.values())
+        #print(list_2[2:9])
+        #print(list_1[2:9])
                                 
 qrate = QuitRate()
 #qrate.compute_quit_rate_by_scores_by_experiments()
