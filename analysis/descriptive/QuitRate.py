@@ -151,6 +151,28 @@ class QuitRate(object):
         plt.xlabel("tasks", fontsize=10)  
 
         plt.show()
+        
+        
+    def quit_rate_by_loc(self):
+        '''
+        Computes the quit rate by the size (loc) of program being analyzed in the task
+        '''
+        loc_by_method_E1 = {"method_id":["1buggy_ApacheCamel.txt","2SelectTranslator_buggy.java","3buggy_PatchSetContentRemoteFactory_buggy.txt",
+                                         "6ReviewScopeNode_buggy.java","7buggy_ReviewTaskMapper_buggy.txt","8buggy_AbstractReviewSection_buggy.txt",
+                                         "9buggy_Hystrix_buggy.txt","10HashPropertyBuilder_buggy.java","11ByteArrayBuffer_buggy.java",
+                                         "13buggy_VectorClock_buggy.txt"], 
+                            "loc":[61,42,34,24,7,6,2,8,2,19]}
+        '''
+        Method List for E1:  { "acquireExclusiveReadLock","appendColumn","addComments","convertScopeToDescription",
+                "mapScope","appendMessage","endCurrentThreadExecutingCommand","calculateNumPopulatedBytes","grow","merge"};
+        '''
+        
+        loc_by_method_E2 = {"method_id":["HIT01_8","HIT02_24","HIT03_6","HIT04_7","HIT05_35","HIT06_51","HIT07_33","HIT08_54"],
+                            "loc":[23,7,23,78,7,28,12,33]}
+        '''
+        Method List for E2: { "forOffsetHoursMinutes","getPaint","translate", "updateBounds",
+                "add","addNumber","toClass","toLocale"}
+        '''
                                 
 qrate = QuitRate()
 #qrate.compute_quit_rate_by_scores_by_experiments()
