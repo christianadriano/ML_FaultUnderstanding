@@ -185,6 +185,7 @@ class QuitRate(object):
         df_unique1 = df_microtasks1.groupby(['worker_id']).agg(['size','count','unique'])
         df_dist = df_unique1.groupby([('microtask_id','count')]).agg(['size','count','unique'])
         #print(list(df_dist.columns.values))
+        #print(df_dist)
         list_1 = list(df_dist[('microtask_id', 'size', 'count')])
         list_2 = list(bug_loc_E1.values())
         #print(list_2[2:9])
@@ -201,10 +202,16 @@ class QuitRate(object):
         #print(df_microtasks2)
 
         df_unique2 = df_microtasks2.groupby(['worker_id','session_id']).agg(['size','count','unique'])
-        print(df_unique2)
+        #print(df_unique2)
+        #print(df_unique2.columns.values)
         df_dist = df_unique2.groupby([('microtask_id','count')]).agg(['size','count','unique'])
-        #print(list(df_dist.columns.values))
+        print(list(df_dist.columns.values))
         #print(df_dist)
+        
+        df_dist = df_dist.groupby([('file_name', 'count', 'unique')]).agg(['size','count','unique'])
+        print(df_dist)
+
+        
         list_1 = list(df_dist[('microtask_id', 'size', 'count')])
         list_2 = list(bug_loc_E1.values())
         #print(list_2[2:9])
