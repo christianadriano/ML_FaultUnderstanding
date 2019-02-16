@@ -201,16 +201,44 @@ class QuitRate(object):
         df_microtasks2 = df2[['worker_id','session_id', 'microtask_id','file_name']].drop_duplicates(keep='last').dropna()
         #print(df_microtasks2)
 
-        df_unique2 = df_microtasks2.groupby(['worker_id','session_id']).agg(['size','count','unique'])
-        #print(df_unique2)
+        df_unique2 = df_microtasks2.groupby(['worker_id','session_id']).agg(['count','unique'])
         #print(df_unique2.columns.values)
-        df_dist = df_unique2.groupby([('microtask_id','count')]).agg(['size','count','unique'])
-        print(list(df_dist.columns.values))
+       ## print(df_unique2[('file_name', 'count')])
+        #print("keys:")
+        #print(list(df_unique2[('file_name','unique')]))
+        #print(list(df_unique2[('file_name','unique')].values()))
+        # print(df_unique2[('microtask_id', 'count')])
+        # df_dist = df_unique2.groupby([('microtask_id','count')]).agg(['size','count','unique'])
+        #print(list(df_dist.columns.values))
         #print(df_dist)
-        
-        df_dist = df_dist.groupby([('file_name', 'count', 'unique')]).agg(['size','count','unique'])
-        print(df_dist)
 
+        length_df = df_unique2.shape[0]
+        df_aux = pd.DataFrame({"index":range(length_df),"file_name":list(df_unique2[('file_name', 'unique')])})
+        #print(df_aux.columns.values)
+        #print(df_aux.head(10))
+        
+        #listacc = []
+        #listacc = df_aux['file_name'].apply(lambda row: listacc.append(row))
+        #print(listacc[1:10])
+        
+        list_file = []
+        for item in list(df_aux['file_name']):
+            print(item[0])
+            list_file.append(item[0])
+        
+        print(list_file)
+        
+        #list_file_name = list(df_unique2[('file_name','count','unique')])
+        #list_count_tasks = list(df_unique2[('microtask_id', 'size','count')].values())
+        #df_file_name = {"file_name":list_file_name,"count_tasks":list_count_tasks}
+        #print(list_file_name)
+        #print(df_file_name)
+        #print(df_unique2[('file_name', 'unique')])
+        #df_dist_file_name = df_unique2.groupby([('file_name', 'unique')]).agg(['size','count','unique'])
+        
+        #print(df_dist_file_name)
+        #listacc = []
+        #listvals = df['vals'].apply(lambda row: listacc.append(row[0]))
         
         list_1 = list(df_dist[('microtask_id', 'size', 'count')])
         list_2 = list(bug_loc_E1.values())
