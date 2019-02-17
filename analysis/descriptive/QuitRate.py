@@ -197,53 +197,35 @@ class QuitRate(object):
         #print(df_dist)
         
         #E2
+        #compute number of incomplete tasks by file_name
         df2 = self.df_2[['worker_id','session_id','file_name','microtask_id']]    
         df_microtasks2 = df2[['worker_id','session_id', 'microtask_id','file_name']].drop_duplicates(keep='last').dropna()
         #print(df_microtasks2)
 
         df_unique2 = df_microtasks2.groupby(['worker_id','session_id']).agg(['count','unique'])
-        #print(df_unique2.columns.values)
-       ## print(df_unique2[('file_name', 'count')])
-        #print("keys:")
-        #print(list(df_unique2[('file_name','unique')]))
-        #print(list(df_unique2[('file_name','unique')].values()))
-        # print(df_unique2[('microtask_id', 'count')])
-        # df_dist = df_unique2.groupby([('microtask_id','count')]).agg(['size','count','unique'])
-        #print(list(df_dist.columns.values))
-        #print(df_dist)
-
         length_df = df_unique2.shape[0]
+
+        microtaks_per_session = list(df_unique2[('microtask_id', 'count')])
+        df_aux_microtasks = pd.DataFrame({"index":range(length_df),"microtasks":list(df_unique2[('microtask_id', 'count')])})
+        list_microtasks = []
+        for item in list(df_aux_microtasks['microtasks']):
+            list_microtasks.append(item)
+
+
         df_aux = pd.DataFrame({"index":range(length_df),"file_name":list(df_unique2[('file_name', 'unique')])})
-        #print(df_aux.columns.values)
-        #print(df_aux.head(10))
-        
-        #listacc = []
-        #listacc = df_aux['file_name'].apply(lambda row: listacc.append(row))
-        #print(listacc[1:10])
-        
         list_file = []
         for item in list(df_aux['file_name']):
-            print(item[0])
             list_file.append(item[0])
+        #print(*list_file, sep='\n')
+
+        df_file_name_tasks = pd.DataFrame({"microtasks":list_microtasks,"file_name":list_file})
+        group_by_fileName = df_file_name_tasks.groupby('file_name').agg(['count','unique'])
+        print(group_by_fileName)
         
-        print(list_file)
+        #Print distribution of tasks by session
+        df_dist = df_unique2.groupby([('microtask_id','count')]).agg(['size','count','unique'])
+        #print(df_dist)
         
-        #list_file_name = list(df_unique2[('file_name','count','unique')])
-        #list_count_tasks = list(df_unique2[('microtask_id', 'size','count')].values())
-        #df_file_name = {"file_name":list_file_name,"count_tasks":list_count_tasks}
-        #print(list_file_name)
-        #print(df_file_name)
-        #print(df_unique2[('file_name', 'unique')])
-        #df_dist_file_name = df_unique2.groupby([('file_name', 'unique')]).agg(['size','count','unique'])
-        
-        #print(df_dist_file_name)
-        #listacc = []
-        #listvals = df['vals'].apply(lambda row: listacc.append(row[0]))
-        
-        list_1 = list(df_dist[('microtask_id', 'size', 'count')])
-        list_2 = list(bug_loc_E1.values())
-        #print(list_2[2:9])
-        #print(list_1[2:9])
                                 
 qrate = QuitRate()
 #qrate.compute_quit_rate_by_scores_by_experiments()
