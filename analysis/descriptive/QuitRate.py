@@ -219,8 +219,34 @@ class QuitRate(object):
         #print(*list_file, sep='\n')
 
         df_file_name_tasks = pd.DataFrame({"microtasks":list_microtasks,"file_name":list_file})
+        incomplete_flag = df_file_name_tasks["microtasks"]<3
+        incomplete_tasks_df = df_file_name_tasks[incomplete_flag]
+        group_incomplete_by_fileName = incomplete_tasks_df.groupby('file_name').agg(['count','unique'])
         group_by_fileName = df_file_name_tasks.groupby('file_name').agg(['count','unique'])
+        
+        print(group_incomplete_by_fileName)
         print(group_by_fileName)
+        
+        list_file_names = ["HIT01_8","HIT02_24","HIT03_6","HIT04_7","HIT05_35","HIT06_51","HIT07_33","HIT08_54"]
+        total_tasks_list=[]
+        incomplete_tasks_list=[]
+        for file_name in list_file_names:
+            total_tasks_list.append(len(df_file_name_tasks.groupby('file_name').groups[file_name]))
+            incomplete_tasks_list.append(len(incomplete_tasks_df.groupby('file_name').groups[file_name]))
+        
+        quit_rate_list = [a/b for a,b in zip(incomplete_tasks_list,total_tasks_list)]
+    
+        #print(*quit_rate_list,sep="\n")
+        #print(group_incomplete_by_fileName)
+        #print(group_incomplete_by_fileName.groups.keys()) #["HIT01_8"])
+        
+        #print("incomplete:"+str(group_incomplete_by_fileName.columns.values))
+        #print("keys:"+str(group_incomplete_by_fileName.groups.keys()))
+        
+        
+        #for file_name in list_file_names:
+        #    print()
+        #print(group_by_fileName)
         
         #Print distribution of tasks by session
         df_dist = df_unique2.groupby([('microtask_id','count')]).agg(['size','count','unique'])
