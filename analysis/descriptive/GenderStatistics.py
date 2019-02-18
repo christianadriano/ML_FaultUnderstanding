@@ -6,12 +6,7 @@ Created on Feb 18, 2019
 
 from util._file_loader import FileLoader
 from util.StatisticalSignificanceTest import StatisticalSignificanceTest
-import seaborn as sns
-import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
-from scipy.stats import morestats,stats
-import csv
 
 class GenderStatistics(object):
     '''
@@ -74,7 +69,34 @@ class GenderStatistics(object):
         before answering the demographics survey.
         '''
         
-    #def compute_gender_age_distribution(self):
+    def compute_gender_age_profession_distribution(self):
+        '''
+        Compute gender age differences across professions
+        '''
+        
+        statTest = StatisticalSignificanceTest()
+        
+        #E1
+        df_female = self.df_1[self.df_1.gender == 0]
+        df_male = self.df_1[self.df_1.gender == 1]
+        print("E1 gender ages")
+        statTest.statistical_test_averages(df_male.age,df_female.age)
+        
+        #E2
+        profession_list = ["Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student","Other"]
+        print("series_1 = Male, series_2 = Female")
+        for profession in profession_list:
+            df_profession = self.df_2[self.df_2.experience == profession]
+            df_female =  df_profession[df_profession.gender ==  0]
+            df_male = df_profession[df_profession.gender == 1]
+            #print(profession)
+            #statTest.statistical_test_averages(df_male.age,df_female.age)
+            
+        #print("E2 All")
+        df_female = self.df_2[self.df_2.gender == 0]
+        df_male = self.df_2[self.df_2.gender == 1]
+        #statTest.statistical_test_averages(df_male['Worker Age'],df_female['Worker Age'])
+    
            
     def load_all_E2_gender_data(self):
         '''
@@ -104,4 +126,5 @@ class GenderStatistics(object):
         statTest.statistical_test_averages(df_male['Worker Age'],df_female['Worker Age'])
         
 genderStats = GenderStatistics()
-genderStats.load_all_E2_gender_data()      
+#genderStats.load_all_E2_gender_data() 
+genderStats.compute_gender_age_profession_distribution()     
