@@ -92,10 +92,10 @@ class GenderStatistics(object):
             #print(profession)
             #statTest.statistical_test_averages(df_male.age,df_female.age)
             
-        #print("E2 All")
+        print("E2 All")
         df_female = self.df_2[self.df_2.gender == 0]
         df_male = self.df_2[self.df_2.gender == 1]
-        #statTest.statistical_test_averages(df_male['Worker Age'],df_female['Worker Age'])
+        statTest.statistical_test_averages(df_male.age,df_female.age)
     
            
     def load_all_E2_gender_data(self):
