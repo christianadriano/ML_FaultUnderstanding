@@ -39,15 +39,7 @@ class StatisticalSignificanceTest(object):
             print("The p-value>0.05, so we cannot say anything about possible differences in mean")
         else:
             print("The p-value<=0.05 shows that the series 1 and 2 have distinct means in 95% of the time")
-
-        
-        exp1_mean = np.mean(series_1)
-        print("series_1 mean="+str(exp1_mean))
-        exp1_median = np.median(series_1)
-        print("series_1 median="+str(exp1_median))
-        
-        exp2_mean = np.mean(series_2)
-        print("series_2 mean="+str(exp2_mean))
-        exp2_median = np.median(series_2)
-        print("series_2 median="+str(exp2_median))
+             
+        print("series_1 mean="+str(np.mean(series_1)) +", median="+str(np.median(series_1)))
+        print("series_2 mean="+str(np.mean(series_2)) +", median="+str(np.median(series_2)))
  
