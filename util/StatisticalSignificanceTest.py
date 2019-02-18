@@ -42,12 +42,12 @@ class StatisticalSignificanceTest(object):
 
         
         exp1_mean = np.mean(series_1)
-        print("E1 mean="+str(exp1_mean))
+        print("series_1 mean="+str(exp1_mean))
         exp1_median = np.median(series_1)
-        print("E1 median="+str(exp1_median))
+        print("series_1 median="+str(exp1_median))
         
         exp2_mean = np.mean(series_2)
-        print("E2 mean="+str(exp2_mean))
+        print("series_2 mean="+str(exp2_mean))
         exp2_median = np.median(series_2)
-        print("E2 median="+str(exp2_median))
+        print("series_2 median="+str(exp2_median))
  
