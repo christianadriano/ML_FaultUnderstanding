@@ -22,13 +22,16 @@ class StatisticalSignificanceTest(object):
         result = morestats.shapiro(series_1)
         print("Shapiro-Wilk test p-value = "+str(result[1]))
         if(result[1]<0.05):
-            print("data is probably not normal")
+            print("data is probably NOT normal")
+        else:
+            print("data IS probably normal")
         #test if rate series_2 normally distributed
         result = morestats.shapiro(series_2)
         print("Shapiro-Wilk test p-value = "+str(result[1]))
         if(result[1]<0.05):
-            print("series_1 is probably not normal")
-        print("data is probably not normal")
+            print("series_1 is probably NOT normal")
+        else:
+            print("data IS probably normal")
         
         #Run Wilcoxon rank sum test
         result = stats.ranksums(series_2,series_1)
