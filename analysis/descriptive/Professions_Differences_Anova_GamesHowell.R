@@ -32,3 +32,8 @@ df_male_data$experience <- as.factor(df_male_data$experience)
 one.way <- oneway(df_male_data$experience, y =df_male_data$age , posthoc = 'games-howell')
 one.way
 
+df_female_data = df_female[,c("experience","age")]
+df_female_data$experience <- as.factor(df_female_data$experience)
+
+one.way <- oneway(df_female_data$experience, y =df_female_data$age , posthoc = 'games-howell')
+one.way
