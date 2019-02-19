@@ -79,14 +79,14 @@ class GenderStatistics(object):
         #E1
         df_female = self.df_1[self.df_1.gender == 0]
         df_male = self.df_1[self.df_1.gender == 1]
-        print("E1 gender ages")
-        statTest.statistical_test_averages(df_male.age,df_female.age)
+        #print("E1 gender ages")
+        #statTest.statistical_test_averages(df_male.age,df_female.age)
         
         #E2
         profession_list = ["Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student","Other"]
         print("series_1 = Male, series_2 = Female")
         for profession in profession_list:
-            df_profession = self.df_2[self.df_2.experience == profession]
+            df_profession = self.df_2[self.df_2.experience.str.contains(profession)]
             df_female =  df_profession[df_profession.gender ==  0]
             df_male = df_profession[df_profession.gender == 1]
             #print(profession)
