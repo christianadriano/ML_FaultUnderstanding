@@ -34,8 +34,10 @@ class ProfessionStatistics(object):
             df_profession = self.df_2[self.df_2.experience.str.contains(profession)]
             df_female =  df_profession[df_profession.gender ==  0]
             df_male = df_profession[df_profession.gender == 1]
-            print(profession)
-            statTest.statistical_test_averages(df_male.age,df_female.age)
+            print("profession,female,male")
+            print(profession+","+str(df_female.shape[0])+","+str(df_male.shape[0]))
+            #Run a ANOVA test to check if the differences as significant do it in R.
+            #statTest.statistical_test_averages(df_male.age,df_female.age)
         
     def eval_gender_age_profession_distribution(self):
         '''
@@ -80,4 +82,6 @@ class ProfessionStatistics(object):
         df_female =  df[df['Worker Gender'] ==  'Female']
         df_male = df[df['Worker Gender'] == 'Male']
         statTest.statistical_test_averages(df_male['Worker Age'],df_female['Worker Age'])   
-    
+
+professionStats = ProfessionStatistics()
+professionStats.eval_gender_profession_distribution() 
