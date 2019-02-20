@@ -98,9 +98,9 @@ class GenderStatistics(object):
         statTest.statistical_test_averages(df_male.age,df_female.age)
     
            
-    def load_all_E2_gender_data(self):
+    def load_prequalified_E2_gender_data(self):
         '''
-        load csv with all the data from qualified and not qualified participants
+        load csv with all the data from participants before they were qualified
         '''
         file_path = 'C:/Users/Christian/Documents/GitHub/ML_FaultUnderstanding/data/'
         csv_file = file_path  + 'gender_data.csv'
