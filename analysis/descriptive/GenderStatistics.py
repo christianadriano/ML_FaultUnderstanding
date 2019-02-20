@@ -31,13 +31,12 @@ class GenderStatistics(object):
         self.df_1 = q_df1[['gender','worker_id','age']].drop_duplicates(keep='last')
         self.df_2 = q_df2[['gender','worker_id','experience','age']].drop_duplicates(keep='last')
         
-    def gender_distribution(self):
+    def print_gender_distribution(self):
         '''
-        Computes the number and proportion of participants from each gender.
+        Prints the number and proportion of participants from each gender.
         This will be both for qualified and not qualified participants.
         '''
-       
-    
+
         #count Exp-1
         females_1 = self.df_1[self.df_1.gender==0].shape[0]
         males_1 = self.df_1[self.df_1.gender==1].shape[0]
@@ -69,9 +68,9 @@ class GenderStatistics(object):
         before answering the demographics survey.
         '''
         
-    def compute_gender_age_profession_distribution(self):
+    def eval_gender_age_profession_distribution(self):
         '''
-        Compute gender age differences across professions
+        Compute gender age differences across professions for E1 and E2
         '''
         
         statTest = StatisticalSignificanceTest()
@@ -98,9 +97,10 @@ class GenderStatistics(object):
         statTest.statistical_test_averages(df_male.age,df_female.age)
     
            
-    def load_prequalified_E2_gender_data(self):
+    def eval_prequalified_gender_profession_age_differences(self):
         '''
-        load csv with all the data from participants before they were qualified
+        Only for E2. load csv with all the data from participants before they were qualified
+        Test for differences of age across profession and gender
         '''
         file_path = 'C:/Users/Christian/Documents/GitHub/ML_FaultUnderstanding/data/'
         csv_file = file_path  + 'gender_data.csv'
