@@ -30,15 +30,69 @@ class ProfessionStatistics(object):
 
         profession_list = ["Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student","Other"]
         print("Gender by profession, series_1 = Male, series_2 = Female")
+        print("profession,female,male")
         for profession in profession_list:
             df_profession = self.df_2[self.df_2.experience.str.contains(profession)]
             df_female =  df_profession[df_profession.gender ==  0]
             df_male = df_profession[df_profession.gender == 1]
-            print("profession,female,male")
-            print(profession+","+str(df_female.shape[0])+","+str(df_male.shape[0]))
+            df_prefer_not_tell = df_profession[df_profession.gender == 2]
+            df_other = df_profession[df_profession.gender == 3]
+            #print(profession+","+str(df_female.shape[0])+","+str(df_male.shape[0])+","+str(df_other.shape[0]))
             #Run a ANOVA test to check if the differences as significant do it in R.
             #statTest.statistical_test_averages(df_male.age,df_female.age)
         
+        df_profession = self.df_2[['gender','worker_id','experience']].drop_duplicates(keep='last')
+        df_profession = df_profession.replace({"experience":r'^Other.*'},{"experience":"Other"}, regex=True)
+        grouped_results = df_profession.groupby(["experience","gender"])
+        print(grouped_results.agg(['size','count','unique']))
+        grouped_results.groups
+        
+        total_tasks_list=[]
+        female_list=[]
+        male_list=[]
+        prefer_not_tell_list=[]
+        other_list=[]
+
+        df_female = df_profession[df_profession.gender ==  0]
+        df_male = df_profession[df_profession.gender ==  1]
+        df_prefer_not_tell = df_profession[df_profession.gender ==  2]
+        df_other = df_profession[df_profession.gender ==  3]
+        
+        for profession in profession_list:
+            total_tasks_list.append(len(df_profession.groupby('experience').groups[profession]))
+            female_list.append(len(df_female.groupby('experience').groups[profession]))
+            male_list.append(len(df_male.groupby('experience').groups[profession]))
+            if(not (df_prefer_not_tell[df_prefer_not_tell.experience.str.contains(profession)].empty)):
+                prefer_not_tell_list.append(len(df_prefer_not_tell.groupby('experience').groups[profession]))
+            else:
+                prefer_not_tell_list.append(0)
+            if(not (df_other[df_other.experience.str.contains(profession)].empty)):
+                other_list.append(len(df_other.groupby('experience').groups[profession]))
+            else:
+                other_list.append(0)         
+        
+        female_rate_list = [a/b for a,b in zip(female_list,total_tasks_list)]
+        male_rate_list = [a/b for a,b in zip(male_list,total_tasks_list)]
+        prefer_not_tell_rate_list = [a/b for a,b in zip(prefer_not_tell_list,total_tasks_list)]
+        other_rate_list = [a/b for a,b in zip(other_list,total_tasks_list)]
+        
+        print("Rates of gender by profession:")
+        print("Gender",*profession_list,sep=",")
+        print("female",*female_rate_list,sep=",")
+        print("male",*male_rate_list,sep=",")
+        print("prefer not tell",*prefer_not_tell_rate_list,sep=",")
+        print("other",*other_rate_list,sep=",")
+
+        print()
+        print("Total participants by gender by profession:")
+        print("Gender",*profession_list,sep=",")
+        print("female",*female_list,sep=",")
+        print("male",*male_list,sep=",")
+        print("prefer not tell",*prefer_not_tell_list,sep=",")
+        print("other",*other_list,sep=",")
+        
+
+
     def eval_gender_age_profession_distribution(self):
         '''
         Compute gender differences across for E2
@@ -82,6 +136,7 @@ class ProfessionStatistics(object):
         df_female =  df[df['Worker Gender'] ==  'Female']
         df_male = df[df['Worker Gender'] == 'Male']
         statTest.statistical_test_averages(df_male['Worker Age'],df_female['Worker Age'])   
+
 
 professionStats = ProfessionStatistics()
 professionStats.eval_gender_profession_distribution() 
