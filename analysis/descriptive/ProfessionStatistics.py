@@ -6,6 +6,9 @@ Created on Feb 20, 2019
 import pandas as pd
 from util._file_loader import FileLoader
 from util.StatisticalSignificanceTest import StatisticalSignificanceTest
+import numpy as np
+from scipy.stats import chisquare, chi2_contingency
+
 
 class ProfessionStatistics(object):
     '''
@@ -71,9 +74,11 @@ class ProfessionStatistics(object):
             else:
                 other_list.append(0)         
         
+        
+        
         female_rate_list = [a/b for a,b in zip(female_list,total_tasks_list)]
         male_rate_list = [a/b for a,b in zip(male_list,total_tasks_list)]
-        prefer_not_tell_rate_list = [a/b for a,b in zip(prefer_not_tell_list,total_tasks_list)]
+        prefer_not_tell_rate_list = [a/b for a,b in zip(male_list,total_tasks_list)]
         other_rate_list = [a/b for a,b in zip(other_list,total_tasks_list)]
         
         print("Rates of gender by profession:")
@@ -92,7 +97,32 @@ class ProfessionStatistics(object):
         print("other",*other_list,sep=",")
         
         #Run Chi-square test to check if these frequencies of gender across profession are distinct.
+        obs = np.array([female_list, male_list])
+        print(obs)
+        #obs = np.array([female_list]).T
+        results = chisquare(obs)
+        chi2_stat, p_val, dof, ex = chi2_contingency(obs, correction=False)
 
+        print("===Chi2 Stat===")
+        print(chi2_stat)
+        print("\n")
+        print("===Degrees of Freedom===")
+        print(dof)
+        print("\n")
+        print("===P-Value===")
+        print(p_val)
+        print("\n")
+        print("===Contingency Table===")
+        print(ex)
+
+    def chisquare_test_gender_profession_distribution(self):
+        '''
+        Tests if the frequencies of gender and profession are independent or not.
+        The null-hypothesis is that the observed frequencies are not different from the expected frequencies for level of confidence (0.05).
+        Our goal is to reject this null-hypothesis, which would support the alternative hypothesis that the observed frequencies 
+        are not random, they are a result of a dependency between gender and profession.
+        '''
+        
 
     def eval_gender_age_profession_distribution(self):
         '''
