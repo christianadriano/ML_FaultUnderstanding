@@ -4,7 +4,7 @@ Created on Feb 9, 2019
 @author: Christian
 '''
 
-from scipy.stats import morestats,stats
+from scipy.stats import morestats,stats, chisquare
 import numpy as np
 
 class StatisticalSignificanceTest(object):
