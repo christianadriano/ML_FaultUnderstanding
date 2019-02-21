@@ -37,7 +37,7 @@ class ProfessionStatistics(object):
             df_male = df_profession[df_profession.gender == 1]
             df_prefer_not_tell = df_profession[df_profession.gender == 2]
             df_other = df_profession[df_profession.gender == 3]
-            #print(profession+","+str(df_female.shape[0])+","+str(df_male.shape[0])+","+str(df_other.shape[0]))
+            #print(profession+","+str(df_female.shape[0])+","+str(df_male.shape[0])+","+str(df_other.shape[0])+","+str(df_prefer_not_tell.shape[0]))
             #Run a ANOVA test to check if the differences as significant do it in R.
             #statTest.statistical_test_averages(df_male.age,df_female.age)
         
@@ -91,6 +91,7 @@ class ProfessionStatistics(object):
         print("prefer not tell",*prefer_not_tell_list,sep=",")
         print("other",*other_list,sep=",")
         
+        #Run Chi-square test to check if these frequencies of gender across profession are distinct.
 
 
     def eval_gender_age_profession_distribution(self):
