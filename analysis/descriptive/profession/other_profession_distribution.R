@@ -13,11 +13,16 @@ head(df)
 
 df <- unique(df)
 
-df[grep("Other",df$experience),"experience"]
+length(df[grep("other",tolower(df$experience)),"experience"])
 
-#count retired
-#count professor
-#count manager
-#count IT
-#count unemployed
-#count other
+#retired
+length(df[grep("retired",tolower(df$experience)),"experience"])
+#6
+
+#professor
+length(df[grep("professor",tolower(df$experience)),"experience"])
+#4
+
+#manager
+length(df[grep("manager",tolower(df$experience)),"experience"])
+#2
