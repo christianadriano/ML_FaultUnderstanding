@@ -48,8 +48,7 @@ class ProfessionStatistics(object):
         df_profession = df_profession.replace({"experience":r'^Other.*'},{"experience":"Other"}, regex=True)
         grouped_results = df_profession.groupby(["experience","gender"])
         print(grouped_results.agg(['size','count','unique']))
-        grouped_results.groups
-        
+                
         total_tasks_list=[]
         female_list=[]
         male_list=[]
