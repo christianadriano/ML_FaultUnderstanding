@@ -37,11 +37,14 @@ class QualificationScoreAnalysis(object):
        
         print(self.compute_score_percentages(grouped_results, [2,3,4]))
         
-        #df_E2  =self.df_1.drop_duplicates(subset=['worker_id'],keep='last')
-        #grouped_results = df_E1.groupby(['qualification_score'])
-        #print(grouped_results.agg(['size','count','unique']))
+        df_E2  =self.df_2.drop_duplicates(subset=['worker_id'],keep='last')
+        grouped_results = df_E2.groupby(['qualification_score'])
+        print(grouped_results.agg(['size','count','unique']))
         #Results
         #(score,count) = (2,538); (3,134); (4,105)
+
+        print(self.compute_score_percentages(grouped_results, [3,4,5]))
+
 
     def compute_score_percentages(self,grouped_results, score_list):
         
