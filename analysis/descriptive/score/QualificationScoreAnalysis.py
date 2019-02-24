@@ -41,7 +41,7 @@ class QualificationScoreAnalysis(object):
         grouped_results = df_E2.groupby(['qualification_score'])
         print(grouped_results.agg(['size','count','unique']))
         #Results
-        #(score,count) = (2,538); (3,134); (4,105)
+        #(score,count) = (3,146); (4,157); (5,194)
 
         print(self.compute_score_percentages(grouped_results, [3,4,5]))
 
