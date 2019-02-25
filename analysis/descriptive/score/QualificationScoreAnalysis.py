@@ -30,21 +30,21 @@ class QualificationScoreAnalysis(object):
         Scores in E2 = 3,4,5
         '''   
         #Remove repeated items
-        df_E1  =self.df_1.drop_duplicates(subset=['worker_id'],keep='last')
+        df_E1  =self.df_1.drop_duplicates(subset=['worker_id'], keep='last')
         grouped_results = df_E1.groupby(['qualification_score'])
         #print(grouped_results.agg(['size','count','unique']))
         #Results
         #(score,count) = (2,538); (3,134); (4,105)
         proportion_score_1,score_count_1 = self.compute_score_percentages(grouped_results, [2,3,4])
-        print(proportion_score_1,score_count_1)
+        print(proportion_score_1, score_count_1)
                 
-        df_E2  =self.df_2.drop_duplicates(subset=['worker_id'],keep='last')
+        df_E2  =self.df_2.drop_duplicates(subset=['worker_id'], keep='last')
         grouped_results = df_E2.groupby(['qualification_score'])
         print(grouped_results.agg(['size','count','unique']))
         #Results
         #(score,count) = (3,146); (4,157); (5,194)
         proportion_score_2,score_count_2 = self.compute_score_percentages(grouped_results, [3,4,5])
-        print(proportion_score_2,score_count_2)
+        print(proportion_score_2, score_count_2)
 
         self.chisquare_test_scores(score_count_1,score_count_2)
 
@@ -55,7 +55,7 @@ class QualificationScoreAnalysis(object):
         results = chisquare(obs)
         chi2_stat, p_val, dof, ex = chi2_contingency(obs, correction=False)
 
-        print("Chi2 Stat: "+str(chi2_stat))
+        print("Chi-square Stat: "+str(chi2_stat))
         print(" degrees of freedom: "+str(dof))
         print(" p-value: "+str(p_val))
         print(" contingency table: "+str(ex))
@@ -63,8 +63,12 @@ class QualificationScoreAnalysis(object):
 
     def score_by_profession(self):
         '''
-        Were the 
+        Is the score distribution consistent with the profession distribution of participants?
+        For instance, do professional programmers have higher score than other professions?
+        To understand that, we need to do a multiple tests. Our choice is to use ANOVA.
         '''
+        df_E2  =self.df_2.drop_duplicates(subset=['worker_id'], keep='last')
+        
 
     def compute_score_percentages(self,grouped_results, score_list):
         
@@ -79,4 +83,5 @@ class QualificationScoreAnalysis(object):
         return(proportion_score,score_count)
          
 scoreAnalysis = QualificationScoreAnalysis()
-scoreAnalysis.distribution_qualification_scores()
+#scoreAnalysis.distribution_qualification_scores()
+scoreAnalysis.score_by_profession()
