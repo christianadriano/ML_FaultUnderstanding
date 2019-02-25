@@ -55,17 +55,10 @@ class QualificationScoreAnalysis(object):
         results = chisquare(obs)
         chi2_stat, p_val, dof, ex = chi2_contingency(obs, correction=False)
 
-        print("===Chi2 Stat===")
-        print(chi2_stat)
-        print("\n")
-        print("===Degrees of Freedom===")
-        print(dof)
-        print("\n")
-        print("===P-Value===")
-        print(p_val)
-        print("\n")
-        print("===Contingency Table===")
-        print(ex)
+        print("Chi2 Stat: "+str(chi2_stat))
+        print(" degrees of freedom: "+str(dof))
+        print(" p-value: "+str(p_val))
+        print(" contingency table: "+str(ex))
 
 
     def score_by_profession(self):
