@@ -3,16 +3,11 @@ Created on Feb 11, 2019
 
 @author: Christian
 '''
-from scipy.stats import morestats,stats
-from dateutil.parser import parse
-import datetime
+from scipy.stats import stats
 from util._file_loader import FileLoader
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns;
-import math
-from future.backports.html.parser import incomplete
 
 class QuitRate(object):
     '''
