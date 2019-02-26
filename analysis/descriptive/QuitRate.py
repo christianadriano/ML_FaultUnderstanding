@@ -15,7 +15,6 @@ class QuitRate(object):
     It also reports on the reasons given for quitting (available in E2)
     '''
 
-
     def __init__(self):
         '''
         Constructor
