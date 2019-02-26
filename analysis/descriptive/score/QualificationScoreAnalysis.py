@@ -68,7 +68,18 @@ class QualificationScoreAnalysis(object):
         To understand that, we need to do a multiple tests. Our choice is to use ANOVA.
         '''
         df_E2  =self.df_2.drop_duplicates(subset=['worker_id'], keep='last')
+        profession_list = ["Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student","Other"]
         
+        print("score distributions across professions: low=3, medium=4, high=5")
+        for profession in profession_list:
+            df_profession = self.df_2[self.df_2.experience.str.contains(profession)]
+            df_low_score =  df_profession[df_profession.qualification_score ==  3]
+            df_medium_score = df_profession[df_profession.qualification_score == 4]
+            df_high_score = df_profession[df_profession.qualification_score == 5]
+            print(profession)
+            #run ANOVA to test if the means across profession are different
+            statTest.statistical_test_averages(df_low_score,df_medium_score,df_high_score)
+            
 
     def compute_score_percentages(self,grouped_results, score_list):
         
