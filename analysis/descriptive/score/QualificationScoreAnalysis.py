@@ -68,8 +68,22 @@ class QualificationScoreAnalysis(object):
         To understand that, we need to do a multiple tests. Our choice is to use ANOVA.
         '''
         df_E2  =self.df_2.drop_duplicates(subset=['worker_id'], keep='last')
+        df_profession = self.df_2.replace({"experience":r'^Other.*'},{"experience":"Other"}, regex=True)
+
         profession_list = ["Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student","Other"]
+        score_list = [3,4,5]
         
+        df_profession = df_profession[['worker_id','experience','qualification_score']]
+        grouped_results = df_profession.groupby(["experience","qualification_score"])
+        print(grouped_results.agg(['size','count','unique']))
+
+        #proportion_score,score_count = self.compute_score_percentages(grouped_results, score_list)
+        
+        #print("proportions:" + str(proportion_score))
+        
+        #print("scores:" + str(score_count))
+        
+        '''
         print("score distributions across professions: low=3, medium=4, high=5")
         for profession in profession_list:
             df_profession = self.df_2[self.df_2.experience.str.contains(profession)]
@@ -79,7 +93,7 @@ class QualificationScoreAnalysis(object):
             print(profession)
             #run ANOVA to test if the means across profession are different
             statTest.statistical_test_averages(df_low_score,df_medium_score,df_high_score)
-            
+        '''    
 
     def compute_score_percentages(self,grouped_results, score_list):
         
