@@ -62,10 +62,15 @@ one.way <- oneway(df_female_data$experience, y =df_female_data$years_programming
 one.way
 
 #Regardless of gender
-
 df_data = df[,c("experience","years_programming")]
 df_data$experience <- as.factor(df_data$experience)
 
 one.way <- oneway(df_data$experience, y =df_data$years_programming , posthoc = 'games-howell')
+one.way
+
+#Profession score
+df_data = df[,c("experience","qualification_score")]
+df_data$experience <- as.factor(df_data$experience)
+one.way <- oneway(df_data$experience, y =df_data$qualification_score , posthoc = 'games-howell')
 one.way
 
