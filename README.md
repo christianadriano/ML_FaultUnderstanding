@@ -1,7 +1,15 @@
 # ML_FaultUnderstanding
 
 ## Goal: 
-investigate the factors that impact the accuracy of fault understanding. The analyzed factors are attributes of programmers (profession, year of experience) and tasks (duration, confidence).
+Investigate the factors that impact the accuracy of fault understanding (ability to recognize the code that is causing a software failure). The analyzed factors consist of attributes of programmers (profession, year of experience, coding ability) and tasks (duration, confidence, difficulty).
+
+## Metrics:
+* Quit rate
+* Task uptake rate
+* Qualification score
+* Task duration
+* Explanation size
+* Inter-rater reliability
 
 ## Data: 
 Two experiments on identifying the code that is causing a software failure. 
