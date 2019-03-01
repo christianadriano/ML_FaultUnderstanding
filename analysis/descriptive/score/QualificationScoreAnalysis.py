@@ -7,6 +7,9 @@ Created on Feb 24, 2019
 from util._file_loader import FileLoader
 import numpy as np
 from scipy.stats import chisquare, chi2_contingency
+import statsmodels.stats.api as sms
+import statsmodels.stats.power as smp
+
 
 
 class QualificationScoreAnalysis(object):
@@ -25,9 +28,10 @@ class QualificationScoreAnalysis(object):
     
     def distribution_qualification_scores(self):
         '''
-        Distribution of scores for E1 and E2
+        Distribution of scores for E1 and E2 in three categories (low, medium, high)
         Scores in E1 = 2,3,4
         Scores in E2 = 3,4,5
+        Hence degrees-of-freedom = 3-1 = 2
         '''   
         #Remove repeated items
         df_E1  =self.df_1.drop_duplicates(subset=['worker_id'], keep='last')
@@ -52,13 +56,23 @@ class QualificationScoreAnalysis(object):
         obs = np.array([E1_score_list, E2_score_list])
         print(obs)
         #obs = np.array([female_list]).T
-        results = chisquare(obs)
         chi2_stat, p_val, dof, ex = chi2_contingency(obs, correction=False)
-
+        
+        #compute effect size
+        effect_size = sms.chisquare_effectsize(E1_score_list,E2_score_list)
+        number_observations = len(E1_score_list)
+        
+        #compute power
+        from statsmodels.stats.gof import chisquare_power
+        power = chisquare_power(effect_size, nobs=number_observations, n_bins=dof+1, alpha=0.05)
+        #smp.GofChisquarePower.solve_power(effect_size, nobs=number_observations, n_bins=degrees_freedom+1, alpha=0.05)
+        
         print("Chi-square Stat: "+str(chi2_stat))
         print(" degrees of freedom: "+str(dof))
         print(" p-value: "+str(p_val))
         print(" contingency table: "+str(ex))
+        print(" effect size:"+str(effect_size))
+        print(" power:"+str(power))
 
 
     def score_by_profession(self):
@@ -77,23 +91,7 @@ class QualificationScoreAnalysis(object):
         grouped_results = df_profession.groupby(["experience","qualification_score"])
         print(grouped_results.agg(['size','count','unique']))
 
-        #proportion_score,score_count = self.compute_score_percentages(grouped_results, score_list)
         
-        #print("proportions:" + str(proportion_score))
-        
-        #print("scores:" + str(score_count))
-        
-        '''
-        print("score distributions across professions: low=3, medium=4, high=5")
-        for profession in profession_list:
-            df_profession = self.df_2[self.df_2.experience.str.contains(profession)]
-            df_low_score =  df_profession[df_profession.qualification_score ==  3]
-            df_medium_score = df_profession[df_profession.qualification_score == 4]
-            df_high_score = df_profession[df_profession.qualification_score == 5]
-            print(profession)
-            #run ANOVA to test if the means across profession are different
-            statTest.statistical_test_averages(df_low_score,df_medium_score,df_high_score)
-        '''    
 
     def compute_score_percentages(self,grouped_results, score_list):
         
@@ -108,5 +106,5 @@ class QualificationScoreAnalysis(object):
         return(proportion_score,score_count)
          
 scoreAnalysis = QualificationScoreAnalysis()
-#scoreAnalysis.distribution_qualification_scores()
-scoreAnalysis.score_by_profession()
+scoreAnalysis.distribution_qualification_scores()
+#scoreAnalysis.score_by_profession()
