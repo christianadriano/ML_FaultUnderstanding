@@ -109,4 +109,9 @@ df_data = df[,c("experience","qualification_score")]
 df_data$experience <- as.factor(df_data$experience)
 one.way <- oneway(df_data$experience, y =df_data$qualification_score , posthoc = 'games-howell')
 one.way
-
+#Power calculations
+pwr.anova.test(k = length(profession_names),
+               n = NULL,
+               f = one.way$output$etasq,
+               sig.level = 0.05,
+               power = 0.9)
