@@ -8,6 +8,7 @@ library(ufs)
 library(userfriendlyscience)
 library(farff)
 library(ggplot2)
+library(pwr)
 
 file_path <-  "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_2.arff"
 df <-  readARFF(file_path)
@@ -19,6 +20,7 @@ df_male <-  df[df$gender == "Male",]
 df_female <-  df[df$gender == "Female",]
 
 profession_names <-  c("Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student","Other")
+
 male_profession_ages_list <- vector(mode="list", length=length(profession_names))
 names(male_profession_ages_list) <- profession_names
 for(profession in profession_names){
@@ -32,21 +34,37 @@ df_male_data$experience <- as.factor(df_male_data$experience)
 
 one.way <- oneway(df_male_data$experience, y =df_male_data$age , posthoc = 'games-howell')
 one.way
+#power calculations
+pwr.anova.test(k = length(profession_names),
+               n = NULL,
+               f = one.way$output$etasq,
+               sig.level = 0.05,
+               power = 0.9)
 
 df_female_data = df_female[,c("experience","age")]
 df_female_data$experience <- as.factor(df_female_data$experience)
 
 one.way <- oneway(df_female_data$experience, y =df_female_data$age , posthoc = 'games-howell')
 one.way
+#power calculations
+pwr.anova.test(k = length(profession_names),
+               n = NULL,
+               f = one.way$output$etasq,
+               sig.level = 0.05,
+               power = 0.9)
 
 #Regardless of gender
-
 df_data = df[,c("experience","age")]
 df_data$experience <- as.factor(df_data$experience)
 
 one.way <- oneway(df_data$experience, y =df_data$age , posthoc = 'games-howell')
 one.way
-
+#Power calculations
+pwr.anova.test(k = length(profession_names),
+               n = NULL,
+               f = one.way$output$etasq,
+               sig.level = 0.05,
+               power = 0.9)
 
 #Profession and Years of Experience
 df_male_data = df_male[,c("experience","years_programming")]
