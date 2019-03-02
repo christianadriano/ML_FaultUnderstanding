@@ -72,12 +72,24 @@ df_male_data$experience <- as.factor(df_male_data$experience)
 
 one.way <- oneway(df_male_data$experience, y =df_male_data$years_programming , posthoc = 'games-howell')
 one.way
+#Power calculations
+pwr.anova.test(k = length(profession_names),
+               n = NULL,
+               f = one.way$output$etasq,
+               sig.level = 0.05,
+               power = 0.9)
 
 df_female_data = df_female[,c("experience","years_programming")]
 df_female_data$experience <- as.factor(df_female_data$experience)
 
 one.way <- oneway(df_female_data$experience, y =df_female_data$years_programming , posthoc = 'games-howell')
 one.way
+#Power calculations
+pwr.anova.test(k = length(profession_names),
+               n = NULL,
+               f = one.way$output$etasq,
+               sig.level = 0.05,
+               power = 0.9)
 
 #Regardless of gender
 df_data = df[,c("experience","years_programming")]
@@ -85,6 +97,12 @@ df_data$experience <- as.factor(df_data$experience)
 
 one.way <- oneway(df_data$experience, y =df_data$years_programming , posthoc = 'games-howell')
 one.way
+#Power calculations
+pwr.anova.test(k = length(profession_names),
+               n = NULL,
+               f = one.way$output$etasq,
+               sig.level = 0.05,
+               power = 0.9)
 
 #Profession score
 df_data = df[,c("experience","qualification_score")]
