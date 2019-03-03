@@ -8,6 +8,9 @@ from util._file_loader import FileLoader
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns;
+import numpy as np
+from scipy.stats import chisquare, chi2_contingency
+
 
 class QuitRate(object):
     '''
@@ -58,17 +61,36 @@ class QuitRate(object):
     def compute_quit_rate_by_scores_by_experiments(self):
         '''
         compute quit rate by qualification score for E1 and E2
+        Also compute the chi-square test to evaluate if the Experiments and score levels are independent.
         '''
         print("E2")
-        self.compute_quit_rate_by_score(df=self.df_2,tasks_in_session=3,score_list=[3,4,5])
-        #print("E1")
-        #self.compute_quit_rate_by_score(df=self.df_1,tasks_in_session=10,score_list=[2,3,4])
+        df_results_2 = self.compute_quit_rate_by_score(df=self.df_2,tasks_in_session=3,score_list=[3,4,5])
+        print("E1")
+        df_results_1 = self.compute_quit_rate_by_score(df=self.df_1,tasks_in_session=10,score_list=[2,3,4])
+        
+        #Run Chi-square test to check if these frequencies of gender across profession are distinct.
+        obs = np.array([  df_results_1[[0]] , df_results_2[[0]] ])
+        print(obs)
+        #obs = np.array([female_list]).T
+        results = chisquare(obs)
+        chi2_stat, p_val, dof, ex = chi2_contingency(obs, correction=False)
+
+        print("Chi2 Stat: "+str(chi2_stat))
+        print(" degrees of freedom: "+str(dof))
+        print(" p-value: "+str(p_val))
+        print(" contingency table: "+str(ex))
+        
     
     def compute_quit_rate_by_score(self, df, tasks_in_session, score_list):  
         '''
         Tasks in session is the number of tasks in a session (i.e., an assignment). 
-        tasks_in_session is 3 for E2 and 10 for E1. 
+        tasks_in_session is 3 for E2 and 10 for E1.
+        Returns the list of incomplete sessions and average incomplete tasks for each score level
         '''
+        
+        incomplete_session_list = []
+        avg_incomplete_task_list = []
+        
         print("Quit rate by [score]=[incomplete sessions],[total sessions],[average incomplete tasks]")
         for score in score_list:
             df_aux = df[df['qualification_score']==score]
@@ -88,6 +110,16 @@ class QuitRate(object):
             
             print("  "+ str(score)+ " = "+str(total_incomplete_sessions)+ 
                   ","+str(df_sessions.shape[0])+","+str(average_incomplete_tasks))
+            incomplete_session_list.append(total_incomplete_sessions)
+            avg_incomplete_task_list.append(average_incomplete_tasks)
+            
+        df_result = pd.DataFrame.from_items([('incomplete sessions', incomplete_session_list), 
+                                             ('average incomplete tasks', avg_incomplete_task_list)],
+                                            orient='index', 
+                                            columns=["low","medium","high"])
+        
+        print(df_result)
+        return(df_result)
         
     def print_professions_by_session_by_tasks(self):
             '''
@@ -248,8 +280,8 @@ class QuitRate(object):
         
                                 
 qrate = QuitRate()
-#qrate.compute_quit_rate_by_scores_by_experiments()
+qrate.compute_quit_rate_by_scores_by_experiments()
 #qrate.compute_quit_rate_professions()
 #qrate.print_professions_by_session_by_tasks()
 #qrate.compute_distribution_tasks_by_participant()
-qrate.quit_rate_by_loc()
+#qrate.quit_rate_by_loc()
