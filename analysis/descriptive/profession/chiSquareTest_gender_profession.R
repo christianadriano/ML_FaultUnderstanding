@@ -31,3 +31,19 @@ tbl
 chitest <- chisq.test(tbl)
 chitest
 #X-squared = 6.7268, df = 4, p-value = 0.151
+#Hence, we cannot ascertain that there is a gender imbalance in the professions surveyed, which
+#is a surprising result. Follows that proportions of males and females across the professions.
+
+
+#ANALYSIS WITHOUT "OTHER" profession 
+#Since the Other group is particularly small, we decided to evaluate if it is skewing the relationship 
+#between Gender and Profession.
+
+#
+mat <- matrix(c(44,28,18,27,16,125,83,45,89),nrow = 4)
+tbl <- as.table(mat)
+rownames(tbl) <- c("ProfessionalDeveloper","Hobbyist","GraduateStudent","UndergraduateStudent");
+colnames(tbl) <- c("females","males");
+tbl
+chitest <- chisq.test(tbl)
+chitest
