@@ -69,9 +69,10 @@ class QuitRate(object):
         df_results_1 = self.compute_quit_rate_by_score(df=self.df_1,tasks_in_session=10,score_list=[2,3,4])
         
         #Run Chi-square test to check if these frequencies of gender across profession are distinct.
-        obs = np.array([  df_results_1[[0]] , df_results_2[[0]] ])
+        list1 = df_results_1.iloc[1].tolist()
+        list2 = df_results_2.iloc[1].tolist()
+        obs = np.array([list1   , list2 ])
         print(obs)
-        #obs = np.array([female_list]).T
         results = chisquare(obs)
         chi2_stat, p_val, dof, ex = chi2_contingency(obs, correction=False)
 
@@ -88,6 +89,7 @@ class QuitRate(object):
         Returns the list of incomplete sessions and average incomplete tasks for each score level
         '''
         
+        complete_sessions_list = []
         incomplete_session_list = []
         avg_incomplete_task_list = []
         
@@ -110,12 +112,17 @@ class QuitRate(object):
             
             print("  "+ str(score)+ " = "+str(total_incomplete_sessions)+ 
                   ","+str(df_sessions.shape[0])+","+str(average_incomplete_tasks))
+            
+            complete_sessions_list.append(df_sessions.shape[0])
             incomplete_session_list.append(total_incomplete_sessions)
             avg_incomplete_task_list.append(average_incomplete_tasks)
             
-        df_result = pd.DataFrame.from_items([('incomplete sessions', incomplete_session_list), 
-                                             ('average incomplete tasks', avg_incomplete_task_list)],
-                                            orient='index', 
+        proportion_incomplete_sessions_list = [a/b for a,b in zip(incomplete_session_list,complete_sessions_list)]
+
+        df_result = pd.DataFrame.from_dict({'incomplete sessions': incomplete_session_list,
+                                            'proportion of incomplete sessions': proportion_incomplete_sessions_list, 
+                                            'average incomplete tasks': avg_incomplete_task_list},
+                                            orient = 'index',
                                             columns=["low","medium","high"])
         
         print(df_result)
