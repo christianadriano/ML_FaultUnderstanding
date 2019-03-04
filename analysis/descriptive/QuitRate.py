@@ -9,7 +9,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns;
 import numpy as np
-from scipy.stats import chisquare, chi2_contingency
+from scipy.stats import chi2_contingency
 
 
 class QuitRate(object):
@@ -36,10 +36,7 @@ class QuitRate(object):
         print("Quit rate by [profession]=[incomplete sessions],[total sessions],[average incomplete tasks]")
         for profession in profession_list:
             
-            flag_list = self.df_2['experience'].str.contains(profession)
-    
-            #if(profession in "Other"):
-            #    flag_list = list(~np.array(flag_list))
+            flag_list = self.df_2['experience'].str.contains(profession)   
             df = self.df_2[flag_list]
             df = df[['worker_id','session_id','microtask_id']]
             
@@ -133,6 +130,7 @@ class QuitRate(object):
             compute the distribution of professions by score level for incomplete sessions.
             group results by incomplete tasks as well. 
             '''
+        
             df = self.df_2
             score_list = [3, 4, 5]
             tasks_in_session = 3
