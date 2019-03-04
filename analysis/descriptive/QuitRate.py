@@ -138,6 +138,7 @@ class QuitRate(object):
         df_microtasks1 = self.df_1[['worker_id','microtask_id','qualification_score']].drop_duplicates(keep='last').dropna()
         df_unique1 = df_microtasks1.groupby(['worker_id']).agg(['count'])
         
+        #ADDED BACK THE WORKER ID
         df_unique1 = pd.DataFrame({'worker_id':df_unique1.index.tolist(),
                                    'microtask_count':df_unique1[('microtask_id','count')].tolist()},
                                  )
@@ -145,7 +146,7 @@ class QuitRate(object):
 
         df_worker_score = self.df_1[['worker_id','qualification_score']].drop_duplicates(keep='last').dropna()
         
-        
+        #INNER JOIN TO ADD BACK THE SCORES
         df_unique_final = pd.merge(df_unique1,df_worker_score,on=['worker_id'])
         
         correl = kendalltau(x=df_unique_final['microtask_count'].tolist(),
