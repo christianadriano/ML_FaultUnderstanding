@@ -9,7 +9,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns;
 import numpy as np
-from scipy.stats import chi2_contingency
+from scipy.stats import chi2_contingency,kendalltau
 
 
 class QuitRate(object):
@@ -124,49 +124,79 @@ class QuitRate(object):
         
         print(df_result)
         return(df_result)
+    
+   
+    
+    def evaluate_incomplete_tasks_by_score(self):
+        '''
+        Do participants with lower scores quit earlier, i.e., leave more tasks incomplete?
+        '''
         
+        tasks_in_session=10
+        
+        ##for score in score_list:
+        df_microtasks1 = self.df_1[['worker_id','microtask_id','qualification_score']].drop_duplicates(keep='last').dropna()
+        df_unique1 = df_microtasks1.groupby(['worker_id']).agg(['count'])
+        
+        df_unique1 = pd.DataFrame({'worker_id':df_unique1.index.tolist(),
+                                   'microtask_count':df_unique1[('microtask_id','count')].tolist()},
+                                 )
+        df_unique1 = df_unique1[df_unique1[('microtask_count')]<tasks_in_session]
+
+        df_worker_score = self.df_1[['worker_id','qualification_score']].drop_duplicates(keep='last').dropna()
+        
+        
+        df_unique_final = pd.merge(df_unique1,df_worker_score,on=['worker_id'])
+        
+        correl = kendalltau(x=df_unique_final['microtask_count'].tolist(),
+                   y=df_unique_final['qualification_score'].tolist())
+        
+        print(correl)
+    
+    
+    
     def print_professions_by_session_by_tasks(self):
-            '''
-            compute the distribution of professions by score level for incomplete sessions.
-            group results by incomplete tasks as well. 
-            '''
+        '''
+        compute the distribution of professions by score level for incomplete sessions.
+        group results by incomplete tasks as well. 
+        '''
+    
+        df = self.df_2
+        score_list = [3, 4, 5]
+        tasks_in_session = 3
         
-            df = self.df_2
-            score_list = [3, 4, 5]
-            tasks_in_session = 3
+        for score in score_list:
+            df_aux = df[df['qualification_score'] == score]
+    
+            df_aux = df_aux[['worker_id', 'experience', 'session_id', 'microtask_id']]
             
-            for score in score_list:
-                df_aux = df[df['qualification_score'] == score]
+            df_unique = df_aux.groupby(['worker_id', 'session_id','experience']).agg(['size', 'count', 'unique'])
+            incomplete_session_df = df_unique[df_unique[('microtask_id','count')]<tasks_in_session]
+            print("score: "+str(score))
         
-                df_aux = df_aux[['worker_id', 'experience', 'session_id', 'microtask_id']]
-                
-                df_sessions = df_aux[['worker_id', 'session_id']].drop_duplicates(keep='last').dropna()
-                df_unique = df_aux.groupby(['worker_id', 'session_id','experience']).agg(['size', 'count', 'unique'])
-                incomplete_session_df = df_unique[df_unique[('microtask_id','count')]<tasks_in_session]
-                print("score: "+str(score))
+            #count by profession within same score level
+            dd = pd.DataFrame({"index":incomplete_session_df.index.tolist(),"count":incomplete_session_df[('microtask_id', 'count')]})
+            profession_list = ["Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student","Other"]
             
-                #count by profession within same score level
-                dd = pd.DataFrame({"index":incomplete_session_df.index.tolist(),"count":incomplete_session_df[('microtask_id', 'count')]})
-                profession_list = ["Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student","Other"]
-                
-                print("[profession]:[average incomplete tasks]:[total incomplete sessions]")
-                for profession in profession_list:
-                    flag_profession_rows = dd['index'].apply(lambda row: profession in row[2])
-                    dd_prof = dd[flag_profession_rows]
-                    incomplete_sessions = dd_prof.shape[0]
-                    completed_tasks = dd_prof['count'].sum()
-                    average_incomplete_tasks = tasks_in_session - completed_tasks/incomplete_sessions
-                    print(profession+" : "+str(average_incomplete_tasks)+" : "+str(incomplete_sessions))
+            print("[profession]:[average incomplete tasks]:[total incomplete sessions]")
+            for profession in profession_list:
+                flag_profession_rows = dd['index'].apply(lambda row: profession in row[2])
+                dd_prof = dd[flag_profession_rows]
+                incomplete_sessions = dd_prof.shape[0]
+                completed_tasks = dd_prof['count'].sum()
+                average_incomplete_tasks = tasks_in_session - completed_tasks/incomplete_sessions
+                print(profession+" : "+str(average_incomplete_tasks)+" : "+str(incomplete_sessions))
+    
     
     def compute_distribution_tasks_by_participant(self):
         '''
         Compute how many tasks each participant took. This is important to evaluate if the results were not 
         dominated by a few participants.
         '''
-        df1 = self.df_1[['worker_id','session_id','microtask_id']]    
-        df_microtasks1 = df1[['worker_id','microtask_id']].drop_duplicates(keep='last').dropna()
-        df_unique1 = df_microtasks1.groupby(['worker_id']).agg(['size','count','unique'])
-        #print(df_unique1) 
+        df1 = self.df_1[['worker_id','session_id','microtask_id','qualification_score']]    
+        df_microtasks1 = df1[['worker_id','microtask_id','qualification_score']].drop_duplicates(keep='last').dropna()
+        df_unique1 = df_microtasks1.groupby(['worker_id','qualification_score']).agg(['size','count','unique'])
+        print(df_unique1) 
               
         sns.distplot(df_unique1[('microtask_id','count')], bins=20, kde=False, rug=False)
         
@@ -175,13 +205,13 @@ class QuitRate(object):
         df2 = self.df_2[['worker_id','session_id','microtask_id']]    
         df_microtasks2 = df2[['worker_id','microtask_id']].drop_duplicates(keep='last').dropna()
         df_unique2 = df_microtasks2.groupby(['worker_id']).agg(['size','count','unique'])
-        print(df_unique2) 
+        #print(df_unique2) 
 
         sns.distplot(df_unique2[('microtask_id','count')], bins=25, kde=False, rug=False)
         plt.ylabel("participants", fontsize=10)  
         plt.xlabel("tasks", fontsize=10)  
 
-        plt.show()
+        #plt.show()
         
         
     def quit_rate_by_loc(self):
@@ -285,8 +315,9 @@ class QuitRate(object):
         
                                 
 qrate = QuitRate()
-qrate.compute_quit_rate_by_scores_by_experiments()
+#qrate.compute_quit_rate_by_scores_by_experiments()
 #qrate.compute_quit_rate_professions()
 #qrate.print_professions_by_session_by_tasks()
 #qrate.compute_distribution_tasks_by_participant()
+qrate.evaluate_incomplete_tasks_by_score()
 #qrate.quit_rate_by_loc()
