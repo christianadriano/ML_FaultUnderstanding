@@ -69,13 +69,13 @@ class QuitRate(object):
         df_results_1 = self.compute_quit_rate_by_score(df=self.df_1,tasks_in_session=10,score_list=[2,3,4])
         
         #Run Chi-square test to check if these frequencies of gender across profession are distinct.
-        list1 = df_results_1.iloc[1].tolist()
-        list2 = df_results_2.iloc[1].tolist()
+        list1 = df_results_1.iloc[0].tolist()
+        list2 = df_results_2.iloc[0].tolist()
         obs = np.array([list1   , list2 ])
-        print(obs)
-        results = chisquare(obs)
         chi2_stat, p_val, dof, ex = chi2_contingency(obs, correction=False)
-
+        
+        print("Chi-square Test")
+        print("Null-hypothesis: quit rate at a qualification score level is independent of the experiment that the person participated")
         print("Chi2 Stat: "+str(chi2_stat))
         print(" degrees of freedom: "+str(dof))
         print(" p-value: "+str(p_val))
