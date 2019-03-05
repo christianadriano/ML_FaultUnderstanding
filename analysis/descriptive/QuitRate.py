@@ -132,6 +132,7 @@ class QuitRate(object):
         Do participants with lower scores quit earlier, i.e., leave more tasks incomplete?
         '''
         
+        #E1
         tasks_in_session=10
         
         ##for score in score_list:
@@ -152,9 +153,27 @@ class QuitRate(object):
         correl = kendalltau(x=df_unique_final['microtask_count'].tolist(),
                    y=df_unique_final['qualification_score'].tolist())
         
-        print(correl)
+        #print(correl)
+        #Statistically not significant
     
-    
+        ###################################3
+        #E2
+        df_microtasks2 = self.df_2[['worker_id','session_id','microtask_id']].drop_duplicates(keep='last').dropna()
+        df_unique2 = df_microtasks2.groupby(['worker_id','session_id'], as_index=False).microtask_id.count()
+        
+        #filter out sessions with less than 3 tasks
+        df_unique2 = df_unique2[df_unique2['microtask_id']<3]
+        
+        df_worker_score_incomplete_sessions = pd.merge(self.df_2[['worker_id','qualification_score']],df_unique2, how='inner', on=['worker_id'])
+        print(df_worker_score_incomplete_sessions.columns.values)
+        
+        correl = kendalltau(x=df_worker_score_incomplete_sessions['microtask_id'].tolist(),
+                   y=df_worker_score_incomplete_sessions['qualification_score'].tolist())
+        #print(correl)
+        
+        #Significant, but weak correlation
+        #KendalltauResult(correlation=0.12733137694918475, pvalue=9.935923642117259e-05)    
+        
     
     def print_professions_by_session_by_tasks(self):
         '''
