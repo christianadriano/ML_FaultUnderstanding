@@ -32,6 +32,9 @@ for(profession in profession_names){
 df_male_data = df_male[,c("experience","age")]
 df_male_data$experience <- as.factor(df_male_data$experience)
 
+one.way <- oneway(df_male_data$experience, y =df_male_data$age , posthoc = 'tukey')
+#little difference between Tukey and Games-Howell. Tukey assumes homoscedacity. 
+
 one.way <- oneway(df_male_data$experience, y =df_male_data$age , posthoc = 'games-howell')
 one.way
 #power calculations
@@ -43,6 +46,8 @@ pwr.anova.test(k = length(profession_names),
 
 df_female_data = df_female[,c("experience","age")]
 df_female_data$experience <- as.factor(df_female_data$experience)
+one.way <- oneway(df_female_data$experience, y =df_female_data$age , posthoc = 'tukey')
+#little difference between Tukey and Games-Howell. Tukey assumes homoscedacity. 
 
 one.way <- oneway(df_female_data$experience, y =df_female_data$age , posthoc = 'games-howell')
 one.way
@@ -56,7 +61,8 @@ pwr.anova.test(k = length(profession_names),
 #Regardless of gender
 df_data = df[,c("experience","age")]
 df_data$experience <- as.factor(df_data$experience)
-
+one.way <- oneway(df_data$experience, y =df_data$age , posthoc = 'tukey')
+#Tukey and Games-Howell provided the same results.
 one.way <- oneway(df_data$experience, y =df_data$age , posthoc = 'games-howell')
 one.way
 #Power calculations
@@ -69,6 +75,8 @@ pwr.anova.test(k = length(profession_names),
 #Profession and Years of Experience
 df_male_data = df_male[,c("experience","years_programming")]
 df_male_data$experience <- as.factor(df_male_data$experience)
+one.way <- oneway(df_male_data$experience, y =df_male_data$years_programming , posthoc = 'tukey')
+#Tukey and Games-Howell provided the same results.
 
 one.way <- oneway(df_male_data$experience, y =df_male_data$years_programming , posthoc = 'games-howell')
 one.way
@@ -81,6 +89,9 @@ pwr.anova.test(k = length(profession_names),
 
 df_female_data = df_female[,c("experience","years_programming")]
 df_female_data$experience <- as.factor(df_female_data$experience)
+one.way <- oneway(df_female_data$experience, y =df_female_data$years_programming , posthoc = 'tukey')
+#Tukey also gave larger p-value than Games-Howell
+#Female Undergraduate_Student-Hobbyist, Tukey = 0.059, while Games-Howell=0.003 (hence Type-2 error)
 
 one.way <- oneway(df_female_data$experience, y =df_female_data$years_programming , posthoc = 'games-howell')
 one.way
@@ -94,6 +105,8 @@ pwr.anova.test(k = length(profession_names),
 #Regardless of gender
 df_data = df[,c("experience","years_programming")]
 df_data$experience <- as.factor(df_data$experience)
+one.way <- oneway(df_data$experience, y =df_data$years_programming , posthoc = 'tukey')
+#Tukey and Games-Howell provided the same results.
 
 one.way <- oneway(df_data$experience, y =df_data$years_programming , posthoc = 'games-howell')
 one.way
@@ -107,6 +120,9 @@ pwr.anova.test(k = length(profession_names),
 #Profession score
 df_data = df[,c("experience","qualification_score")]
 df_data$experience <- as.factor(df_data$experience)
+one.way <- oneway(df_data$experience, y =df_data$qualification_score , posthoc = 'tukey')
+#Tukey and Games-Howell provided the same results.
+
 one.way <- oneway(df_data$experience, y =df_data$qualification_score , posthoc = 'games-howell')
 one.way
 #Power calculations
