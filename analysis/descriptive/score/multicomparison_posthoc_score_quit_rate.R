@@ -10,7 +10,7 @@ library(farff)
 library(ggplot2)
 library(pwr)
 library(dplyr)
-
+library(plyr)
 
 file_path <-  "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_1.arff"
 df1 <-  readARFF(file_path)
@@ -18,11 +18,41 @@ df1 <-  readARFF(file_path)
 file_path <-  "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_2.arff"
 df2 <-  readARFF(file_path)
 
-df1 <- select(df1,'worker_id','session_id','microtask_id')
+df1 <- select(df1,'worker_id','session_id','microtask_id','qualification_score')
 
-df1 %>% group_by(session_id) %>% summarise(microtask_id= length(unique(microtask_id)))
+#Other ways to grouping
+#df1 %>% group_by(session_id) %>% summarise(microtask_id= length(unique(microtask_id)))
+#df_group <- aggregate(df1$microtask_id, by=list(session=df1$session_id), FUN=length)
 
-df_group <- ddply(df1,~session_id,summarise,tasks=length(unique(microtask_id)))
+df_group <- ddply(df1,worker_id ~ session_id ~ qualification_score,summarise,tasks=length(unique(microtask_id)))
+
+df_group <- df_group[df_group$tasks<10,]
+df_group['incomplete'] <- 10 - df_group$tasks
+
+kendall_tau_1 <- cor.test(df_group$qualification_score,df_group$incomplete,method=c("kendall"))
+kendall_tau_1
+#NO Signficant correlation z = -0.16639, p-value = 0.8679, tau = -0.008577271
+
+#Now I treated both scores and incomplete as categories and I wanted to see if they are independent.
+#For that I do a chi-square test.
+
+#Now I want to see if the average number of incomplete tasks is distinct across score levels
+#For that I run an multicomparison test. I chose ANOVA with games-howell to correct for heteroscedacity.
+
+df_group["scores_factor"] = as.factor(df_group$qualification_score)
+df_group["incomplete_factor"] =  as.factor(df_group$incomplete)
+
+df_scores = select(df_group,qualification_score,incomplete)
+df_group_scores = ddply(df_scores,incomplete~qualification_score,summarise,frequency=length(incomplete))
+                        
+
+one.way <- oneway(df_group$scores_factor, y =df_group$incomplete , posthoc = 'tukey')
+one.way
+
+one.way <- oneway(df_group$scores_factor, y =df_group$incomplete , posthoc = 'games-howell')
+one.way
+
+
 
 #https://stats.stackexchange.com/questions/8225/how-to-summarize-data-by-group-in-r
 #https://stackoverflow.com/questions/1660124/how-to-sum-a-variable-by-group
