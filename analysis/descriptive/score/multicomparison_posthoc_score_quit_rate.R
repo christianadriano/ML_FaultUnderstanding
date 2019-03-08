@@ -4,6 +4,8 @@
 #
 # https://rpubs.com/aaronsc32/games-howell-test
 
+install.packages('reshape')
+library(reshape)
 library(ufs)
 library(userfriendlyscience)
 library(farff)
@@ -33,8 +35,23 @@ kendall_tau_1 <- cor.test(df_group$qualification_score,df_group$incomplete,metho
 kendall_tau_1
 #NO Signficant correlation z = -0.16639, p-value = 0.8679, tau = -0.008577271
 
+#-----------------------------------------------------------
 #Now I treated both scores and incomplete as categories and I wanted to see if they are independent.
-#For that I do a chi-square test.
+#For that I did a fisher exact test (two sided with simulated p-value based on 2000 replicates). 
+#I did not use the chi-square test because the contingency table had more than 20% of frequencies below 5.
+
+df_fequencies <-  ddply(df_group,incomplete~qualification_score,summarise,frequency=length(incomplete))
+
+mat <- as.matrix(cast(df_fequencies, incomplete ~ qualification_score))
+
+fisher.test(mat,simulate.p.value = TRUE)
+
+#The results of not statistically significant, p-value = 0.9585. This means that we could not
+#reject that null hypothesis that score and incomplete tasks are independent.
+
+#-----------------------------------------------------------
+#Now I test the null-hypthesis that different score levels have the same average number of
+#incomplete tasks
 
 #Now I want to see if the average number of incomplete tasks is distinct across score levels
 #For that I run an multicomparison test. I chose ANOVA with games-howell to correct for heteroscedacity.
