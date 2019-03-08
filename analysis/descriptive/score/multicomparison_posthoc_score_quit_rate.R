@@ -46,7 +46,7 @@ mat <- as.matrix(cast(df_fequencies, incomplete ~ qualification_score))
 
 fisher.test(mat,simulate.p.value = TRUE)
 
-#The results of not statistically significant, p-value = 0.9585. This means that we could not
+#The results of not statistically significant, p-value = 0.9595. This means that we could not
 #reject that null hypothesis that score and incomplete tasks are independent.
 
 #-----------------------------------------------------------
@@ -61,7 +61,13 @@ df_group["incomplete_factor"] =  as.factor(df_group$incomplete)
 
 df_scores = select(df_group,qualification_score,incomplete)
 df_group_scores = ddply(df_scores,incomplete~qualification_score,summarise,frequency=length(incomplete))
-                        
+
+df_pivot <- cast(df_group_scores, incomplete ~ qualification_score)                        
+df_pivot["p_4"] <- df_pivot$'4'/sum(df_pivot$'4')
+df_pivot["p_3"] <- df_pivot$'3'/sum(df_pivot$'3')
+df_pivot["p_2"] <- df_pivot$'2'/sum(df_pivot$'2')
+df_pivot["p_0"] <- 1/9
+
 
 one.way <- oneway(df_group$scores_factor, y =df_group$incomplete , posthoc = 'tukey')
 one.way
