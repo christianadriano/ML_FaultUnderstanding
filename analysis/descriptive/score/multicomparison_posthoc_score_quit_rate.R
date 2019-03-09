@@ -68,6 +68,10 @@ df_pivot["p_3"] <- df_pivot$'3'/sum(df_pivot$'3')
 df_pivot["p_2"] <- df_pivot$'2'/sum(df_pivot$'2')
 df_pivot["p_0"] <- 1/9
 
+#75% or more
+p_4_7 = sum(df_pivot$p_4[7:9])
+p_3_7 = sum(df_pivot$p_3[7:9])
+p_2_7 = sum(df_pivot$p_2[7:9])
 
 one.way <- oneway(df_group$scores_factor, y =df_group$incomplete , posthoc = 'tukey')
 one.way
