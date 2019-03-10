@@ -1,8 +1,6 @@
 #Are participant score and number of incompleted tasks independent?
-# ANOVA Games-Howell Post-Hoc Test for E1 
-# Wilcoxon with Bonferroni for E2 because of low frequencies (<5)
-#
-# https://rpubs.com/aaronsc32/games-howell-test
+#Did participants with lower score quit earlier?
+#Did participants quit mostly at the begining or at the end of the experiment
 
 install.packages('reshape')
 library(reshape)
@@ -47,14 +45,8 @@ fisher.test(mat,simulate.p.value = TRUE)
 #reject that null hypothesis that score and incomplete tasks are independent.
 
 #-----------------------------------------------------------
-#Now I test the null-hypthesis that different score levels have the same average number of
-#incomplete tasks
-
-#Now I want to see if the average number of incomplete tasks is distinct across score levels
-#For that I run an multicomparison test. I chose ANOVA with games-howell to correct for heteroscedacity.
-
-df_group["scores_factor"] = as.factor(df_group$qualification_score)
-df_group["incomplete_factor"] =  as.factor(df_group$incomplete)
+#Now I look at the distributions of incomplete tasks by qualification score.
+#I want to know if participants quit mostly at the begining or at the end of the experiment
 
 df_scores = select(df_group,qualification_score,incomplete)
 df_group_scores = ddply(df_scores,incomplete~qualification_score,summarise,frequency=length(incomplete))
@@ -73,6 +65,9 @@ p_2_7 = sum(df_pivot$p_2[7:9])
 #Participants with scores 2, 3, and 4 corresponded respectively to 50%, 51%, and 43% who left 9 tasks incomplete 
 #(i.e., quit after the first tasks) and 74%, 81%, and 76% left 7 or more tasks incomplete.
 
+
+
+#----------------------------------------------------------
 #----------------------------------------------------------
 #Compute Fisher-test for E2
 
@@ -110,11 +105,8 @@ fisher.test(mat,simulate.p.value = TRUE)
 #reject that null hypothesis that score and incomplete tasks are independent.
 
 #-----------------------------------------------------------
-#Now I test the null-hypthesis that different score levels have the same average number of
-#incomplete tasks
-
-#Now I want to see if the average number of incomplete tasks is distinct across score levels
-#For that I run an multicomparison test. I chose ANOVA with games-howell to correct for heteroscedacity.
+#Now I look at the distributions of incomplete tasks by qualification score.
+#I want to know if participants quit mostly at the begining or at the end of the experiment
 
 df_group <- ddply(df2,worker_id ~ session_id ~ qualification_score,summarise,tasks=length(unique(microtask_id)))
 
