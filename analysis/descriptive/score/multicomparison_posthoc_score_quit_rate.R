@@ -17,9 +17,6 @@ library(plyr)
 file_path <-  "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_1.arff"
 df1 <-  readARFF(file_path)
 
-file_path <-  "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_2.arff"
-df2 <-  readARFF(file_path)
-
 df1 <- select(df1,'worker_id','session_id','microtask_id','qualification_score')
 
 #Other ways to grouping
@@ -73,13 +70,25 @@ p_4_7 = sum(df_pivot$p_4[7:9])
 p_3_7 = sum(df_pivot$p_3[7:9])
 p_2_7 = sum(df_pivot$p_2[7:9])
 
-one.way <- oneway(df_group$scores_factor, y =df_group$incomplete , posthoc = 'tukey')
-one.way
+#Compute Fisher-test for E2
 
-one.way <- oneway(df_group$scores_factor, y =df_group$incomplete , posthoc = 'games-howell')
-one.way
+file_path <-  "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_2.arff"
+df2 <-  readARFF(file_path)
 
+df2 <- select(df2,'worker_id','session_id','microtask_id','qualification_score')
 
+#Other ways to grouping
+#df1 %>% group_by(session_id) %>% summarise(microtask_id= length(unique(microtask_id)))
+#df_group <- aggregate(df1$microtask_id, by=list(session=df1$session_id), FUN=length)
+
+df_group <- ddply(df2,worker_id ~ session_id ~ qualification_score,summarise,tasks=length(unique(microtask_id)))
+
+#df_group <- df_group[df_group$tasks<3,]
+df_group['incomplete'] <- 3 - df_group$tasks
+
+kendall_tau_1 <- cor.test(df_group$qualification_score,df_group$incomplete,method=c("kendall"))
+kendall_tau_1
+#NOT Statistically significant z = 0.99174, p-value = 0.3213, kendall-tau =0.0302179
 
 #https://stats.stackexchange.com/questions/8225/how-to-summarize-data-by-group-in-r
 #https://stackoverflow.com/questions/1660124/how-to-sum-a-variable-by-group
