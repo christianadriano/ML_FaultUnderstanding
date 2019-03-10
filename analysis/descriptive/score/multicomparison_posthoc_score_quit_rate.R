@@ -70,6 +70,7 @@ p_4_7 = sum(df_pivot$p_4[7:9])
 p_3_7 = sum(df_pivot$p_3[7:9])
 p_2_7 = sum(df_pivot$p_2[7:9])
 
+#----------------------------------------------------------
 #Compute Fisher-test for E2
 
 file_path <-  "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_2.arff"
@@ -89,6 +90,22 @@ df_group['incomplete'] <- 3 - df_group$tasks
 kendall_tau_1 <- cor.test(df_group$qualification_score,df_group$incomplete,method=c("kendall"))
 kendall_tau_1
 #NOT Statistically significant z = 0.99174, p-value = 0.3213, kendall-tau =0.0302179
+
+
+#-----------------------------------------------------------
+#Now I treated both scores and incomplete as categories and I wanted to see if they are independent.
+#For that I did a fisher exact test (two sided with simulated p-value based on 2000 replicates). 
+#I did not use the chi-square test because the contingency table had more than 20% of frequencies below 5.
+
+df_fequencies <-  ddply(df_group,incomplete~qualification_score,summarise,frequency=length(incomplete))
+
+mat <- as.matrix(cast(df_fequencies, incomplete ~ qualification_score))
+
+fisher.test(mat,simulate.p.value = TRUE)
+
+#The results of not statistically significant, p-value = 0.1959 This means that we could not
+#reject that null hypothesis that score and incomplete tasks are independent.
+
 
 #https://stats.stackexchange.com/questions/8225/how-to-summarize-data-by-group-in-r
 #https://stackoverflow.com/questions/1660124/how-to-sum-a-variable-by-group
