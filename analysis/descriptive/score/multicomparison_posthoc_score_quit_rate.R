@@ -70,6 +70,9 @@ p_4_7 = sum(df_pivot$p_4[7:9])
 p_3_7 = sum(df_pivot$p_3[7:9])
 p_2_7 = sum(df_pivot$p_2[7:9])
 
+#Participants with scores 2, 3, and 4 corresponded respectively to 50%, 51%, and 43% who left 9 tasks incomplete 
+#(i.e., quit after the first tasks) and 74%, 81%, and 76% left 7 or more tasks incomplete.
+
 #----------------------------------------------------------
 #Compute Fisher-test for E2
 
@@ -106,6 +109,29 @@ fisher.test(mat,simulate.p.value = TRUE)
 #The results of not statistically significant, p-value = 0.1959 This means that we could not
 #reject that null hypothesis that score and incomplete tasks are independent.
 
+#-----------------------------------------------------------
+#Now I test the null-hypthesis that different score levels have the same average number of
+#incomplete tasks
+
+#Now I want to see if the average number of incomplete tasks is distinct across score levels
+#For that I run an multicomparison test. I chose ANOVA with games-howell to correct for heteroscedacity.
+
+df_group <- ddply(df2,worker_id ~ session_id ~ qualification_score,summarise,tasks=length(unique(microtask_id)))
+
+df_group <- df_group[df_group$tasks<3,]
+df_group['incomplete'] <- 3 - df_group$tasks
+
+df_scores = select(df_group,qualification_score,incomplete)
+df_group_scores = ddply(df_scores,incomplete~qualification_score,summarise,frequency=length(incomplete))
+
+df_pivot <- cast(df_group_scores, incomplete ~ qualification_score)                        
+df_pivot["p_5"] <- df_pivot$'5'/sum(df_pivot$'5')
+df_pivot["p_4"] <- df_pivot$'4'/sum(df_pivot$'4')
+df_pivot["p_3"] <- df_pivot$'3'/sum(df_pivot$'3')
+df_pivot["p_0"] <- 1/3
+
+#Participants with scores 3, 4, and 5 corresponded respectively to 33%, 34%, and 19% who left 2 tasks incomplete
+#(i.e., quit after the first tasks) and 67%, 67%, and 81% who left one task incomplete.
 
 #https://stats.stackexchange.com/questions/8225/how-to-summarize-data-by-group-in-r
 #https://stackoverflow.com/questions/1660124/how-to-sum-a-variable-by-group
