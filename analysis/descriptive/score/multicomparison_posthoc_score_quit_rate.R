@@ -44,7 +44,7 @@ fisher.test(mat,simulate.p.value = TRUE)
 #The results of not statistically significant, p-value = 0.9595. This means that we could not
 #reject that null hypothesis that score and incomplete tasks are independent.
 
-#-----------------------------------------------------------
+-----------------------------------------------------------
 #Now I look at the distributions of incomplete tasks by qualification score.
 #I want to know if participants quit mostly at the begining or at the end of the experiment
 
@@ -71,21 +71,34 @@ p_2_7 = sum(df_pivot$p_2[7:9])
 #----------------------------------------------------------
 #Compute Fisher-test for E2
 
-file_path <-  "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_2.arff"
+file_path <-
+  "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_2.arff"
 df2 <-  readARFF(file_path)
 
-df2 <- select(df2,'worker_id','session_id','microtask_id','qualification_score')
+df2 <-
+  select(df2,
+         'worker_id',
+         'session_id',
+         'microtask_id',
+         'qualification_score')
 
 #Other ways to grouping
 #df1 %>% group_by(session_id) %>% summarise(microtask_id= length(unique(microtask_id)))
 #df_group <- aggregate(df1$microtask_id, by=list(session=df1$session_id), FUN=length)
 
-df_group <- ddply(df2,worker_id ~ session_id ~ qualification_score,summarise,tasks=length(unique(microtask_id)))
+df_group <-
+  ddply(df2,
+        worker_id ~ session_id ~ qualification_score,
+        summarise,
+        tasks = length(unique(microtask_id)))
 
 #df_group <- df_group[df_group$tasks<3,]
 df_group['incomplete'] <- 3 - df_group$tasks
 
-kendall_tau_1 <- cor.test(df_group$qualification_score,df_group$incomplete,method=c("kendall"))
+kendall_tau_1 <-
+  cor.test(df_group$qualification_score,
+           df_group$incomplete,
+           method = c("kendall"))
 kendall_tau_1
 #NOT Statistically significant z = 0.99174, p-value = 0.3213, kendall-tau =0.0302179
 
@@ -128,4 +141,43 @@ df_pivot["p_0"] <- 1/3
 #https://stats.stackexchange.com/questions/8225/how-to-summarize-data-by-group-in-r
 #https://stackoverflow.com/questions/1660124/how-to-sum-a-variable-by-group
 #https://www.nature.com/articles/s41467-019-08806-w
+
+#---------------------------------------------------------
+#E2
+#Did certain professions quit the experiment earlier?
+
+file_path <-
+  "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_2.arff"
+df2 <-  readARFF(file_path)
+
+df2 <-
+  select(df2,
+         'worker_id',
+         'session_id',
+         'microtask_id',
+         'experience')
+
+df2[grep("Other",df2$experience),"experience"] <-"Other"
+df2 <- df2[df2$experience!="Other",]
+
+#counts the number of microtasks executed by each worker_id and session_id
+df_group <-
+  ddply(df2,
+        worker_id ~ session_id ~ experience,
+        summarise,
+        tasks = length(unique(microtask_id)))
+
+#df_group <- df_group[df_group$tasks<3,]
+df_group['incomplete'] <- 3 - df_group$tasks
+
+df_experiences = select(df_group,experience,incomplete)
+df_pivot = dcast(df_experiences,experience~incomplete,length)
+
+#Other ways of doing
+#df_group_scores = ddply(df_scores,incomplete~experience,summarise,frequency=length(incomplete))
+#df_pivot <- cast(df_group_scores, incomplete ~ experience)                        
+
+df_pivot["p_0"] <- df_pivot$'5'/sum(df_pivot$'5')
+df_pivot["p_1"] <- df_pivot$'4'/sum(df_pivot$'4')
+df_pivot["p_2"] <- df_pivot$'3'/sum(df_pivot$'3')
 
