@@ -180,8 +180,20 @@ df_pivot = dcast(df_experiences,incomplete~experience,length)
 mat <- as.matrix(df_pivot)
 fisher.test(mat,simulate.p.value = TRUE)
 
+#p-value = 0.0004998
+
+#-------------------------------------------------------------------
+#Distribution of incomplete tasks
 df_p_pivot <- tibble("incomplete" = c(0:2))
 df_p_pivot["p_Grad"] <- df_pivot$Graduate_Student/sum(df_pivot$Graduate_Student)
 df_p_pivot["p_Hobb"] <- df_pivot$Hobbyist/sum(df_pivot$Hobbyist)
 df_p_pivot["p_Prof"] <- df_pivot$Professional_Developer/sum(df_pivot$Professional_Developer)
 df_p_pivot["p_Under"] <- df_pivot$Undergraduate_Student/sum(df_pivot$Undergraduate_Student)
+# A tibble: 3 x 5
+#       incomplete p_Grad p_Hobb p_Prof p_Under
+#           <int>  <dbl>  <dbl>  <dbl>   <dbl>
+# 1          0    0.692   0.844  0.861   0.795 
+# 2          1    0.206   0.118  0.118   0.128 
+# 3          2    0.103   0.0377 0.0202  0.0769
+
+
