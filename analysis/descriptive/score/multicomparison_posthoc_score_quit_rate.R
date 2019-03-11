@@ -171,13 +171,17 @@ df_group <-
 df_group['incomplete'] <- 3 - df_group$tasks
 
 df_experiences = select(df_group,experience,incomplete)
-df_pivot = dcast(df_experiences,experience~incomplete,length)
+df_pivot = dcast(df_experiences,incomplete~experience,length)
 
 #Other ways of doing
 #df_group_scores = ddply(df_scores,incomplete~experience,summarise,frequency=length(incomplete))
 #df_pivot <- cast(df_group_scores, incomplete ~ experience)                        
 
-df_pivot["p_0"] <- df_pivot$'5'/sum(df_pivot$'5')
-df_pivot["p_1"] <- df_pivot$'4'/sum(df_pivot$'4')
-df_pivot["p_2"] <- df_pivot$'3'/sum(df_pivot$'3')
+mat <- as.matrix(df_pivot)
+fisher.test(mat,simulate.p.value = TRUE)
 
+df_p_pivot <- tibble("incomplete" = c(0:2))
+df_p_pivot["p_Grad"] <- df_pivot$Graduate_Student/sum(df_pivot$Graduate_Student)
+df_p_pivot["p_Hobb"] <- df_pivot$Hobbyist/sum(df_pivot$Hobbyist)
+df_p_pivot["p_Prof"] <- df_pivot$Professional_Developer/sum(df_pivot$Professional_Developer)
+df_p_pivot["p_Under"] <- df_pivot$Undergraduate_Student/sum(df_pivot$Undergraduate_Student)
