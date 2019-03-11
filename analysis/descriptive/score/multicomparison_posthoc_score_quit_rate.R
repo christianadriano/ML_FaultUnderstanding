@@ -192,8 +192,29 @@ df_p_pivot["p_Under"] <- df_pivot$Undergraduate_Student/sum(df_pivot$Undergradua
 # A tibble: 3 x 5
 #       incomplete p_Grad p_Hobb p_Prof p_Under
 #           <int>  <dbl>  <dbl>  <dbl>   <dbl>
-# 1          0    0.692   0.844  0.861   0.795 
-# 2          1    0.206   0.118  0.118   0.128 
-# 3          2    0.103   0.0377 0.0202  0.0769
+#            0    0.692   0.844  0.861   0.795 
+#            1    0.206   0.118  0.118   0.128 
+#            2    0.103   0.0377 0.0202  0.0769
 
-
+#------------------------------------------------------------------
+#Run ANOVA with Games-Howell correction
+df_temp <- select(df_pivot,Professional_Developer,Hobbyist,Graduate_Student,Undergraduate_Student)
+df_molten <- melt(df_temp)
+one.way <- oneway(df_molten$variable, y =df_molten$value , posthoc = 'games-howell')
+one.way
+#No significant differences
+#                                     SS   Df     MS    F    p
+# Between groups (error + effect) 9744.67  3  3248.22 0.31 .815
+# Within groups (error only)        82842  8 10355.25          
+# 
+# 
+# ### Post hoc test: games-howell
+# 
+#                                               diff   ci.lo  ci.hi    t   df     p
+# Hobbyist-Professional_Developer              -44.67 -533.27 443.94 0.42 3.25  .972
+# Graduate_Student-Professional_Developer      -79.67 -673.40 514.06 0.85 2.18  .832
+# Undergraduate_Student-Professional_Developer -50.33 -554.79 454.12 0.49 2.91  .956
+# Graduate_Student-Hobbyist                    -35.00 -355.80 285.80 0.61 2.50  .923
+# Undergraduate_Student-Hobbyist                -5.67 -298.25 286.92 0.08 3.87 1.000
+# Undergraduate_Student-Graduate_Student        29.33 -225.51 284.18 0.60 2.72  .926
+> 
