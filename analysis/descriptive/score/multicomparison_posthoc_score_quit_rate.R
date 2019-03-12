@@ -3,7 +3,7 @@
 #Did participants quit mostly at the begining or at the end of the experiment
 
 install.packages('reshape')
-library(reshape)
+library(reshape2)
 library(ufs)
 library(userfriendlyscience)
 library(farff)
@@ -69,7 +69,7 @@ p_2_7 = sum(df_pivot$p_2[7:9])
 
 #----------------------------------------------------------
 #----------------------------------------------------------
-#Compute Fisher-test for E2
+#Compute Kendall-tau correlation for E2
 
 file_path <-
   "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_2.arff"
@@ -92,16 +92,16 @@ df_group <-
         summarise,
         tasks = length(unique(microtask_id)))
 
-#df_group <- df_group[df_group$tasks<3,]
+df_group <- df_group[df_group$tasks<3,]
 df_group['incomplete'] <- 3 - df_group$tasks
 
-kendall_tau_1 <-
+kendall_tau <-
   cor.test(df_group$qualification_score,
            df_group$incomplete,
            method = c("kendall"))
-kendall_tau_1
-#NOT Statistically significant z = 0.99174, p-value = 0.3213, kendall-tau =0.0302179
-
+kendall_tau
+#Statistically significant z = 0.99174, p-value = 0.04806, kendall-tau =-0.149538 
+#However, the correlation of 0.15 is too weak 
 
 #-----------------------------------------------------------
 #Now I treated both scores and incomplete as categories and I wanted to see if they are independent.
@@ -114,8 +114,8 @@ mat <- as.matrix(cast(df_fequencies, incomplete ~ qualification_score))
 
 fisher.test(mat,simulate.p.value = TRUE)
 
-#The results of not statistically significant, p-value = 0.1959 This means that we could not
-#reject that null hypothesis that score and incomplete tasks are independent.
+#The results of not statistically significant, p-value = 0.07646 
+#This means that we could not reject the null hypothesis that score and incomplete tasks are independent.
 
 #-----------------------------------------------------------
 #Now I look at the distributions of incomplete tasks by qualification score.
@@ -143,7 +143,8 @@ df_pivot["p_0"] <- 1/3
 #https://www.nature.com/articles/s41467-019-08806-w
 
 #---------------------------------------------------------
-#E2
+#E2 PROFESSIONS
+
 #Did certain professions quit the experiment earlier?
 
 file_path <-
@@ -173,18 +174,23 @@ df_group['incomplete'] <- 3 - df_group$tasks
 df_experiences = select(df_group,experience,incomplete)
 df_pivot = dcast(df_experiences,incomplete~experience,length)
 
+#print pivot tables with totals
+dcast(df_experiences,incomplete~experience,length, margins=TRUE)
+
 #Other ways of doing
 #df_group_scores = ddply(df_scores,incomplete~experience,summarise,frequency=length(incomplete))
 #df_pivot <- cast(df_group_scores, incomplete ~ experience)                        
 
+to_drop <- c("incomplete")
+df_pivot <- df_pivot[,!names(df_pivot) %IN% to_drop]
 mat <- as.matrix(df_pivot)
-fisher.test(mat,simulate.p.value = TRUE)
 
-#p-value = 0.0004998
+fisher.test(mat,simulate.p.value = TRUE)
+#p-value = 0.08096
 
 #-------------------------------------------------------------------
 #Distribution of incomplete tasks
-df_p_pivot <- tibble("incomplete" = c(0:2))
+df_p_pivot <- tibble("incomplete" = c(1:2))
 df_p_pivot["p_Grad"] <- df_pivot$Graduate_Student/sum(df_pivot$Graduate_Student)
 df_p_pivot["p_Hobb"] <- df_pivot$Hobbyist/sum(df_pivot$Hobbyist)
 df_p_pivot["p_Prof"] <- df_pivot$Professional_Developer/sum(df_pivot$Professional_Developer)
@@ -197,24 +203,27 @@ df_p_pivot["p_Under"] <- df_pivot$Undergraduate_Student/sum(df_pivot$Undergradua
 #            2    0.103   0.0377 0.0202  0.0769
 
 #------------------------------------------------------------------
-#Run ANOVA with Games-Howell correction
+#Run ANOVA with Games-Howell correction, just to confirm any two categories are distinct
 df_temp <- select(df_pivot,Professional_Developer,Hobbyist,Graduate_Student,Undergraduate_Student)
 df_molten <- melt(df_temp)
 one.way <- oneway(df_molten$variable, y =df_molten$value , posthoc = 'games-howell')
 one.way
 #No significant differences
-#                                     SS   Df     MS    F    p
-# Between groups (error + effect) 9744.67  3  3248.22 0.31 .815
-# Within groups (error only)        82842  8 10355.25          
+# Omega squared: 95% CI = [NA; .19], point estimate = -.49
+# Eta Squared: 95% CI = [0; .04], point estimate = .08
+# 
+# SS Df     MS    F    p
+# Between groups (error + effect) 76.5  3   25.5 0.12 .942
+# Within groups (error only)       833  4 208.25          
 # 
 # 
 # ### Post hoc test: games-howell
 # 
-#                                               diff   ci.lo  ci.hi    t   df     p
-# Hobbyist-Professional_Developer              -44.67 -533.27 443.94 0.42 3.25  .972
-# Graduate_Student-Professional_Developer      -79.67 -673.40 514.06 0.85 2.18  .832
-# Undergraduate_Student-Professional_Developer -50.33 -554.79 454.12 0.49 2.91  .956
-# Graduate_Student-Hobbyist                    -35.00 -355.80 285.80 0.61 2.50  .923
-# Undergraduate_Student-Hobbyist                -5.67 -298.25 286.92 0.08 3.87 1.000
-# Undergraduate_Student-Graduate_Student        29.33 -225.51 284.18 0.60 2.72  .926
+#                                                 diff ci.lo  ci.hi t   df    p
+#   Hobbyist-Professional_Developer              -7.5   NaN   NaN 0.39 1.47 <NA>
+#   Graduate_Student-Professional_Developer      -7.5   NaN   NaN 0.42 1.21 <NA>
+#   Undergraduate_Student-Professional_Developer -4.0   NaN   NaN 0.23 1.17 <NA>
+#   Graduate_Student-Hobbyist                     0.0   NaN   NaN 0.00 1.71    1
+#   Undergraduate_Student-Hobbyist                3.5   NaN   NaN 0.35 1.62 <NA>
+#   Undergraduate_Student-Graduate_Student        3.5   NaN   NaN 0.47 1.98 <NA>
 > 
