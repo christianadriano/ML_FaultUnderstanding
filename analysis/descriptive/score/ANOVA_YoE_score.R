@@ -1,4 +1,5 @@
-#Are YoE distinct across qualification score levels?
+#Are YoE distinct across qualification score levels? NO
+
 #This analysis is particular for E2 experiment
 
 library(ufs)
@@ -26,8 +27,6 @@ one.way <- oneway(as.factor(df2$qualification_score), y =df2$years_programming ,
 
 one.way <- oneway(as.factor(df2$qualification_score), y =df2$years_programming , posthoc = 'games-howell')
 one.way
-
-
 
 #Power calculations
 pwr.anova.test(k = 3,
@@ -63,3 +62,4 @@ pwr.anova.test(k = 3,
 # power = 0.9
 # 
 # NOTE: n is number in each group
+
