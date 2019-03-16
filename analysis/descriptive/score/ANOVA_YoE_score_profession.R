@@ -33,39 +33,37 @@ df2[grep("Other",df2$experience),"experience"] <-"Other"
 
 
 
-profession_names <-  c("Professional_Developer") #c("Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student","Other")
-profession <- "Professional_Developer"
+profession_names <-  c("Professional_Developer","Hobbyist","Graduate_Student","Undergraduate_Student","Other")
 #Run ANOVA for each profession
+one.way.matrix <- matrix(list(), nrow=5, ncol=2)
+rownames(one.way.matrix) <- profession_names
+colnames(one.way.matrix) <- c("anova","power")
+
+
+print(" ANOVA results, statistically significant?")
 for(profession in profession_names){
-  print(str_c("ANOVA ",profession))
   df_prof <- df2[str_detect(df2$experience, profession), ] #could have used grep too.
   one.way <- oneway(as.factor(df_prof$qualification_score), y =df_prof$years_programming , posthoc = 'games-howell')
-  one.way
+  one.way.matrix[[profession,"anova"]] = one.way
   p.value = one.way$output$dat[1,5]
-  str_c("p_value =", p.value)
-  if(p.value<0.05){
-    print(" -- results not statistically significant",str(p.value))
+  if(p.value>0.05){
+    print(str_c(profession," NO, p_value = ", p.value))
   }
   else{
-    pwr.anova.test(k = 3,
+    power <- pwr.anova.test(k = 3,
                    n = NULL,
                    f = one.way$output$etasq,
                    sig.level = 0.05,
                    power = 0.9)
+    one.way.matrix[[profession,"power"]] = power
+    print(str_c(profession," YES, p_value = ", p.value," power.test.n=",power$n))
   }
 }
 
+#Results statistically significant for all professions but Professional_Developer.
+# [1] "Professional_Developer NO, p_value = 0.166908878668443"
+# [1] "Hobbyist YES, p_value = 0.018276325662517 power.test.n=23387.5795319749"
+# [1] "Graduate_Student YES, p_value = 0.000217026992290259 power.test.n=1183.84621266952"
+# [1] "Undergraduate_Student YES, p_value = 0.000453740235808 power.test.n=5089.24554557751"
+# [1] "Other YES, p_value = 3.57444563761555e-06 power.test.n=282.226118713718"
 
-
-#one.way <- oneway(as.factor(df2$qualification_score), y =df2$years_programming , posthoc = 'tukey')
-#Tukey and Games-Howell provided the same results.
-
-one.way <- oneway(as.factor(df2$qualification_score), y =df2$years_programming , posthoc = 'games-howell')
-one.way
-
-#Power calculations
-pwr.anova.test(k = 3,
-               n = NULL,
-               f = one.way$output$etasq,
-               sig.level = 0.05,
-               power = 0.9)
