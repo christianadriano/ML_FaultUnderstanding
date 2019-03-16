@@ -1,5 +1,7 @@
-#Are YoE distinct across qualification score levels for any of the professions?
-#Are YoE distinct across qualification score levels for any of the genders?
+#Are YoE distinct across qualification score levels for any of the professions? 
+#YES, except Professional_Developers
+#However, to detect the differences, the number of participants needed is in the
+#order of magnitude of the experiments only for the Other and Graduate Students
 
 #This analysis is particular for E2 experiment
 
@@ -67,3 +69,9 @@ for(profession in profession_names){
 # [1] "Undergraduate_Student YES, p_value = 0.000453740235808 power.test.n=5089.24554557751"
 # [1] "Other YES, p_value = 3.57444563761555e-06 power.test.n=282.226118713718"
 
+#We performed a power test to estimate how many participants would be necessary to detect these
+#effecs (differences in YoE across scores) in 90% of cases. For Others and Graduates the numbers of
+#participants were 282 and 1184 respectively, whereas Undergrads and Hobbyists would require respectively
+#23387 and 5089 participants. We consider that the effect is practically detectable in the first two 
+#groups of professions, because the number of participatns are in the order of magnitude of the
+#two large experiments.
