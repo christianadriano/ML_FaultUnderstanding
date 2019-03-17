@@ -14,7 +14,6 @@ library(ufs)
 library(userfriendlyscience)
 library(farff)
 library(pwr)
-library(stringr)
 library(tidyverse)
 
 file_path <-
