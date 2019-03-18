@@ -13,7 +13,7 @@ Therefore, before we compare E1 and E2, we first confirmed if
 we could only select the first task of each assignment in E2.
 ---------------------------------------------------
 "
-
+library (ggplot2)
 library(ufs)
 library(userfriendlyscience)
 library(farff)
@@ -38,9 +38,9 @@ df2 <-
 file_names_list <- unique(df2$file_name)
 
 #Run ANOVA for each profession
-one.way.matrix <- matrix(list(), nrow=8, ncol=2)
+one.way.matrix <- matrix(list(), nrow=8, ncol=3)
 rownames(one.way.matrix) <- file_names_list
-colnames(one.way.matrix) <- c("anova","power")
+colnames(one.way.matrix) <- c("anova","power","boxplot")
 
 print(" ANOVA results, statistically significant?")
 for(name in file_names_list){
@@ -61,7 +61,16 @@ for(name in file_names_list){
     print(str_c(name," YES, p_value = ", p.value," power.test.n=",power$n))
   }
   
+  df_file$answer_index <- as.factor(df_file$answer_index)
+  
+  bxplot <- ggplot(df_file, aes(x=answer_index,y=duration)) + 
+    geom_boxplot()  +
+    labs(title=str_c("Task duration distribution -", name),x="Task order", y = "Duration (ms)")+
+    theme_classic()
+
+  one.way.matrix[[name,"boxplot"]] <- bxplot
 }
+
 
 ----------------------------------------------------------
 # [1] "HIT01_8 YES, p_value = 1.13810014759374e-06 power.test.n=212.951609797782"
@@ -78,7 +87,8 @@ for(name in file_names_list){
 The One Way Anova with Games-Howell correction for post hoc tests showed that 
 duration of first task was on aveage longer than the durations of the second 
 and third tasks (p-value<0.05). This is true for all Java methods. The only 
-exception was tasks 1 and 3 for Java method HIT07_33 (p-value=0.17).
+exception was tasks 1 and 3 for Java method HIT07_33 (p-value=0.17)
 "
 
+#Boxplot?
 
