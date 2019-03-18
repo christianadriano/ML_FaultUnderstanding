@@ -14,6 +14,7 @@ we could only select the first task of each assignment in E2.
 ---------------------------------------------------
 "
 library (ggplot2)
+library (gridExtra)
 library(ufs)
 library(userfriendlyscience)
 library(farff)
@@ -62,14 +63,28 @@ for(name in file_names_list){
   }
   
   df_file$answer_index <- as.factor(df_file$answer_index)
+  df_file["duration_minutes"] <- df_file$duration / 60000
   
-  bxplot <- ggplot(df_file, aes(x=answer_index,y=duration)) + 
+  bxplot <- ggplot(df_file, aes(x=answer_index,y=duration_minutes)) + 
     geom_boxplot()  +
-    labs(title=str_c("Task duration distribution -", name),x="Task order", y = "Duration (ms)")+
+    stat_summary(fun.y=mean, geom="point", shape=4, size=2, color="black") +
+    labs(title=name,x="Task order", y = "Duration (min)")+
     theme_classic()
 
   one.way.matrix[[name,"boxplot"]] <- bxplot
 }
+
+#Show plots in a grid
+p1 <- one.way.matrix[[1,3]]
+p2 <- one.way.matrix[[2,3]]
+p3 <- one.way.matrix[[3,3]]
+p4 <- one.way.matrix[[4,3]]
+p5 <- one.way.matrix[[5,3]]
+p6 <- one.way.matrix[[6,3]]
+p7 <- one.way.matrix[[7,3]]
+p8 <- one.way.matrix[[8,3]]
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, ncol=4)
+
 
 
 ----------------------------------------------------------
