@@ -1,7 +1,5 @@
-"--------------------------------------------------
-Were tasks in E1 executed faster than tasks in E2?
-To answer this question I compare the average duration of tasks in E1 and E2.
-
+"-------------------------------------------------
+Were the first tasks slower than the later task in each assignment in E1 and E2?
 
 Since participants in E2 received three tasks about the same source code, 
 in the second and third task participants could reuse the knowledge they
@@ -105,5 +103,24 @@ and third tasks (p-value<0.05). This is true for all Java methods. The only
 exception was tasks 1 and 3 for Java method HIT07_33 (p-value=0.17)
 "
 
-#Boxplot?
+"---------------------------------------------------------------------"
 
+"2. Null-Hypothesis: Do the first, second, third, ... tenth tasks in E1 
+assignments have different average duration?
+"
+
+file_path <-  "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_1.arff"
+df1 <-  readARFF(file_path)
+
+df1 <-
+  select(df1,
+         'file_name',
+         'answer_index',
+         'duration')
+
+file_names_list <- unique(df1$file_name)
+
+#Run ANOVA for each profession
+one.way.matrix <- matrix(list(), nrow=10, ncol=3)
+rownames(one.way.matrix) <- file_names_list
+colnames(one.way.matrix) <- c("anova","power","boxplot")
