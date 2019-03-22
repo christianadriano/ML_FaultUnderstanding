@@ -11,10 +11,8 @@ because the second and third tasks in each assignment in E2 concern the same sou
 Therefore, participants did not have to spent time understanding the source or at least
 can reuse the knowledge they acquired from executing the first task.
 
-"
+" 
 
-library (ggplot2)
-library (gridExtra)
 library(ufs)
 library(userfriendlyscience)
 library(farff)
@@ -67,3 +65,58 @@ mean(df2$duration)
 # [1] 201078.1
 # > mean(df2$duration)
 # [1] 396429.1
+
+" ----------------------------------------------------------------"
+
+"Are tasks in E1 also faster than in E2 across all qualification score levels?
+i.e., for programmers at the lower, medium, and upper range of the scales?
+"
+
+" Testing for programmers at lower range"
+
+#Ermoglichen
+#Entzunden
+#Erweiterung
+
+file_path <-
+  "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_2.arff"
+df2 <-  readARFF(file_path)
+
+df2 <-
+  select(df2,
+         'file_name',
+         'qualification_score',
+         'duration')
+
+df2 <- df2[df2$answer_index=='1']
+
+file_path <-  "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_1.arff"
+df1 <-  readARFF(file_path)
+
+df1 <-
+  select(df1,
+         'file_name',
+         'qualification_score',
+         'duration')
+
+score_levels_E1 <- c("2","3","4")
+score_levels_E2 <- c("3","4","5")
+
+results.matrix <- matrix(list(), nrow=3, ncol=2)
+rownames(results.matrix) <- file_names_list
+colnames(results.matrix) <- c("p.value","boxplot")
+
+for(i in c(1:3)){
+  df_group_1 = df1[df1$qualification_score=scores_levels_E1[i]]
+  df_group_2 = df1[df1$qualification_score=scores_levels_E2[i]]
+  wilcoxon_results <- wilcox.test(df1$duration,df2$duration)
+  results.matrix[[i,1]]= wilcoxon_results$p.value
+  
+  bxplot <- ggplot(df_group_1, aes(x=answer_index,y=duration_minutes)) + 
+    geom_boxplot()  +
+    stat_summary(fun.y=mean, geom="point", shape=4, size=2, color="black") +
+    labs(title=name,x="Task order", y = "Duration (min)")+
+    theme_classic()
+  
+  
+}
