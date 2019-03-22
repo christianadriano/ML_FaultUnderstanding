@@ -13,6 +13,7 @@ can reuse the knowledge they acquired from executing the first task.
 
 " 
 library(ggplot2)
+library (gridExtra)
 library(ufs)
 library(userfriendlyscience)
 library(farff)
@@ -122,15 +123,24 @@ for(i in c(1:3)){
 # medium score 1.737562e-13 368379.8   372172.9  
 # high score   1.390266e-08 268484.3   456611.7
 
-bxplot <- ggplot(df1, aes(x=as.factor(qualification_score),y=duration_minutes)) + 
+#Remove outlier duration in E1 and E2
+df1 <- df1[df1$duration_minutes<120,]
+df2 <- df2[df2$duration_minutes<120,]
+
+bxplot_1 <- ggplot(df1, aes(x=as.factor(qualification_score),y=duration_minutes)) + 
   geom_boxplot()  +
   stat_summary(fun.y=mean, geom="point", shape=4, size=2, color="black") +
-  labs(title=name,x="Task order", y = "Duration (min)")+
+  labs(title="Experiment-1",x="Qualification Score", y = "Duration (min)")+
   theme_classic()
 
-bxplot <- ggplot(df2, aes(x=as.factor(qualification_score),y=duration_minutes)) + 
+bxplot_2 <- ggplot(df2, aes(x=as.factor(qualification_score),y=duration_minutes)) + 
                      geom_boxplot()  +
                      stat_summary(fun.y=mean, geom="point", shape=4, size=2, color="black") +
-                     labs(title=name,x="Task order", y = "Duration (min)")+
+                     labs(title="Experiment-2",x="Qualification Score", y = "Duration (min)")+
                      theme_classic()
-                   
+
+grid.arrange(bxplot_1, bxplot_2, ncol=1)
+
+#We can see that speed to execute tasks does not seem to be distinct across
+#scores within the same experiment. Will do an ANOVA to check that.
+
