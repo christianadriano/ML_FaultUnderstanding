@@ -1,6 +1,8 @@
 #---------------------------------------------------------------------
 "
-Were some professions faster than others?
+Were some professions faster than others? 
+YES, power analysis tells that it would require 1270 participants
+to detect effect (differences in task duration)
 
 For this analysis I compared three groups of tasks, the first, second, and third
 of each assignment. Since I performed multiple comparisons,I 
@@ -50,6 +52,19 @@ if(p.value>0.05){
                           sig.level = 0.05,
                           power = 0.9)
 #  one.way.matrix[[profession,"power"]] = power
-  print(str_c(profession," YES, p_value = ", p.value," power.test.n=",power$n))
+  print(str_c(" YES, p_value = ", p.value," power.test.n=",power$n))
 }
 
+# ANOVA was significant, p_value = 3.2067647808294e-11
+
+#The following professions have distinct task durations (1st tasks in the assignment):
+# Hobbyist>Graduate_Student
+# Other>Graduate_Student
+# Professional_Developer<Hobbyist
+# Undergraduate_Student<Hobbyist
+# Professional_Developer<Other
+# Undergraduate_Student<Other
+
+# Power Analysis:
+# To detect these effects in 90% of the time, it would be necessary 
+#to have 1270 participants, which is in the order of magnitude of the study.
