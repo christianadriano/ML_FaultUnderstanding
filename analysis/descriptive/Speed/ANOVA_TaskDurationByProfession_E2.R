@@ -35,11 +35,6 @@ df2["duration_minutes"] <- df2$duration / 60000
 #FIRST TASK
 df2 <- df2[df2$answer_index=='1',]
 
-#Run ANOVA for each profession
-# one.way.matrix <- matrix(list(), nrow=5, ncol=2)
-# rownames(one.way.matrix) <- profession_names
-# colnames(one.way.matrix) <- c("anova","power")
-
 print(" ANOVA results, statistically significant?")
 one.way <- oneway(as.factor(df2$experience), y =df2$duration , posthoc = 'games-howell')
 one.way
@@ -59,6 +54,31 @@ if(p.value>0.05){
 
 # ANOVA was significant, p_value = 3.2067647808294e-11
 
+# Omega squared: 95% CI = [.03; .09], point estimate = .05
+# Eta Squared: 95% CI = [.03; .08], point estimate = .06
+# 
+#                                               SS  Df               MS     F     p
+# Between groups (error + effect) 73888552994799.5   4 18472138248699.9 14.16 <.001
+# Within groups (error only)      1208158363614651 926 1304706656171.33            
+# 
+# 
+# ### Post hoc test: games-howell
+# 
+#                                                     diff       ci.lo      ci.hi    t     df     p
+# Hobbyist-Graduate_Student                      405226.73    64871.18  745582.27 3.27 283.26  .011
+# Other-Graduate_Student                        1003619.24   156811.47 1850427.01 3.31  82.78  .012
+# Professional_Developer-Graduate_Student         93677.94  -182222.07  369577.96 0.94 177.02  .883
+# Undergraduate_Student-Graduate_Student         -36768.76  -306166.89  232629.38 0.38 159.62  .996
+# Other-Hobbyist                                 598392.51  -248724.84 1445509.87 1.97  83.15  .290
+# Professional_Developer-Hobbyist               -311548.78  -587251.19  -35846.37 3.10 341.17  .018
+# Undergraduate_Student-Hobbyist                -441995.48  -711116.46 -172874.51 4.51 306.92 <.001
+# Professional_Developer-Other                  -909941.30 -1734403.11  -85479.48 3.09  73.98  .023
+# Undergraduate_Student-Other                  -1040388.00 -1862763.33 -218012.67 3.54  73.15  .006
+# Undergraduate_Student-Professional_Developer  -130446.70  -309328.98   48435.58 2.00 523.38  .269
+
+# However, the only statistically significant differences are that 
+# Others and Hobbyists are slower than the students and professionals.
+
 #The following professions have distinct task durations (1st tasks in the assignment):
 # Hobbyist>Graduate_Student
 # Other>Graduate_Student
@@ -66,6 +86,9 @@ if(p.value>0.05){
 # Undergraduate_Student<Hobbyist
 # Professional_Developer<Other
 # Undergraduate_Student<Other
+
+#(Hobbyist/Other) > (Graduate_Student/Undergrad/Professional)
+
 
 # Power Analysis:
 # To detect these effects in 90% of the time, it would be necessary 
