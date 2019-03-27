@@ -1,5 +1,5 @@
 "
-Causality Discovery
+Testing for independence
 
 The code here runs the d-variable Hilbert Schmidt independence criterion (dHSIC).
 This method measures the dependency between variables. It is a non-parametric method,
@@ -34,4 +34,15 @@ dhsic.test(modelback$residuals,Y)$p.value
 #[1] 0.000999001, statistically significant, hence Y and X in modelback ARE INDEPENDENT
 
 
+"
+Comparing multiple causal relations. 
+We can use maximum likelihood to compute  
 
+"
+
+#Computing likelihood of models
+- log(var(X)) - log(var(modelforw$residuals))
+#[1] 0.1420063, which is much better than the one below
+
+ - log(var(modelback$residuals)) - log(var(Y))
+#[1] 66.23279
