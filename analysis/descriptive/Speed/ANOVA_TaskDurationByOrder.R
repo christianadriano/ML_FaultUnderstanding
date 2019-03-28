@@ -173,3 +173,17 @@ for(name in file_names_list){
 # [8] "7buggy_ReviewTaskMapper_buggy.txt NO, p_value = 0.96578325507836"
 # [9] "6ReviewScopeNode_buggy.java NO, p_value = 0.99936800484661"
 # [10] "2SelectTranslator_buggy.java NO, p_value = 0.974529450385213"
+
+
+#Show plots in a grid
+p1 <- one.way.matrix[[1,3]]
+p2 <- one.way.matrix[[2,3]]
+p3 <- one.way.matrix[[3,3]]
+p4 <- one.way.matrix[[4,3]]
+p5 <- one.way.matrix[[5,3]]
+p6 <- one.way.matrix[[6,3]]
+p7 <- one.way.matrix[[7,3]]
+p8 <- one.way.matrix[[8,3]]
+p9 <- one.way.matrix[[9,3]]
+p10 <- one.way.matrix[[10,3]]
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, ncol=5)
