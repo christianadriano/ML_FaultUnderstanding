@@ -124,6 +124,7 @@ df1 <-
 one.way.matrix <- matrix(list(), nrow=10, ncol=3)
 rownames(one.way.matrix) <- file_names_list
 colnames(one.way.matrix) <- c("anova","power","boxplot")
+df1 <- df1[df1$duration<60000,] #remove outliers
 
 print(" ANOVA results, statistically significant?")
 #for(name in file_names_list){
@@ -156,6 +157,17 @@ print(" ANOVA results, statistically significant?")
   
   one.way
   
+  
+  # Results without removing outliers (tasks that took more than 60 min)
+  # The omnibus ANOVA test could not reject the null-hypothesis about task duration by task order in Experiment for most of tasks orders.
+  # The only task that has statistically distinct duration is the first task.
+  # However, the power test tells that it would require 11K data points
+  
+  
+  #After removing outliers the results were the same. 
+  #The ANOVA is statistically significatn (p-value<<0.00001)
+  #The power test tells that the it would require 1656 data points.
+
   one.way.matrix[[name,"boxplot"]] <- bxplot
 
   
