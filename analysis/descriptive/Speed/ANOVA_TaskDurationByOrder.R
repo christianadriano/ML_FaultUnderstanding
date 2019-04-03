@@ -121,16 +121,14 @@ df1 <-
 #file_names_list <- unique(df1$file_name)
 
 #Run ANOVA for each profession
-one.way.matrix <- matrix(list(), nrow=10, ncol=3)
-rownames(one.way.matrix) <- file_names_list
-colnames(one.way.matrix) <- c("anova","power","boxplot")
 df1 <- df1[df1$duration<60000,] #remove outliers
 
 print(" ANOVA results, statistically significant?")
 #for(name in file_names_list){
 #  df_file <- df1[str_detect(df1$file_name, name), ] #could have used grep too.
   one.way <- oneway(as.factor(df1$answer_index), y =df1$duration , posthoc = 'games-howell')
-  one.way.matrix[[name,"anova"]] = one.way
+  one.way
+  
   p.value = one.way$output$dat[1,5]
   if(p.value>0.05){
     print(str_c(name," NO, p_value = ", p.value))
@@ -140,7 +138,6 @@ print(" ANOVA results, statistically significant?")
                             f = one.way$output$etasq,
                             sig.level = 0.05,
                             power = 0.9)
-    one.way.matrix[[name,"power"]] = power
     print(str_c(" YES, p_value = ", p.value," power.test.n=",power$n))
   }
   
@@ -155,7 +152,6 @@ print(" ANOVA results, statistically significant?")
     theme_classic()
   bxplot
   
-  one.way
   
   
   # Results without removing outliers (tasks that took more than 60 min)
@@ -168,37 +164,3 @@ print(" ANOVA results, statistically significant?")
   #The ANOVA is statistically significatn (p-value<<0.00001)
   #The power test tells that the it would require 1656 data points.
 
-  one.way.matrix[[name,"boxplot"]] <- bxplot
-
-  
-#Three out of ten files have tasks that showed statistically significant distinct durations
-#However, to detect these distinction in 90% of cases, only two files require a number o participants
-#that is in the order of magnitude of the experiment. Nonetheless, for these remaining
-#two files, the pos hoc test did not show any statistically significant differences between the order of
-#the tasks. Therefore, for E1, we cannot show that the tasks have distinct durations depending on
-#the order that they were executed.
-
-# [1] "11ByteArrayBuffer_buggy.java NO, p_value = 0.583805808858908"
-# [2] "8buggy_AbstractReviewSection_buggy.txt YES, p_value = 5.5359720401319e-48 power.test.n=40.9404022015442"
-# [3] "1buggy_ApacheCamel.txt YES, p_value = 0.00559539939759507 power.test.n=2785.83217619076"
-# [4] "9buggy_Hystrix_buggy.txt NO, p_value = 0.109252062772444"
-# [5] "13buggy_VectorClock_buggy.txt YES, p_value = 2.40088050847522e-05 power.test.n=960.091778169484"
-# [6] "10HashPropertyBuilder_buggy.java NO, p_value = 0.994969306618684"
-# [7] "3buggy_PatchSetContentRemoteFactory_buggy.txt NO, p_value = 0.999599766838317"
-# [8] "7buggy_ReviewTaskMapper_buggy.txt NO, p_value = 0.96578325507836"
-# [9] "6ReviewScopeNode_buggy.java NO, p_value = 0.99936800484661"
-# [10] "2SelectTranslator_buggy.java NO, p_value = 0.974529450385213"
-
-
-#Show plots in a grid
-p1 <- one.way.matrix[[1,3]]
-p2 <- one.way.matrix[[2,3]]
-p3 <- one.way.matrix[[3,3]]
-p4 <- one.way.matrix[[4,3]]
-p5 <- one.way.matrix[[5,3]]
-p6 <- one.way.matrix[[6,3]]
-p7 <- one.way.matrix[[7,3]]
-p8 <- one.way.matrix[[8,3]]
-p9 <- one.way.matrix[[9,3]]
-p10 <- one.way.matrix[[10,3]]
-grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, ncol=5)
