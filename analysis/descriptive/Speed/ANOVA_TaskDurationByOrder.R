@@ -118,7 +118,7 @@ df1 <-
          'answer_index',
          'duration')
 
-file_names_list <- unique(df1$file_name)
+#file_names_list <- unique(df1$file_name)
 
 #Run ANOVA for each profession
 one.way.matrix <- matrix(list(), nrow=10, ncol=3)
@@ -126,36 +126,39 @@ rownames(one.way.matrix) <- file_names_list
 colnames(one.way.matrix) <- c("anova","power","boxplot")
 
 print(" ANOVA results, statistically significant?")
-for(name in file_names_list){
-  df_file <- df1[str_detect(df1$file_name, name), ] #could have used grep too.
-  one.way <- oneway(as.factor(df_file$answer_index), y =df_file$duration , posthoc = 'games-howell')
+#for(name in file_names_list){
+#  df_file <- df1[str_detect(df1$file_name, name), ] #could have used grep too.
+  one.way <- oneway(as.factor(df1$answer_index), y =df1$duration , posthoc = 'games-howell')
   one.way.matrix[[name,"anova"]] = one.way
   p.value = one.way$output$dat[1,5]
   if(p.value>0.05){
     print(str_c(name," NO, p_value = ", p.value))
-  }
-  else{
+  }else{
     power <- pwr.anova.test(k = 3,
                             n = NULL,
                             f = one.way$output$etasq,
                             sig.level = 0.05,
                             power = 0.9)
     one.way.matrix[[name,"power"]] = power
-    print(str_c(name," YES, p_value = ", p.value," power.test.n=",power$n))
+    print(str_c(" YES, p_value = ", p.value," power.test.n=",power$n))
   }
   
-  df_file$answer_index <- as.factor(df_file$answer_index)
-  df_file["duration_minutes"] <- df_file$duration / 60000
+  df1$answer_index <- as.factor(df1$answer_index)
+  df1["duration_minutes"] <- df1$duration / 60000
+  df1 <- df1[df1$duration_minutes<60,] #remove outliers
   
-  bxplot <- ggplot(df_file, aes(x=answer_index,y=duration_minutes)) + 
+  bxplot <- ggplot(df1, aes(x=answer_index,y=duration_minutes)) + 
     geom_boxplot()  +
     stat_summary(fun.y=mean, geom="point", shape=4, size=2, color="black") +
-    labs(title=name,x="Task order", y = "Duration (min)")+
+    labs(title="Experiment 1",x="Task order", y = "Duration (min)")+
     theme_classic()
+  bxplot
+  
+  one.way
   
   one.way.matrix[[name,"boxplot"]] <- bxplot
-}
 
+  
 #Three out of ten files have tasks that showed statistically significant distinct durations
 #However, to detect these distinction in 90% of cases, only two files require a number o participants
 #that is in the order of magnitude of the experiment. Nonetheless, for these remaining
