@@ -21,7 +21,7 @@ library(tidyverse) #includes dplyr, stringr,tidyr,ggplot2,tibble,purr,forcats
 
   
 "1. Null-Hypothesis: Do the first, second, and third tasks in E2 
-assignments have duration average?
+assignments have same duration average?
 "
 
 file_path <-
@@ -106,7 +106,7 @@ exception was tasks 1 and 3 for Java method HIT07_33 (p-value=0.17)
 "---------------------------------------------------------------------"
 
 "2. Null-Hypothesis: Do the first, second, third, ... tenth tasks in E1 
-assignments have different average duration?
+assignments have same average duration?
 "
 
 file_path <-  "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_1.arff"
