@@ -33,6 +33,10 @@ Load Ground Truth to E2 data
 df2 <- readARFF(str_c(path, "//consolidated_Final_Experiment_2.arff"))
 gt2 <- read.csv(str_c(path, "//ground_truth_E2.csv"))
 
+gt2 <-  select(gt2, ID,LineID,isBugCovering,type,faulty_lines,all_Lines,LOC_inspection,LOC_original)
+
+
+
 "join file_name,microtask_id bugID,ID"
 gt2$ID <- as.factor(gt2$ID) #convert to factor I can join with microtask_id column
 df2_ground <- left_join(df2,gt2,by=c("microtask_id"="ID"))
@@ -43,5 +47,5 @@ Apply Ground Truth to E2 data
 isCorrectList <- (df2_ground$answer=="YES_THERE_IS_AN_ISSUE" &  df2_ground$isBugCovering =="yes") |
   ((df2_ground$answer=="NO_THERE_IS_NOT_AN_ISSUE" | df2_ground$answer=="I_DO_NOT_KNOW") &  df2_ground$isBugCovering =="no")
 
-df2_ground <- isCorrectList
+df2_ground$isAnswerCorrect <- isCorrectList
 
