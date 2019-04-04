@@ -27,7 +27,7 @@ library(tidyverse) #includes dplyr, stringr,tidyr,ggplot2,tibble,purr,forcats
 path <- "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//"
 
 "
-Load and Apply Ground Truth to E2 data
+Load Ground Truth to E2 data
 "
 
 df2 <- readARFF(str_c(path, "//consolidated_Final_Experiment_2.arff"))
@@ -36,4 +36,12 @@ gt2 <- read.csv(str_c(path, "//ground_truth_E2.csv"))
 "join file_name,microtask_id bugID,ID"
 gt2$ID <- as.factor(gt2$ID) #convert to factor I can join with microtask_id column
 df2_ground <- left_join(df2,gt2,by=c("microtask_id"="ID"))
-df2_ground[df2_ground$microtask_id==0,"isBugCovering"]
+
+"
+Apply Ground Truth to E2 data
+"
+isCorrectList <- (df2_ground$answer=="YES_THERE_IS_AN_ISSUE" &  df2_ground$isBugCovering =="yes") |
+  ((df2_ground$answer=="NO_THERE_IS_NOT_AN_ISSUE" | df2_ground$answer=="I_DO_NOT_KNOW") &  df2_ground$isBugCovering =="no")
+
+df2_ground <- isCorrectList
+
