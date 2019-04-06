@@ -26,3 +26,10 @@ length(df[grep("professor",tolower(df$experience)),"experience"])
 #manager
 length(df[grep("manager",tolower(df$experience)),"experience"])
 #2
+
+#Summary
+#The most frequent professions within Other are retired, professor, and manager.
+#These all sum to 12, which is 1/3 of people who chose Other.
+count_other <- c(36,6,4,2)
+labels <- c("total","retired","professor","manager")
+barplot(count_other,main="Other professions", names =labels)
