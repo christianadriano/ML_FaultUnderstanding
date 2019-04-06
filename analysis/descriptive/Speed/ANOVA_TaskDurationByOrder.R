@@ -37,26 +37,32 @@ df2 <-
 file_names_list <- unique(df2$file_name)
 
 #Run ANOVA for each profession
-one.way.matrix <- matrix(list(), nrow=8, ncol=3)
-rownames(one.way.matrix) <- file_names_list
-colnames(one.way.matrix) <- c("anova","power","boxplot")
+one_way_matrix <- matrix(list(), nrow=8, ncol=3)
+rownames(one_way_matrix) <- file_names_list
+colnames(one_way_matrix) <- c("anova","power","boxplot")
+
+posthoc_matrix <- matrix(list(),nrow=8,ncol=3)
+rownames(posthoc_matrix) <- file_names_list
+colnames(posthoc_matrix) <- c("2-1","3-1","3-2")
+posthoc_matrix[] <- c(-1)
 
 print(" ANOVA results, statistically significant?")
 for(name in file_names_list){
   df_file <- df2[str_detect(df2$file_name, name), ] #could have used grep too.
-  one.way <- oneway(as.factor(df_file$answer_index), y =df_file$duration , posthoc = 'games-howell')
-  one.way.matrix[[name,"anova"]] = one.way
-  p.value = one.way$output$dat[1,5]
+  one_way <- oneway(as.factor(df_file$answer_index), y =df_file$duration , posthoc = 'games-howell')
+  one_way_matrix[[name,"anova"]] = one_way
+  posthoc_matrix[name,] <- one_way$intermediate$posthoc$p
+  p.value = one_way$output$dat[1,5]
   if(p.value>0.05){
     print(str_c(name," NO, p_value = ", p.value))
   }
   else{
     power <- pwr.anova.test(k = 3,
                             n = NULL,
-                            f = one.way$output$etasq,
+                            f = one_way$output$etasq,
                             sig.level = 0.05,
                             power = 0.9)
-    one.way.matrix[[name,"power"]] = power
+    one_way_matrix[[name,"power"]] = power
     print(str_c(name," YES, p_value = ", p.value," power.test.n=",power$n))
   }
   
@@ -69,43 +75,77 @@ for(name in file_names_list){
     labs(title=name,x="Task order", y = "Duration (min)")+
     theme_classic()
 
-  one.way.matrix[[name,"boxplot"]] <- bxplot
+  one_way_matrix[[name,"boxplot"]] <- bxplot
 }
 
 #Show plots in a grid
-p1 <- one.way.matrix[[1,3]]
-p2 <- one.way.matrix[[2,3]]
-p3 <- one.way.matrix[[3,3]]
-p4 <- one.way.matrix[[4,3]]
-p5 <- one.way.matrix[[5,3]]
-p6 <- one.way.matrix[[6,3]]
-p7 <- one.way.matrix[[7,3]]
-p8 <- one.way.matrix[[8,3]]
+p1 <- one_way_matrix[[1,3]]
+p2 <- one_way_matrix[[2,3]]
+p3 <- one_way_matrix[[3,3]]
+p4 <- one_way_matrix[[4,3]]
+p5 <- one_way_matrix[[5,3]]
+p6 <- one_way_matrix[[6,3]]
+p7 <- one_way_matrix[[7,3]]
+p8 <- one_way_matrix[[8,3]]
 grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, ncol=4)
 
 
 
-----------------------------------------------------------
-# [1] "HIT01_8 YES, p_value = 1.13810014759374e-06 power.test.n=212.951609797782"
-# [1] "HIT05_35 YES, p_value = 7.87009607481587e-06 power.test.n=801.95825186607"
-# [1] "HIT03_6 YES, p_value = 1.36996333363752e-09 power.test.n=247.272466313301"
-# [1] "HIT08_54 YES, p_value = 9.43985297771631e-09 power.test.n=492.112701774917"
-# [1] "HIT06_51 YES, p_value = 4.1396396996935e-10 power.test.n=561.100858956688"
-# [1] "HIT04_7 YES, p_value = 1.50438817791253e-23 power.test.n=227.885633895706"
-# [1] "HIT02_24 YES, p_value = 0.0141069493107821 power.test.n=241.582733560835"
-# [1] "HIT07_33 YES, p_value = 0.000514337295933223 power.test.n=402.204641612896"
+#----------------------------------------------------------
+one_way_matrix
+# [1] "HIT02_24 YES, p_value = 0.00303130632776475 power.test.n=474.630026036824" 
+# [1] "HIT01_8 YES, p_value = 0.00989493481568965 power.test.n=2013.64443545293"  *
+# [1] "HIT03_6 YES, p_value = 4.67712942891409e-05 power.test.n=1278.80132666585" *
+# [1] "HIT04_7 YES, p_value = 1.65521199301771e-20 power.test.n=313.013734015771"
+# [1] "HIT07_33 YES, p_value = 0.00627436413870615 power.test.n=1078.73770890834" *
+# [1] "HIT08_54 YES, p_value = 4.5900114447663e-12 power.test.n=393.345865989164"
+# [1] "HIT05_35 YES, p_value = 7.52785272866472e-07 power.test.n=195.473929249197"
+# [1] "HIT06_51 YES, p_value = 3.33700874443378e-09 power.test.n=394.149502064819"
+  
+#---------------------------------
+posthoc_matrix
+#             2-1          3-1          3-2       
+# HIT02_24 0.02936214   0.04227035   0.8275387 
+# HIT01_8  0.01033781   0.3153392    0.3555685 
+# HIT03_6  0.01308726   0.0001438434 0.03873688
+# HIT04_7  3.556155e-12 1.519118e-12 0.6734393 
+# HIT07_33 0.03052541   0.01406451   0.9038669 
+# HIT08_54 3.28382e-06  9.312902e-08 0.05284291
+# HIT05_35 0.0005079674 0.0002070275 0.8395715 
+# HIT06_51 6.663069e-05 1.624309e-07 0.451744
 ----------------------------------------------------------
   
 "
 The One Way Anova with Games-Howell correction for post hoc tests showed that 
-duration of first task was on aveage longer than the durations of the second 
-and third tasks (p-value<0.05). This is true for all Java methods. The only 
-exception was tasks 1 and 3 for Java method HIT07_33 (p-value=0.17)
+durations of first was on average longer than the durations of the second 
+or third tasks (p-value<0.05). This was true for ALL java methods.
+
+The posthoc test results could not reject the null-hypothesis that second 
+and third task have same duration. Therefore, contrary to the first task effect on duration,
+we could not show the order effect on duration effect between second and third task.
+There was only one exception. Java method HIT03_6 presented statistical significant (p-value=0.03873688)
+differences between the duration of the second and third task.
+
+Our interpretation (separate section) is that the difference detected for the first
+task is mostly the reading the source code of the Java method and understanding the 
+failure. After this cost has been paid in the first task, the cost does not appear
+again in the execution of the second and third task. Other researchers could confirm 
+this by creating an introductory task in which the programmer does not have to answer
+any question, but only read the failure description and the corresponding source code.
+
+However, to detect this effect in 90% the time, we would need a number 
+of participants from 195 (HIT05_35) to 2013 (HIT01_8). This might not be realistic
+when one is able to optimize the number of participants needed.
+
+Hence, our conclusion is that even though for three methods there is a significant
+difference in duration time between first tasks and the second and third tasks, 
+this distinction would not be detected with the number of participants that would
+inspect these source code files.
 "
 
 "---------------------------------------------------------------------"
 
-"2. Null-Hypothesis: Do the first, second, third, ... tenth tasks in E1 
+"2. Null-Hypothesis: Do the first, second, third, fourth,... tenth tasks in E1 
 assignments have same average duration?
 "
 
@@ -126,16 +166,16 @@ df1 <- df1[df1$duration<60000,] #remove outliers
 print(" ANOVA results, statistically significant?")
 #for(name in file_names_list){
 #  df_file <- df1[str_detect(df1$file_name, name), ] #could have used grep too.
-  one.way <- oneway(as.factor(df1$answer_index), y =df1$duration , posthoc = 'games-howell')
-  one.way
+  one_way <- oneway(as.factor(df1$answer_index), y =df1$duration , posthoc = 'games-howell')
+  one_way
   
-  p.value = one.way$output$dat[1,5]
+  p.value = one_way$output$dat[1,5]
   if(p.value>0.05){
     print(str_c(name," NO, p_value = ", p.value))
   }else{
     power <- pwr.anova.test(k = 3,
                             n = NULL,
-                            f = one.way$output$etasq,
+                            f = one_way$output$etasq,
                             sig.level = 0.05,
                             power = 0.9)
     print(str_c(" YES, p_value = ", p.value," power.test.n=",power$n))
