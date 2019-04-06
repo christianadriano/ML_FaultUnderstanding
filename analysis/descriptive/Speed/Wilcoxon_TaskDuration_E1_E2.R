@@ -68,6 +68,7 @@ mean(df2$duration)
 # [1] 396429.1
 
 " ----------------------------------------------------------------"
+#BY QUALIFICATION SCORE
 
 "Are tasks in E1 also faster than in E2 across all qualification score levels?
 i.e., for programmers at the lower, medium, and upper range of the scales?
