@@ -127,7 +127,7 @@ class QuitRate(object):
     
    
     
-    def evaluate_incomplete_tasks_by_score(self):
+    def correlat_incomplete_tasks_by_score(self):
         '''
         Do participants with lower scores quit earlier, i.e., leave more tasks incomplete?
         '''
