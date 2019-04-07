@@ -35,7 +35,7 @@ df2 <-
          'answer_index',
          'duration')
 
-df2 <- df2[df2$answer_index=='1']
+df2 <- df2[df2$answer_index==1,]
 
 file_path <-  "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_1.arff"
 df1 <-  readARFF(file_path)
@@ -49,25 +49,20 @@ df1 <-
 
 wilcoxon_results <- wilcox.test(df1$duration,df2$duration)
 wilcoxon_results
-wilcoxon_results$alternative
-wilcoxon_results$statistic
-wilcoxon_results$parameter
-wilcoxon_results$null.value
-mean(df1$duration)
-mean(df2$duration)
+mean(df2$duration) / mean(df1$duration)
 
 # Wilcoxon rank sum test with continuity correction
 # 
 # data:  df1$duration and df2$duration
-# W = 4404900, p-value < 2.2e-16
+# W = 961500, p-value < 2.2e-16
 # alternative hypothesis: true location shift is not equal to 0
 # 
 # > mean(df1$duration)
 # [1] 199848.6 milliseconds
 # > mean(df2$duration)
-# [1] 396429.1 milliseconds
+# [1] 710940.6 milliseconds
 #
-# Duration of E1 was half of E2 duration
+# Average duration of the first E2 tasks is 3.5 times the duration of E1 tasks
 
 #-----------------------------------------
 #Comparing results without outliers 
@@ -81,9 +76,9 @@ mean(df2$duration)
 upper_limit <- (5*60*1000) * 10
 lower_limit <- (5*60*1000) / 10
 
-df1 <- df1[df1$duration<upper_limit,]
-df2 <- df2[df2$duration<upper_limit,]
-wilcoxon_results <- wilcox.test(df1$duration,df2$duration)
+df1_O <- df1[df1$duration<upper_limit,]
+df2_O <- df2[df2$duration<upper_limit,]
+wilcoxon_results <- wilcox.test(df1_O$duration,df2_O$duration)
 
 
 # Wilcoxon rank sum test with continuity correction
@@ -100,6 +95,13 @@ wilcoxon_results <- wilcox.test(df1$duration,df2$duration)
 "
 After removing outliers, the results are the same.
 "
+
+#--------------------------------
+#Do first task in E1 has shorter duration than first tasks in E2?
+
+df1 <- df1[df1$answer_index=='1']
+
+
 
 " ----------------------------------------------------------------"
 #BY QUALIFICATION SCORE
