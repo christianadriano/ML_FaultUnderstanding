@@ -78,28 +78,62 @@ lower_limit <- (5*60*1000) / 10
 
 df1_O <- df1[df1$duration<upper_limit,]
 df2_O <- df2[df2$duration<upper_limit,]
-wilcoxon_results <- wilcox.test(df1_O$duration,df2_O$duration)
+wilcox.test(df1_O$duration,df2_O$duration)
+mean(df2_O$duration) / mean(df1_O$duration)
 
 
 # Wilcoxon rank sum test with continuity correction
 # data:  df1$duration and df2$duration
-# W = 4348500, p-value < 2.2e-16
+# W = 941370, p-value < 2.2e-16
 # alternative hypothesis: true location shift is not equal to 0
-# > mean(df1$duration)
+# >  mean(df1_O$duration)
 # [1] 164413.7
-# > mean(df2$duration)
-# [1] 326981.1
+#   >  mean(df2_O$duration)
+# [1] 537197.7
 
-# Duration of E1 was half of the duratoin of E2
+# Average duration of the first E2 tasks is 3.3 times the duration of E1 tasks
 
 "
-After removing outliers, the results are the same.
+After removing outliers, the results are similar same.
 "
 
-#--------------------------------
+#----------------------------------------------
+#Comparing first tasks only
 #Do first task in E1 has shorter duration than first tasks in E2?
+#Without outliers
 
-df1 <- df1[df1$answer_index=='1']
+df1_first <- df1[df1$answer_index==1,]
+
+#Outlier limits in milliseconds
+upper_limit <- (5*60*1000) * 10
+lower_limit <- (5*60*1000) / 10
+
+df1_O <- df1_first[df1_first$duration<upper_limit,]
+df2_O <- df2[df2$duration<upper_limit,]
+wilcox.test(df1_O$duration,df2_O$duration)
+mean(df2_O$duration) / mean(df1_O$duration)
+
+# Wilcoxon rank sum test with continuity correction
+# 
+# data:  df1_O$duration and df2_O$duration
+# W = 220730, p-value < 2.2e-16
+# alternative hypothesis: true location shift is not equal to 0
+# 
+# > mean(df2_O$duration) / mean(df1_O$duration)
+# [1] 1.837933
+
+"
+However, when we compare only the first task of each experiment, 
+the difference drops to a half. Instead of 3.5 times longer,
+E2 first taks as 1.8 longer than the first E1 tasks.
+
+Interpretation.
+There is an effect of being the first task that is not related 
+to the time to understand the failure description and the 
+the source code. The reason is that subsequent tasks in 
+E1 did not pay this cost.
+
+"
 
 
 
@@ -123,7 +157,7 @@ df2 <-
          'answer_index',
          'duration')
 
-df2 <- df2[df2$answer_index=='1']
+df2 <- df2[df2$answer_index==1,]
 df2["duration_minutes"] <- df2$duration / 60000
 
 
