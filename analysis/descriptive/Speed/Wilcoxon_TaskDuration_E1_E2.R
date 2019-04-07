@@ -128,11 +128,18 @@ the difference drops to a half. Instead of 3.5 times longer,
 E2 first taks as 1.8 longer than the first E1 tasks.
 
 Interpretation.
-There is an effect of being the first task that is not related 
-to the time to understand the failure description and the 
-the source code. The reason is that subsequent tasks in 
-E1 did not pay this cost.
+Need to check if this drop is also present for the other tasks in E1.
+If it is not, then being the first tasks has an effect on duration 
+that is more than than the time to understand the failure description and the 
+the source code. 
 
+This duration cost might relate to getting acquainted with the task 
+in terms of information available and usability.
+
+I could show that by:
+- comparing first task E2 against task 2, 3,4, etc. in E1
+- testing if subsequent tasks in E1 did not pay this cost.
+-?
 "
 
 
