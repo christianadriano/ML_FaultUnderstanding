@@ -69,6 +69,16 @@ mean(df2$duration)
 #
 # Duration of E1 was half of E2 duration
 
+#-----------------------------------------
+#Comparing results without outliers 
+#I considered as outliers the tasks that took 10 times the duration for
+#which the task was designed for. Since tasks were designed to
+#take 5 minutes, I considered 50 minutes tasks as outliers.
+#I also considered outliers the task that took 10 times less, i.e.,
+#less than 30 seconds
+
+
+
 
 " ----------------------------------------------------------------"
 #BY QUALIFICATION SCORE
