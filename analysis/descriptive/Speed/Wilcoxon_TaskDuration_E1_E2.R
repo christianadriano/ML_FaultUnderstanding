@@ -77,8 +77,29 @@ mean(df2$duration)
 #I also considered outliers the task that took 10 times less, i.e.,
 #less than 30 seconds
 
+#Outlier limits in milliseconds
+upper_limit <- (5*60*1000) * 10
+lower_limit <- (5*60*1000) / 10
+
+df1 <- df1[df1$duration<upper_limit,]
+df2 <- df2[df2$duration<upper_limit,]
+wilcoxon_results <- wilcox.test(df1$duration,df2$duration)
 
 
+# Wilcoxon rank sum test with continuity correction
+# data:  df1$duration and df2$duration
+# W = 4348500, p-value < 2.2e-16
+# alternative hypothesis: true location shift is not equal to 0
+# > mean(df1$duration)
+# [1] 164413.7
+# > mean(df2$duration)
+# [1] 326981.1
+
+# Duration of E1 was half of the duratoin of E2
+
+"
+After removing outliers, the results are the same.
+"
 
 " ----------------------------------------------------------------"
 #BY QUALIFICATION SCORE
