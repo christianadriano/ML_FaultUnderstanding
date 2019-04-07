@@ -59,13 +59,16 @@ mean(df2$duration)
 # Wilcoxon rank sum test with continuity correction
 # 
 # data:  df1$duration and df2$duration
-# W = 4473000, p-value < 2.2e-16
+# W = 4404900, p-value < 2.2e-16
 # alternative hypothesis: true location shift is not equal to 0
 # 
 # > mean(df1$duration)
-# [1] 201078.1
+# [1] 199848.6 milliseconds
 # > mean(df2$duration)
-# [1] 396429.1
+# [1] 396429.1 milliseconds
+#
+# Duration of E1 was half of E2 duration
+
 
 " ----------------------------------------------------------------"
 #BY QUALIFICATION SCORE
