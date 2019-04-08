@@ -137,11 +137,58 @@ This duration cost might relate to getting acquainted with the task
 in terms of information available and usability.
 
 I could show that by:
-- comparing first task E2 against task 2, 3,4, etc. in E1
+- comparing first task E2 against mid and last tasks in E1
 - testing if subsequent tasks in E1 did not pay this cost.
 -?
 "
+"----------------------------------------------------------"
 
+for (index in c(2:10)) {
+
+  df1_first <- df1[df1$answer_index==index,]
+  
+  #Remove outliers
+  df1_O <- df1_first[df1_first$duration<upper_limit,]
+  df2_O <- df2[df2$duration<upper_limit,]
+  
+  wilcoxon_results <-   wilcox.test(df1_O$duration,df2_O$duration)
+  if(wilcoxon_results$p.value<0.05){
+    print(str_c(index," YES, significant, p_value = ", wilcoxon_results$p.value))
+    print(str_c("Difference between duration means= ",mean(df2_O$duration) / mean(df1_O$duration))) 
+  }
+  else{    
+    print(str_c(index," not significant, p_value = ", wilcoxon_results$p.value))
+  }
+}
+
+# [1] "2 YES, significant, p_value = 5.97595678910605e-77"
+# [1] "Difference between duration means= 2.77051319059703"
+# [1] "3 YES, significant, p_value = 4.62799299540337e-82"
+# [1] "Difference between duration means= 2.96672086171822"
+# [1] "4 YES, significant, p_value = 7.23414568102981e-97"
+# [1] "Difference between duration means= 3.52992411453755"
+# [1] "5 YES, significant, p_value = 1.55746058155229e-90"
+# [1] "Difference between duration means= 3.32550045625148"
+# [1] "6 YES, significant, p_value = 3.72604935177152e-101"
+# [1] "Difference between duration means= 3.95588046521857"
+# [1] "7 YES, significant, p_value = 1.01416175463892e-116"
+# [1] "Difference between duration means= 4.44867572509694"
+# [1] "8 YES, significant, p_value = 1.6322396411088e-110"
+# [1] "Difference between duration means= 4.42124659012653"
+# [1] "9 YES, significant, p_value = 1.81292990333869e-113"
+# [1] "Difference between duration means= 4.76859370648151"
+# [1] "10 YES, significant, p_value = 7.86680781246878e-125"
+# [1] "Difference between duration means= 5.58939474342479"
+
+"
+First tasks E2 assignments are statistically significant larger than all tasks in E1.
+The difference increases from the second to the tenth task.
+
+This might support the idea that first task in E1 and E2 pay 
+a cost of the programmer getting acquainted with the task.
+
+
+"
 
 
 " ----------------------------------------------------------------"
