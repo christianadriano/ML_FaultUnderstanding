@@ -137,11 +137,15 @@ This duration cost might relate to getting acquainted with the task
 in terms of information available and usability.
 
 I could show that by:
-- comparing first task E2 against mid and last tasks in E1
-- testing if subsequent tasks in E1 did not pay this cost.
--?
+- comparing first task E2 against mid and last tasks in E1 -  DONE below
+- testing if subsequent tasks in E1 did not pay this cost - DONE IN THE ANOVA_taskDurationOrder
 "
-"----------------------------------------------------------"
+
+
+"---------------------------------------------------------------------"
+"How do first tasks in E2 assigment compare with 2nd, 3rd, 4th, 5th, ...,10th tasks in E1 assignment?
+I compared individually each task order below.
+"
 
 for (index in c(2:10)) {
 
