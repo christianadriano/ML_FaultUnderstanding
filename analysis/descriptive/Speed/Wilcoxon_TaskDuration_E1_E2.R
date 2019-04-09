@@ -13,7 +13,7 @@ can reuse the knowledge they acquired from executing the first task.
 
 " 
 library(ggplot2)
-library (gridExtra)
+library(gridExtra)
 library(ufs)
 library(userfriendlyscience)
 library(farff)
@@ -193,83 +193,4 @@ a cost of the programmer getting acquainted with the task.
 
 
 "
-
-
-" ----------------------------------------------------------------"
-#BY QUALIFICATION SCORE
-
-"Are tasks in E1 also faster than in E2 across all qualification score levels?
-i.e., for programmers at the lower, medium, and upper range of the scales?
-"
-
-" Testing for programmers at lower range"
-
-file_path <-
-  "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_2.arff"
-df2 <-  readARFF(file_path)
-
-df2 <-
-  select(df2,
-         'file_name',
-         'qualification_score',
-         'answer_index',
-         'duration')
-
-df2 <- df2[df2$answer_index==1,]
-df2["duration_minutes"] <- df2$duration / 60000
-
-
-file_path <-  "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_1.arff"
-df1 <-  readARFF(file_path)
-
-df1 <-
-  select(df1,
-         'file_name',
-         'qualification_score',
-         'duration')
-df1["duration_minutes"] <- df1$duration / 60000
-
-score_levels_E1 <- c(2,3,4)
-score_levels_E2 <- c(3,4,5)
-
-results.matrix <- matrix(list(), nrow=3, ncol=3)
-rownames(results.matrix) <- c("low score","medium score","high score")
-colnames(results.matrix) <- c("p.value","average_E1","average_E2")
-
-i=1
-for(i in c(1:3)){
-  df_group_1 <- df1[df1$qualification_score==score_levels_E1[i],]
-  df_group_2 <-  df2[df2$qualification_score==score_levels_E2[i],]
-  wilcoxon_results <- wilcox.test(df_group_1$duration,df_group_2$duration)
-  results.matrix[[i,"p.value"]] <-  wilcoxon_results$p.value
-  results.matrix[[i,"average_E1"]] <-  mean(df_group_1$duration)
-  results.matrix[[i,"average_E2"]] <-  mean(df_group_2$duration)
-}
-
-#The E1 tasks are faster than E2 across all levels of qualification score
-#              p.value      average_E1 average_E2
-# low score    1.408635e-80 145900.1   325416.4  
-# medium score 1.737562e-13 368379.8   372172.9  
-# high score   1.390266e-08 268484.3   456611.7
-
-#Remove outlier duration in E1 and E2
-df1 <- df1[df1$duration_minutes<120,]
-df2 <- df2[df2$duration_minutes<120,]
-
-bxplot_1 <- ggplot(df1, aes(x=as.factor(qualification_score),y=duration_minutes)) + 
-  geom_boxplot()  +
-  stat_summary(fun.y=mean, geom="point", shape=4, size=2, color="black") +
-  labs(title="Experiment-1",x="Qualification Score", y = "Duration (min)")+
-  theme_classic()
-
-bxplot_2 <- ggplot(df2, aes(x=as.factor(qualification_score),y=duration_minutes)) + 
-                     geom_boxplot()  +
-                     stat_summary(fun.y=mean, geom="point", shape=4, size=2, color="black") +
-                     labs(title="Experiment-2",x="Qualification Score", y = "Duration (min)")+
-                     theme_classic()
-
-grid.arrange(bxplot_1, bxplot_2, ncol=1)
-
-#We can see that speed to execute tasks does not seem to be distinct across
-#scores within the same experiment. Will do an ANOVA to check that.
 
