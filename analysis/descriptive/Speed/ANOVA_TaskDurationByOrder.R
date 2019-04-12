@@ -34,7 +34,11 @@ df2 <-
          'answer_index',
          'duration')
 
-file_names_list <- unique(df2$file_name)
+#Outlier treament
+upper_limit <- (5*60*1000) * 10 #50 min, which is 10 times the duration for which the task was designed for
+lower_limit <- (5*60*1000) / 10 #30 seconds, which is the minimum expected to read test case, questions, and the program statement (3 lines)
+df2 <- df2[df2$duration<upper_limit & df2$duration>lower_limit,]
+
 
 #Run ANOVA for each profession
 one_way_matrix <- matrix(list(), nrow=8, ncol=3)
@@ -93,37 +97,37 @@ grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, ncol=4)
 
 #----------------------------------------------------------
 one_way_matrix
-# [1] "HIT02_24 YES, p_value = 0.00303130632776475 power.test.n=474.630026036824" 
-# [1] "HIT01_8 YES, p_value = 0.00989493481568965 power.test.n=2013.64443545293"  *
-# [1] "HIT03_6 YES, p_value = 4.67712942891409e-05 power.test.n=1278.80132666585" *
-# [1] "HIT04_7 YES, p_value = 1.65521199301771e-20 power.test.n=313.013734015771"
-# [1] "HIT07_33 YES, p_value = 0.00627436413870615 power.test.n=1078.73770890834" *
-# [1] "HIT08_54 YES, p_value = 4.5900114447663e-12 power.test.n=393.345865989164"
-# [1] "HIT05_35 YES, p_value = 7.52785272866472e-07 power.test.n=195.473929249197"
-# [1] "HIT06_51 YES, p_value = 3.33700874443378e-09 power.test.n=394.149502064819"
-  
+# [1] "HIT02_24 YES, p_value = 0.00162582043889594 power.test.n=336.52287990056"
+# [1] "HIT01_8 YES, p_value = 7.87121512261683e-05 power.test.n=448.239612674863"
+# [1] "HIT03_6 YES, p_value = 0.000550297447160647 power.test.n=2046.71789800071"
+# [1] "HIT04_7 YES, p_value = 9.04436167220364e-25 power.test.n=187.807395415615"
+# [1] "HIT07_33 YES, p_value = 0.00629661331238729 power.test.n=1040.63901948381"
+# [1] "HIT08_54 YES, p_value = 4.7268330054517e-19 power.test.n=148.767950961521"
+# [1] "HIT05_35 YES, p_value = 1.87054263374765e-06 power.test.n=189.937402929766"
+# [1] "HIT06_51 YES, p_value = 4.22079215924961e-14 power.test.n=144.908512010482"  
 #---------------------------------
 posthoc_matrix
 #             2-1          3-1          3-2       
-# HIT02_24 0.02936214   0.04227035   0.8275387 
-# HIT01_8  0.01033781   0.3153392    0.3555685 
-# HIT03_6  0.01308726   0.0001438434 0.03873688
-# HIT04_7  3.556155e-12 1.519118e-12 0.6734393 
-# HIT07_33 0.03052541   0.01406451   0.9038669 
-# HIT08_54 3.28382e-06  9.312902e-08 0.05284291
-# HIT05_35 0.0005079674 0.0002070275 0.8395715 
-# HIT06_51 6.663069e-05 1.624309e-07 0.451744
+# HIT02_24 0.003327164  0.04392712   0.8220985 
+# HIT01_8  3.158251e-05 0.06458597   0.6990589 
+# HIT03_6  0.1390966    0.0001558041 0.04111067 NOT SIGNIFICANT
+# HIT04_7  0            0            0.8450548 NOT SIGNIFICANT
+# HIT07_33 0.02936537   0.01462503   0.9137894 
+# HIT08_54 1.128018e-09 3.785861e-14 0.07407149
+# HIT05_35 0.0002471296 5.343122e-05 0.9201399 
+# HIT06_51 3.944789e-09 6.639014e-09 0.9497608 
 ----------------------------------------------------------
   
 "
 The One Way Anova with Games-Howell correction for post hoc tests showed that 
 durations of first was on average longer than the durations of the second 
-or third tasks (p-value<0.05). This was true for ALL java methods.
+or third tasks (p-value<0.05). This was true for ALL java methods, but HIT03_6
+and HIT04_7.
 
 The posthoc test results could not reject the null-hypothesis that second 
 and third task have same duration. Therefore, contrary to the first task effect on duration,
 we could not show the order effect on duration effect between second and third task.
-There was only one exception. Java method HIT03_6 presented statistical significant (p-value=0.03873688)
+There was one exception. Java method HIT03_6 presented statistical significant (p-value=0.03873688)
 differences between the duration of the second and third task.
 
 Our interpretation (separate section) is that the difference detected for the first
@@ -133,14 +137,9 @@ again in the execution of the second and third task. Other researchers could con
 this by creating an introductory task in which the programmer does not have to answer
 any question, but only read the failure description and the corresponding source code.
 
-However, to detect this effect in 90% the time, we would need a number 
-of participants from 195 (HIT05_35) to 2013 (HIT01_8). This might not be realistic
-when one is able to optimize the number of participants needed.
-
-Hence, our conclusion is that even though for three methods there is a significant
-difference in duration time between first tasks and the second and third tasks, 
-this distinction would not be detected with the number of participants that would
-inspect these source code files.
+The power analysis shows the number of participants needed to detect these 
+differences between tasks order in 90% the time. For all bugs except (HIT07_33 and HIT03_6),
+the number of participants is in the order or magnitude of the experiment (below 500).
 "
 
 "---------------------------------------------------------------------"
@@ -161,7 +160,7 @@ df1 <-
 #file_names_list <- unique(df1$file_name)
 
 #Run ANOVA for each profession
-df1 <- df1[df1$duration<60000,] #remove outliers
+df1 <- df1[df1$duration<upper_limit & df1$duration>lower_limit,]
 
 print(" ANOVA results, statistically significant?")
 #for(name in file_names_list){
