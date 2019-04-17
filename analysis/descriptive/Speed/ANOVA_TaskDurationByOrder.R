@@ -161,33 +161,30 @@ df1 <-
 df1 <- df1[df1$duration<upper_limit & df1$duration>lower_limit,]
 
 print(" ANOVA results, statistically significant?")
-#for(name in file_names_list){
-#  df_file <- df1[str_detect(df1$file_name, name), ] #could have used grep too.
-  one_way <- oneway(as.factor(df1$answer_index), y =df1$duration , posthoc = 'games-howell')
-  one_way
+one_way <- oneway(as.factor(df1$answer_index), y =df1$duration , posthoc = 'games-howell')
+one_way
   
-  p.value = one_way$output$dat[1,5]
-  if(p.value>0.05){
-    print(str_c(name," NO, p_value = ", p.value))
-  }else{
-    power <- pwr.anova.test(k = 3,
-                            n = NULL,
-                            f = one_way$output$etasq,
-                            sig.level = 0.05,
-                            power = 0.9)
-    print(str_c(" YES, p_value = ", p.value," power.test.n=",power$n))
-  }
+p.value = one_way$output$dat[1,5]
+if(p.value>0.05){
+  print(str_c(name," NO, p_value = ", p.value))
+}else{
+  power <- pwr.anova.test(k = 3,
+                          n = NULL,
+                          f = one_way$output$etasq,
+                          sig.level = 0.05,
+                          power = 0.9)
+  print(str_c(" YES, p_value = ", p.value," power.test.n=",power$n))
+}
   
-  df1$answer_index <- as.factor(df1$answer_index)
-  df1["duration_minutes"] <- df1$duration / 60000
- # df1 <- df1[df1$duration_minutes<60,] #remove outliers
-  
-  bxplot <- ggplot(df1, aes(x=answer_index,y=duration_minutes)) + 
+df1$answer_index <- as.factor(df1$answer_index)
+df1["duration_minutes"] <- df1$duration / 60000
+
+bxplot <- ggplot(df1, aes(x=answer_index,y=duration_minutes)) + 
     geom_boxplot()  +
     stat_summary(fun.y=mean, geom="point", shape=4, size=2, color="black") +
     labs(title="Experiment 1",x="Task order", y = "Duration (min)")+
     theme_classic()
-  bxplot
+bxplot
   
   
   "  
