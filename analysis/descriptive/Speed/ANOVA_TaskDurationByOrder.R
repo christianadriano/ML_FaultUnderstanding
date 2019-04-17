@@ -36,7 +36,7 @@ df2 <-
 
 #Outlier treament
 upper_limit <- (5*60*1000) * 10 #50 min, which is 10 times the duration for which the task was designed for
-lower_limit <- (5*60*1000) / 10 #30 seconds, which is the minimum expected to read test case, questions, and the program statement (3 lines)
+lower_limit <- (5*60*1000) / 10 #30 seconds, which is the minimum expected read test case, questions, and the program statement (3 lines)
 df2 <- df2[df2$duration<upper_limit & df2$duration>lower_limit,]
 
 
@@ -157,8 +157,6 @@ df1 <-
          'answer_index',
          'duration')
 
-#file_names_list <- unique(df1$file_name)
-
 #Run ANOVA for each profession
 df1 <- df1[df1$duration<upper_limit & df1$duration>lower_limit,]
 
@@ -182,7 +180,7 @@ print(" ANOVA results, statistically significant?")
   
   df1$answer_index <- as.factor(df1$answer_index)
   df1["duration_minutes"] <- df1$duration / 60000
-  df1 <- df1[df1$duration_minutes<60,] #remove outliers
+ # df1 <- df1[df1$duration_minutes<60,] #remove outliers
   
   bxplot <- ggplot(df1, aes(x=answer_index,y=duration_minutes)) + 
     geom_boxplot()  +
@@ -192,14 +190,20 @@ print(" ANOVA results, statistically significant?")
   bxplot
   
   
+  "  
+  Results WITHOUT removing outliers
+  The omnibus ANOVA test rejected the null hypothesis that the duration were the same
+  The posthoc test showed however that only the first task has a statistically significatn 
+  distinct duration from all of the other 9 tasks
+  Note however that to detect this difference in 90% of the time, it would be necessary to 
+  the power test tells that it would require 112140 data points, which is way 20 times 
+  larger than the number of tasks in the experiment. Hence, we conclude that 
+  without removing outliers we cannot tell if the first task took on average more time  
+  than the other tasks.
+  "
   
-  # Results without removing outliers (tasks that took more than 60 min)
-  # The omnibus ANOVA test could not reject the null-hypothesis about task duration by task order in Experiment for most of tasks orders.
-  # The only task that has statistically distinct duration is the first task.
-  # However, the power test tells that it would require 11K data points
-  
-  
-  #After removing outliers the results were the same. 
+  #AFTER removing outliers the results were the same. 
   #The ANOVA is statistically significatn (p-value<<0.00001)
-  #The power test tells that the it would require 1656 data points.
+  #The power test tells that the it would require 6238 data points (tasks)
+  #This number is closer to the 5633 tasks (data points).
 
