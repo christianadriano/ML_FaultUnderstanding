@@ -152,10 +152,10 @@ for (index in c(2:10)) {
   df1_first <- df1[df1$answer_index==index,]
   
   #Remove outliers
-  df1_O <- df1_first[df1_first$duration<upper_limit & df1_first$duration_limit>lower_limit,]
-  df2_O <- df2[df2$duration<upper_limit & df2&duration>lower_limit,]
+  df1_O <- df1_first[df1_first$duration<upper_limit & df1_first$duration>lower_limit,]
+  df2_O <- df2[df2$duration<upper_limit & df2$duration>lower_limit,]
   
-  wilcoxon_results <-   wilcox.test(df1_O$duration,df2_O$duration)
+  wilcoxon_results <-   wilcox.test(df1_O$duration,df2_O$duration, alternative = c("less"))
   if(wilcoxon_results$p.value<0.05){
     print(str_c(index," YES, significant, p_value = ", wilcoxon_results$p.value))
     print(str_c("Difference between duration means= ",mean(df2_O$duration) / mean(df1_O$duration))) 
@@ -165,24 +165,24 @@ for (index in c(2:10)) {
   }
 }
 
-# [1] "2 YES, significant, p_value = 5.97595678910605e-77"
-# [1] "Difference between duration means= 2.77051319059703"
-# [1] "3 YES, significant, p_value = 4.62799299540337e-82"
-# [1] "Difference between duration means= 2.96672086171822"
-# [1] "4 YES, significant, p_value = 7.23414568102981e-97"
-# [1] "Difference between duration means= 3.52992411453755"
-# [1] "5 YES, significant, p_value = 1.55746058155229e-90"
-# [1] "Difference between duration means= 3.32550045625148"
-# [1] "6 YES, significant, p_value = 3.72604935177152e-101"
-# [1] "Difference between duration means= 3.95588046521857"
-# [1] "7 YES, significant, p_value = 1.01416175463892e-116"
-# [1] "Difference between duration means= 4.44867572509694"
-# [1] "8 YES, significant, p_value = 1.6322396411088e-110"
-# [1] "Difference between duration means= 4.42124659012653"
-# [1] "9 YES, significant, p_value = 1.81292990333869e-113"
-# [1] "Difference between duration means= 4.76859370648151"
-# [1] "10 YES, significant, p_value = 7.86680781246878e-125"
-# [1] "Difference between duration means= 5.58939474342479"
+# [1] "2 YES, significant, p_value = 3.12819668927795e-45"
+# [1] "Difference between duration means= 2.23944413562979"
+# [1] "3 YES, significant, p_value = 4.60357406440822e-43"
+# [1] "Difference between duration means= 2.26523147281561"
+# [1] "4 YES, significant, p_value = 3.89573689373137e-50"
+# [1] "Difference between duration means= 2.56439530953377"
+# [1] "5 YES, significant, p_value = 3.67969503773751e-41"
+# [1] "Difference between duration means= 2.33763282303752"
+# [1] "6 YES, significant, p_value = 8.21303716450932e-49"
+# [1] "Difference between duration means= 2.74068651817819"
+# [1] "7 YES, significant, p_value = 1.24709806743117e-51"
+# [1] "Difference between duration means= 2.81133977315507"
+# [1] "8 YES, significant, p_value = 3.1890143897836e-48"
+# [1] "Difference between duration means= 2.83095448691977"
+# [1] "9 YES, significant, p_value = 2.82613664894699e-49"
+# [1] "Difference between duration means= 3.00174865492852"
+# [1] "10 YES, significant, p_value = 2.56304710402206e-59"
+# [1] "Difference between duration means= 3.4997112170765"
 
 "
 First tasks E2 assignments are statistically significant larger than all tasks in E1.
