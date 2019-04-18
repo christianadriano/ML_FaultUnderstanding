@@ -108,19 +108,19 @@ df1_first <- df1[df1$answer_index==1,]
 upper_limit <- (5*60*1000) * 10
 lower_limit <- (5*60*1000) / 10
 
-df1_O <- df1_first[df1_first$duration<upper_limit,]
-df2_O <- df2[df2$duration<upper_limit,]
+df1_O <- df1_first[df1_first$duration<upper_limit & df1_first$duration>lower_limit,]
+df2_O <- df2[df2$duration<upper_limit  & df2$duration>lower_limit,]
 wilcox.test(df1_O$duration,df2_O$duration)
 mean(df2_O$duration) / mean(df1_O$duration)
 
 # Wilcoxon rank sum test with continuity correction
 # 
 # data:  df1_O$duration and df2_O$duration
-# W = 220730, p-value < 2.2e-16
+# W = 212800, p-value < 2.2e-16
 # alternative hypothesis: true location shift is not equal to 0
 # 
 # > mean(df2_O$duration) / mean(df1_O$duration)
-# [1] 1.837933
+# [1] 1.71567
 
 "
 However, when we compare only the first task of each experiment, 
@@ -152,8 +152,8 @@ for (index in c(2:10)) {
   df1_first <- df1[df1$answer_index==index,]
   
   #Remove outliers
-  df1_O <- df1_first[df1_first$duration<upper_limit,]
-  df2_O <- df2[df2$duration<upper_limit,]
+  df1_O <- df1_first[df1_first$duration<upper_limit & df1_first$duration_limit>lower_limit,]
+  df2_O <- df2[df2$duration<upper_limit & df2&duration>lower_limit,]
   
   wilcoxon_results <-   wilcox.test(df1_O$duration,df2_O$duration)
   if(wilcoxon_results$p.value<0.05){
