@@ -76,22 +76,22 @@ mean(df2$duration) / mean(df1$duration)
 upper_limit <- (5*60*1000) * 10
 lower_limit <- (5*60*1000) / 10
 
-df1_O <- df1[df1$duration<upper_limit,]
-df2_O <- df2[df2$duration<upper_limit,]
-wilcox.test(df1_O$duration,df2_O$duration)
+df1_O <- df1[df1$duration<upper_limit & df1$duration>lower_limit,]
+df2_O <- df2[df2$duration<upper_limit & df2$duration>lower_limit,]
+wilcox.test(df1_O$duration,df2_O$duration,alternative = c("less"))
 mean(df2_O$duration) / mean(df1_O$duration)
 
 
 # Wilcoxon rank sum test with continuity correction
 # data:  df1$duration and df2$duration
-# W = 941370, p-value < 2.2e-16
+# W = 895370, p-value < 2.2e-16
 # alternative hypothesis: true location shift is not equal to 0
 # >  mean(df1_O$duration)
-# [1] 164413.7
+# [1] 228943.2
 #   >  mean(df2_O$duration)
-# [1] 537197.7
+# [1] 543566.2
 
-# Average duration of the first E2 tasks is 3.3 times the duration of E1 tasks
+# Average duration of the first E2 tasks is 2.4 times the duration of E1 tasks
 
 "
 After removing outliers, the results are similar same.
@@ -110,7 +110,7 @@ lower_limit <- (5*60*1000) / 10
 
 df1_O <- df1_first[df1_first$duration<upper_limit & df1_first$duration>lower_limit,]
 df2_O <- df2[df2$duration<upper_limit  & df2$duration>lower_limit,]
-wilcox.test(df1_O$duration,df2_O$duration)
+wilcox.test(df1_O$duration,df2_O$duration,alternative = c("less"))
 mean(df2_O$duration) / mean(df1_O$duration)
 
 # Wilcoxon rank sum test with continuity correction
