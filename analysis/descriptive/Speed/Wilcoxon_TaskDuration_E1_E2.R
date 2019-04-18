@@ -47,7 +47,7 @@ df1 <-
          'duration')
 
 
-wilcoxon_results <- wilcox.test(df1$duration,df2$duration)
+wilcoxon_results <- wilcox.test(df1$duration,df2$duration, alternative=c("less"))
 wilcoxon_results
 mean(df2$duration) / mean(df1$duration)
 
