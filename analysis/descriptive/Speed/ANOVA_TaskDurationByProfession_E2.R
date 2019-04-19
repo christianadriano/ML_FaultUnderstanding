@@ -15,7 +15,6 @@ library(farff)
 library(pwr)
 library(tidyverse)
 
-
 file_path <-
   "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//consolidated_Final_Experiment_2.arff"
 df2 <-  readARFF(file_path)
@@ -29,14 +28,22 @@ df2 <-
 
 #Replace Other * experience to simply other.
 df2[grep("Other",df2$experience),"experience"] <-"Other"
+
+#--- Remove outliers
+#Outlier limits in milliseconds
+upper_limit <- (5*60*1000) * 10
+lower_limit <- (5*60*1000) / 10
+df2 <- df2[df2$duration<upper_limit & df2$duration>lower_limit,]
+
+#New field
 df2["duration_minutes"] <- df2$duration / 60000
 
 "------------------------------------------------------------"
 #FIRST TASK
-df2 <- df2[df2$answer_index=='1',]
+df2_first <- df2[df2$answer_index=='1',]
 
 print(" ANOVA results, statistically significant?")
-one.way <- oneway(as.factor(df2$experience), y =df2$duration , posthoc = 'games-howell')
+one.way <- oneway(as.factor(df2_first$experience), y =df2_first$duration , posthoc = 'games-howell')
 one.way
 #one.way.matrix[[profession,"anova"]] = one.way
 p.value = one.way$output$dat[1,5]
@@ -54,17 +61,19 @@ if(p.value>0.05){
 
 # ANOVA was significant, p_value = 3.2067647808294e-11
 
+### Oneway Anova for y=duration and x=experience (groups: Graduate_Student, Hobbyist, Other, Professional_Developer, Undergraduate_Student)
+
 # Omega squared: 95% CI = [.03; .09], point estimate = .05
 # Eta Squared: 95% CI = [.03; .08], point estimate = .06
 # 
-#                                               SS  Df               MS     F     p
+# SS  Df               MS     F     p
 # Between groups (error + effect) 73888552994799.5   4 18472138248699.9 14.16 <.001
-# Within groups (error only)      1208158363614651 926 1304706656171.33            
-# 
+# Within groups (error only)      1208158363614651 926 1304706656171.33               
+# # 
 # 
 # ### Post hoc test: games-howell
 # 
-#                                                     diff       ci.lo      ci.hi    t     df     p
+#                                                     diff      ci.lo     ci.hi    t     df     p
 # Hobbyist-Graduate_Student                      405226.73    64871.18  745582.27 3.27 283.26  .011
 # Other-Graduate_Student                        1003619.24   156811.47 1850427.01 3.31  82.78  .012
 # Professional_Developer-Graduate_Student         93677.94  -182222.07  369577.96 0.94 177.02  .883
@@ -92,16 +101,17 @@ if(p.value>0.05){
 
 # Power Analysis:
 # To detect these effects in 90% of the time, it would be necessary 
-#to have 1270 participants, which is in the order of magnitude of the study.
+#to have 1270 participants, which is in the order of magnitude of 
+#the number of particpants in the study.
 
 "------------------------------------------------------------"
 #SECOND AND THIRD TASKS (together because we could not show that there
 #durations are distinsct on average)
 
-df2 <- df2[!df2$answer_index=='1',]
+df2_notFirst <- df2[!df2$answer_index=='1',]
 
 print("TASK 2 and 3, ANOVA results, statistically significant?")
-one.way <- oneway(as.factor(df2$experience), y =df2$duration , posthoc = 'games-howell')
+one.way <- oneway(as.factor(df2_notFirst$experience), y =df2_notFirst$duration , posthoc = 'games-howell')
 one.way
 #one.way.matrix[[profession,"anova"]] = one.way
 p.value = one.way$output$dat[1,5]
