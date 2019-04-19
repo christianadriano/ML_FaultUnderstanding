@@ -128,19 +128,21 @@ if(p.value>0.05){
 }
 
 # ANOVA show that the task duration average across categories are statistically significant distinct 
-# p_value = 0.000563025702213102.
+# p_value = 4.16289079952329e-06
 # 
 # Post hoc test: games-howelladjustment shows that only 3 pairs are actually distinct
 #                                                   diff      ci.lo     ci.hi    t     df     p
-# Hobbyist-Graduate_Student                      61737.59  -23184.84 146660.03 1.99 306.91  .271
-# Other-Graduate_Student                        124429.58    1846.75 247012.40 2.79 238.81  .045
-# Professional_Developer-Graduate_Student        -3712.88  -81099.76  73674.00 0.13 222.70 1.000
-# Undergraduate_Student-Graduate_Student         18227.44  -83213.72 119668.61 0.49 448.12  .988
-# Other-Hobbyist                                 62691.98  -46560.18 171944.15 1.58 176.92  .511
-# Professional_Developer-Hobbyist               -65450.47 -118364.71 -12536.24 3.38 673.17  .007
-# Undergraduate_Student-Hobbyist                -43510.15 -128042.99  41022.70 1.41 571.89  .622
-# Professional_Developer-Other                 -128142.46 -231713.73 -24571.19 3.42 143.30  .007
-# Undergraduate_Student-Other                  -106202.13 -228600.55  16196.28 2.38 259.88  .123
-# Undergraduate_Student-Professional_Developer   21940.32  -54963.43  98844.08 0.78 438.08  .936
+# Hobbyist-Graduate_Student                      46934.09  -49297.49 143165.68 1.34 238.93 .666
+# Other-Graduate_Student                         91807.30  -37857.36 221471.96 1.95 250.46 .296
+# Professional_Developer-Graduate_Student       -31205.75 -118497.16  56085.67 0.99 166.04 .861
+# Undergraduate_Student-Graduate_Student        -25735.79 -120932.53  69460.95 0.74 229.13 .946
+# Other-Hobbyist                                 44873.21  -65375.93 155122.35 1.12 182.89 .795
+# Professional_Developer-Hobbyist               -78139.84 -131222.72 -25056.96 4.03 537.28 .001
+# Undergraduate_Student-Hobbyist                -72669.88 -138146.67  -7193.09 3.04 669.89 .021
+# Professional_Developer-Other                 -123013.05 -225599.83 -20426.28 3.31 137.71 .010
+# Undergraduate_Student-Other                  -117543.09 -226895.12  -8191.07 2.96 176.99 .028
+# Undergraduate_Student-Professional_Developer    5469.96  -45686.85  56626.76 0.29 494.71 .998
 
-#Nonetheless, the power test shows it would require 29658 participants to detect these effects.
+#Nonetheless, the power test shows it would require 10938 participants to detect these effects.
+#Hence, for the second and third tasks we cannot ascertain that professions have different speeds
+#to complete tasks.
