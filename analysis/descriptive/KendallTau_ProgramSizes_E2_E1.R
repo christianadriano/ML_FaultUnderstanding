@@ -5,6 +5,7 @@ LOC = Lines of Code
 Lines = LOC + javadoc comments
 Words = words
 Characters = all non-blank space characters
+words.original = including the Javadocs
 "
 
 file_path <-
@@ -13,15 +14,15 @@ file_path <-
 df2 <- read.csv(file_path,header = TRUE,sep=",")
 
 df2
-# bugID LOC Lines Words Characters
-#   1   23    54   306       2484
-#   2    7    13    52        438
-#   3   23    31   154       1249
-#   4   78    78   241       2641
-#   5    7    33   240       1667
-#   6   28    28   106        665
-#   7   12    21    99        831
-#   8   33    62   303       2426
+#   Seq   BUG_ID                          File                Method LOC Lines Words Characters Words.original
+#1   1  HIT01_8           8_DateTimeZone.java forOffsetHoursMinutes  23    54   306       2484            337
+#2   2 HIT02_24        24_GrayPaintScale.java              getPaint   7    13    52        438             58
+#3   3  HIT03_6 6_CharSequenceTranslator.java             translate  23    31   154       1249            162
+#4   4  HIT04_7       7_TimePeriodValues.java          updateBounds  78    78   241       2641            241
+#5   5 HIT05_35            35_ArrayUtils.java                   add   7    33   240       1667            266
+#6   6 HIT06_51          51_CodeConsumer.java             addNumber  28    28   106        665            106
+#7   7 HIT07_33            33_ClassUtils.java               toClass  12    21    99        831            108
+#8   8 HIT08_54           54_LocaleUtils.java              toLocale  33    62   303       2426            332
 
 
 shapiro.test(df2$LOC)
