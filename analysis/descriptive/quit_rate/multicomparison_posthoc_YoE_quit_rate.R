@@ -51,7 +51,17 @@ YoE_levels <- as.numeric(colnames(mat_p))
 Total_Assignments <- colSums(df_pivot)
 #Is there a correlation between YoE and the number of assignements?
 cor.test(YoE_levels,Total_Assignments,method="kendall")
-#YES, z = -2.7345, p-value = 0.006248, kendall-tau = -0.327968 (medium correlation)
+#YES, z = -2.7345, p-value = 0.006248, kendall-tau = -0.327968 (Medium correlation)
 
 # test if YoE is correlated with rate of incomplete assignments
+#Is there correlation between YoE and proportion of assignments with one incomplete task? 
+#NO, p-value=0.6762
+cor.test(YoE_levels,mat_p[2,],method="kendall")
+
+#Is there correlation between YoE and proportion of assignments with two incomplete task? 
+#YES, z = -2.7961, p-value = 0.005173, tau=-0.3679905 (Medium)
 cor.test(YoE_levels,mat_p[3,],method="kendall")
+
+
+#------------------------------------------
+
