@@ -44,8 +44,9 @@ df2_ground <- left_join(df2,gt2,by=c("microtask_id"="ID"))
 "
 Apply Ground Truth to E2 data
 "
-isCorrectList <- (df2_ground$answer=="YES_THERE_IS_AN_ISSUE" &  df2_ground$isBugCovering =="yes") |
+isCorrectList <- (df2_ground$answer=="YES_THERE_IS_AN_ISSUE" &  df2_ground$isBugCovering) |
   ((df2_ground$answer=="NO_THERE_IS_NOT_AN_ISSUE" | df2_ground$answer=="I_DO_NOT_KNOW") &  df2_ground$isBugCovering =="no")
 
 df2_ground$isAnswerCorrect <- isCorrectList
+
 
