@@ -23,6 +23,7 @@ library (ggplot2)
 library (gridExtra)
 library(farff)
 library(tidyverse) #includes dplyr, stringr,tidyr,ggplot2,tibble,purr,forcats
+library(dplyr)
 
 path <- "C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//data//"
 
@@ -33,7 +34,7 @@ Load Ground Truth to E2 data
 df2 <- readARFF(str_c(path, "//consolidated_Final_Experiment_2.arff"))
 gt2 <- read.csv(str_c(path, "//ground_truth_E2.csv"))
 
-gt2 <-  select(gt2, ID,LineID,isBugCovering,type,faulty_lines,all_Lines,LOC_inspection,LOC_original)
+gt2 <- dplyr::select(gt2, ID,LineID,isBugCovering,type,faulty_lines,all_Lines,LOC_inspection,LOC_original)
 
 
 
