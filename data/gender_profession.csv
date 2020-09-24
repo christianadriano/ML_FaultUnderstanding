@@ -1,0 +1,13 @@
+Rates of gender by profession:
+Gender,Professional_Developer,Hobbyist,Graduate_Student,Undergraduate_Student,Other
+female,0.2603550295857988,0.25225225225225223,0.2857142857142857,0.2288135593220339,0.4444444444444444
+male,0.7396449704142012,0.7477477477477478,0.7142857142857143,0.7542372881355932,0.5555555555555556
+prefer not tell,0.0,0.0,0.0,0.0,0.0
+other,0.0,0.0,0.0,0.01694915254237288,0.0
+
+Total participants by gender by profession:
+Gender,Professional_Developer,Hobbyist,Graduate_Student,Undergraduate_Student,Other
+female,44,28,18,27,16
+male,125,83,45,89,20
+prefer not tell,0,0,0,0,0
+other,0,0,0,2,0
