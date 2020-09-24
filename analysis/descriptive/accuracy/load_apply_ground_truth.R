@@ -1,6 +1,17 @@
 "
 -------------------------------------------------------
-Loads the ground truth for both experiments E1 and E2.
+NOTE: This procedure was improved in a new project CausalModel_FaultUnderstanding.
+The improvements comprise:
+- Join worker demographics and qualification test info to each task (which is a row in the dataframe)
+- Includes IRT (item response theory) equalization of the grades
+- Includes Add Halstead complexity of each program statement
+
+Local path to the new load_data script:
+...\CausalModel_FaultUnderstanding\data\loaders\
+
+---------------------------------------------------------
+
+Loads the ground truth for experiment E2.
 Stores the data as a new column in the data frame 
 Colunm name is 'ground_truth'
 
