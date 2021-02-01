@@ -6,6 +6,10 @@ TODO:
 - make background lighter DONE
 - add title DONE
 - make lines thinner DONE
+- compute Spearman correlations DONE
+- compute Kendall-tau correlations 
+- plot values of Spearman correlations and Kendall-Tau
+
 
 This plot is used to discuss possible spurious correlation between 
 accuracy and certain task attributes like explanation size and difficulty.
@@ -47,6 +51,9 @@ head(anscombe_tidy)
 # 5           2   set I  8 6.95
 # 6           2  set II  8 8.14
 
+anscombe_tidy
+
+
 cor.test(anscombe_tidy$x,anscombe_tidy$y,method="pearson",alternative =
     "two.sided")
 # data:  anscombe_tidy$x and anscombe_tidy$y
@@ -58,26 +65,31 @@ cor.test(anscombe_tidy$x,anscombe_tidy$y,method="pearson",alternative =
 #   cor 
 # 0.8163662
 
-cor.test(anscombe_tidy$x,anscombe_tidy$y,method="spearman",alternative =
+cor.test(df$x,df$y,method="spearman",alternative =
            "two.sided")
 
-# Spearman's rank correlation rho
-# 
-# data:  anscombe_tidy$x and anscombe_tidy$y
-# S = 2598.4, p-value = 1.361e-11
-# alternative hypothesis: true rho is not equal to 0
-# sample estimates:
-#       rho 
-# 0.8168855 
+# set I: rho = 0.8181818, p-value = 0.003734
+# set II: rho = 0.6909091, p-value = 0.02306
+# set III: rho 0.9909091, p-value < 2.2e-16 
+# set IV: rho = 0.5 , p-value=0.1173
+
 
 #--------------------------------
 
 plot <- ggplot(anscombe_tidy, aes(x, y)) +
   geom_point() +
-  ggtitle("Ascombe´s quadrants - same Pearson correlation for distinct sets")+
+  ggtitle("Anscombe's quadrants - same Pearson correlation for distinct sets")+
   facet_wrap(~ set) +
   theme_minimal()+
   annotate("text", x = 15, y = 6, label = "italic(R) == 0.816",parse=TRUE)+
   geom_smooth(method = "lm",linetype=2, size=0.3,se = FALSE)
 
 ggsave(dpi=300, filename = ".\\output\\ascombes_quadrants.png")
+
+plot <- ggplot(anscombe_tidy, aes(x, y)) +
+  geom_point() +
+  ggtitle("Anscombe's quadrants - Spearman correlations")+
+  facet_wrap(~ set) +
+  theme_minimal()+
+  annotate("text", x = 15, y = 6, label = "italic(R) == 0.816",parse=TRUE)+
+  geom_smooth(method = "lm",linetype=2, size=0.3,se = FALSE)
