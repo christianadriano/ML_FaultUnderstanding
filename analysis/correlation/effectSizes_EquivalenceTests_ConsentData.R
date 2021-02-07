@@ -69,7 +69,7 @@ corrplot(corr_matrix$r, type = "upper", order = "hclust",
 
 install.packages("PerformanceAnalytics")
 library("PerformanceAnalytics")
-chart.Correlation(df_data, histogram=TRUE, pch=25, method="kendall")
+chart.Correlation(df_data, histogram=TRUE, pch="+", method="kendall")
 
 #--------------------------------------------------------
 #HEAT MAP
