@@ -29,10 +29,11 @@ library(corrplot)
 source("C://Users//Christian//Documents//GitHub//CausalModel_FaultUnderstanding//data_loaders//load_consent_create_indexes_E2.R")
 
 df_consent$profession_level <- as.numeric(df_consent$profession_id)
-df_data$profession_level <- 7-df_data$profession_level #so it is incremental (higher skill, larger level)
 
 #compute correlations between qualification_score, adjusted_score, profession_level,test_duration, age, years_programming 
-df_data <- df_consent%>%select(qualification_score, adjusted_score, profession_level,test_duration, age, years_programming)
+df_data <- df_consent%>%select(adjusted_score, profession_level,test_duration, age, years_programming)
+df_data$profession_level <- 7-df_data$profession_level #so it is incremental (higher skill, larger level)
+
 colnames(df_data)
 #using Spearman because all data sets failed the Shapiro-Wilk normality test (p-value<0.05)
 corr_matrix <- rcorr(as.matrix(df_data),type="spearman")
@@ -62,3 +63,16 @@ flattenCorrMatrix(corr_matrix$r, corr_matrix$P)
 
 corrplot(corr_matrix$r, type = "upper", order = "hclust", 
         tl.col = "black", tl.srt = 45)
+
+#--------------------------------------------------------
+#Hybrid PLOT
+
+install.packages("PerformanceAnalytics")
+library("PerformanceAnalytics")
+chart.Correlation(df_data, histogram=TRUE, pch=25, method="kendall")
+
+#--------------------------------------------------------
+#HEAT MAP
+
+col<- colorRampPalette(c("blue", "white", "red"))(20)
+heatmap(x = corr_matrix$r, col = col, symm = TRUE)
