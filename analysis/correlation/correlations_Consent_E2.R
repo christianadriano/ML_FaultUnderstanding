@@ -1,18 +1,10 @@
 "
-Test of Equivalence between two means.
-This is done after we fail to reject a null-hypothesis.
-
-Based on paper: Equivalence Testing for Psychological Research: A Tutorial
-DOI: 10.1177/2515245918770963
-
-Look at:
-https://reilly-lab.github.io/Equivalence_Tutorial.html
+Correlations in the Consent Data from E2
 
 TODO:
 - Compute correlation matrix
 - Plot matrix
 - For the non-significant correlations, run TOST (assuming effect less than small)
-
 
 "
 #install.packages("TOSTER")
@@ -44,6 +36,17 @@ corr_matrix
 # qualification_score   age  0.03906618 9.866124e-02
 # adjusted_score        age  0.03805823 1.076732e-01
 
+
+#EQUIVALENCE TEST
+
+results <- dataTOSTr(data=df_data,
+                     pairs=list(list(i1="adjusted_score",i2="age")),
+                          low_eqbound_r = -0.3, 
+                          high_eqbound_r = 0.3, alpha=0.05, 
+                          desc=TRUE, plots=TRUE)
+          
+
+results
 # ++++++++++++++++++++++++++++
 # flattenCorrMatrix
 # source: http://www.sthda.com/english/wiki/correlation-matrix-a-quick-start-guide-to-analyze-format-and-visualize-a-correlation-matrix-using-r-software
