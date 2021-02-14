@@ -4,7 +4,7 @@ Correlations in the Consent Data from E2
 TODO:
 - Compute correlation matrix
 - Plot matrix
-- For the non-significant correlations, run TOST (assuming effect less than small)
+(DONE)- For the non-significant correlations, run TOST (assuming effect less than small)
 
 "
 #install.packages("TOSTER")
@@ -87,6 +87,48 @@ flattenCorrMatrix(corr_matrix$r, corr_matrix$P)
 
 corrplot(corr_matrix$r, type = "upper", order = "hclust", 
         tl.col = "black", tl.srt = 45)
+
+col<- colorRampPalette(c("red", "grey", "blue"))(20)
+
+corrplot(corr_matrix$r, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45, method="number", col=col)
+
+corrplot(corr_matrix$P, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45, method="number", col=col)
+
+#----------------------------------------------------------------------
+
+# mat : is a matrix of data
+# ... : further arguments to pass to the native R cor.test function
+cor.mtest <- function(mat, ...) {
+  mat <- as.matrix(mat)
+  n <- ncol(mat)
+  p.mat<- matrix(NA, n, n)
+  diag(p.mat) <- 0
+  for (i in 1:(n - 1)) {
+    for (j in (i + 1):n) {
+      tmp <- cor.test(mat[, i], mat[, j], ...)
+      p.mat[i, j] <- p.mat[j, i] <- tmp$p.value
+    }
+  }
+  colnames(p.mat) <- rownames(p.mat) <- colnames(mat)
+  p.mat
+}
+# matrix of the p-value of the correlation
+p.mat <- cor.mtest(df_data)
+head(p.mat[, 1:5])
+
+
+col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA"))
+corrplot(corr_matrix$r, method="color", col=col(200),  
+         type="upper", order="hclust", 
+         addCoef.col = "black", # Add coefficient of correlation
+         tl.col="black", tl.srt=45, #Text label color and rotation
+         # Combine with significance
+         p.mat = p.mat, sig.level = 0.05, insig = "blank", 
+         # hide correlation coefficient on the principal diagonal
+         diag=FALSE 
+)
 
 #--------------------------------------------------------
 #Hybrid PLOT
