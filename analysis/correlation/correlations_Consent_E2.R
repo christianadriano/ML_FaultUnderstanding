@@ -10,9 +10,9 @@ TODO:
 #install.packages("TOSTER")
 library(TOSTER)
 library(dplyr)
-install.packages("Hmisc") #to compute the correlations with the significance levels
+#install.packages("Hmisc") #to compute the correlations with the significance levels
 library(Hmisc)
-install.packages("corrplot")
+#install.packages("corrplot")
 library(corrplot)
 
 #----------------------------------------------
