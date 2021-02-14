@@ -28,8 +28,8 @@ df_data$profession_level <- 7-df_data$profession_level #so it is incremental (hi
 
 colnames(df_data)
 #using Spearman because all data sets failed the Shapiro-Wilk normality test (p-value<0.05)
-corr_matrix <- rcorr(as.matrix(df_data),type="spearman")
-corr_matrix
+corr_matrix <- cor.test(df_data$adjusted_score,df_data$profession_level,method=c("kendall"))
+corr_matrix$estimate
 
 #The only two non-significant correlations are:
 #   row                column   cor            p
@@ -104,23 +104,29 @@ cor.mtest <- function(mat, ...) {
   mat <- as.matrix(mat)
   n <- ncol(mat)
   p.mat<- matrix(NA, n, n)
+  r.mat<- matrix(NA, n, n)
   diag(p.mat) <- 0
+  diag(r.mat) <- 1
   for (i in 1:(n - 1)) {
     for (j in (i + 1):n) {
-      tmp <- cor.test(mat[, i], mat[, j], ...)
+      tmp <- cor.test(mat[, i], mat[, j], method=c("kendall"), ...)
       p.mat[i, j] <- p.mat[j, i] <- tmp$p.value
+      r.mat[i, j] <- r.mat[j, i] <- tmp$estimate
     }
   }
   colnames(p.mat) <- rownames(p.mat) <- colnames(mat)
-  p.mat
+  return(list(r.mat,p.mat))
 }
 # matrix of the p-value of the correlation
-p.mat <- cor.mtest(df_data)
-head(p.mat[, 1:5])
+list_mat <- cor.mtest(df_data)
+p.mat <- list_mat[[1]]
+r.mat <- list_mat[[2]]
+head(p.mat)
+head(r.mat)
 
 
 col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA"))
-corrplot(corr_matrix$r, method="color", col=col(200),  
+corrplot(r.mat, method="color", col=col(200),  
          type="upper", order="hclust", 
          addCoef.col = "black", # Add coefficient of correlation
          tl.col="black", tl.srt=45, #Text label color and rotation
@@ -133,7 +139,7 @@ corrplot(corr_matrix$r, method="color", col=col(200),
 #--------------------------------------------------------
 #Hybrid PLOT
 
-install.packages("PerformanceAnalytics")
+#install.packages("PerformanceAnalytics")
 library("PerformanceAnalytics")
 chart.Correlation(df_data, histogram=TRUE, pch="+", method="kendall")
 
@@ -141,4 +147,4 @@ chart.Correlation(df_data, histogram=TRUE, pch="+", method="kendall")
 #HEAT MAP
 
 col<- colorRampPalette(c("blue", "white", "red"))(20)
-heatmap(x = corr_matrix$r, col = col, symm = TRUE)
+heatmap(x = r.mat, col = col, symm = TRUE)
