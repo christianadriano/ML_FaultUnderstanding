@@ -2,7 +2,7 @@
 Correlations in the Consent Data from E1
 
 TODO:
-- add adjusted_score to the df_consent
+(DONE)- Add adjusted_score to the df_consent
 (DONE)- Compute correlation matrix
 (DONE)- Plot matrix
 (DONE)- For the non-significant correlations, run TOST (assuming effect less than small)
@@ -11,9 +11,9 @@ TODO:
 #install.packages("TOSTER")
 library(TOSTER)
 library(dplyr)
-install.packages("Hmisc") #to compute the correlations with the significance levels
+#install.packages("Hmisc") #to compute the correlations with the significance levels
 library(Hmisc)
-install.packages("corrplot")
+#install.packages("corrplot")
 library(corrplot)
 
 #----------------------------------------------
@@ -24,14 +24,13 @@ source("C://Users//Christian//Documents//GitHub//CausalModel_FaultUnderstanding/
 #df_consent$profession_level <- as.numeric(df_consent$profession_id)
 
 #compute correlations between qualification_score, adjusted_score, profession_level,test_duration, age, years_programming 
-df_data <- df_consent%>%select(qualification_score,test_duration, age, years_programming)
+df_data <- df_consent%>%select(adjusted_score,test_duration, age, years_programming)
 
 #--------------------------------------
 #CORRELATION MATRIX
 
 #Using Spearman because all data sets failed the Shapiro-Wilk normality test (p-value<0.05)
-#corr_matrix <- cor.test(df_data$adjusted_score,df_data$profession_level,method=c("kendall"))
-#corr_matrix$estimate
+
 # mat : is a matrix of data
 # ... : further arguments to pass to the native R cor.test function
 cor.mtest <- function(mat, ...) {
@@ -64,7 +63,7 @@ head(r.mat)
 
 #The only two non-significant correlations are:
 #   row                column   cor            p
-# qualification_score   age  -0.049724718  1.729559e-01
+# adjusted_score        age  -0.018539331  5.751414e-01
 # test_duration         age  -0.003175597  9.183911e-01
 
 
@@ -72,27 +71,19 @@ head(r.mat)
 #Documentation https://github.com/Lakens/TOSTER/blob/master/tests/testthat/test-data_summary_equivalent.R
 
 results <- dataTOSTr(data=df_data,
-                     pairs=list(list(i1="qualification_score",i2="age")),
+                     pairs=list(list(i1="adjusted_score",i2="age")),
                           low_eqbound_r = -0.3, 
                           high_eqbound_r = 0.3, alpha=0.05, 
                           desc=TRUE, plots=TRUE)
 
 results
-# -------------------------------------------------------------------
-# TOST Results                              r             p            
-# -------------------------------------------------------------------
-# adjusted_score    age    Pearson's r    0.03558930     0.1325019   
-#                          TOST Upper     0.03558930    < .0000001   
-#                          TOST Lower     0.03558930    < .0000001  
-# -------------------------------------------------------------------
-# The p-values for Upper and Lower show that the correlation is bettwen lower and upper.
 
 # -----------------------------------------------------------------------------------
 #                                                       90% confidence interval
 # -----------------------------------------------------------------------------------
 # Equivalence Bounds          Low           High         Lower           Upper        
 # -----------------------------------------------------------------------------------
-# adjusted_score    age    -0.3000000    0.3000000    -0.1279472     0.02103143   
+# adjusted_score    age    -0.3000000    0.3000000    -0.04095798     0.1082798   
 # -----------------------------------------------------------------------------------
 #Correlation CI crosses zero, hence the correlation is equivalent to zero.
 
