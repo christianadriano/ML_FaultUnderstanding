@@ -2,9 +2,9 @@
 Correlations in the Consent Data from E2
 
 TODO:
-- Compute correlation matrix
-- Plot matrix
-(DONE)- For the non-significant correlations, run TOST (assuming effect less than small)
+(DONE) - Compute correlation matrix
+(DONE) - Plot matrix
+(DONE) - For the non-significant correlations, run TOST (assuming effect less than small)
 
 "
 #install.packages("TOSTER")
@@ -26,10 +26,41 @@ df_consent$profession_level <- as.numeric(df_consent$profession_id)
 df_data <- df_consent%>%select(adjusted_score, profession_level,test_duration, age, years_programming)
 df_data$profession_level <- 7-df_data$profession_level #so it is incremental (higher skill, larger level)
 
-colnames(df_data)
-#using Spearman because all data sets failed the Shapiro-Wilk normality test (p-value<0.05)
-corr_matrix <- cor.test(df_data$adjusted_score,df_data$profession_level,method=c("kendall"))
-corr_matrix$estimate
+#--------------------------------------
+#CORRELATION MATRIX
+
+#Using Spearman because all data sets failed the Shapiro-Wilk normality test (p-value<0.05)
+#corr_matrix <- cor.test(df_data$adjusted_score,df_data$profession_level,method=c("kendall"))
+#corr_matrix$estimate
+# mat : is a matrix of data
+# ... : further arguments to pass to the native R cor.test function
+cor.mtest <- function(mat, ...) {
+  mat <- as.matrix(mat)
+  n <- ncol(mat)
+  p.mat<- matrix(NA, n, n)
+  r.mat<- matrix(NA, n, n)
+  diag(p.mat) <- 0
+  diag(r.mat) <- 1
+  for (i in 1:(n - 1)) {
+    for (j in (i + 1):n) {
+      tmp <- cor.test(mat[, i], mat[, j], method=c("kendall"), ...)
+      p.mat[i, j] <- p.mat[j, i] <- tmp$p.value
+      r.mat[i, j] <- r.mat[j, i] <- tmp$estimate
+    }
+  }
+  colnames(p.mat) <- rownames(p.mat) <- colnames(mat)
+  colnames(r.mat) <- rownames(r.mat) <- colnames(mat)
+  return(list(r.mat,p.mat))
+}
+
+
+# matrix of the p-value of the correlation
+list_mat <- cor.mtest(df_data)
+r.mat <- list_mat[[1]]
+p.mat <- list_mat[[2]]
+head(p.mat)
+head(r.mat)
+
 
 #The only two non-significant correlations are:
 #   row                column   cor            p
@@ -83,46 +114,13 @@ flattenCorrMatrix <- function(cormat, pmat) {
     p = pmat[ut]
   )
 }
-flattenCorrMatrix(corr_matrix$r, corr_matrix$P)
-
-corrplot(corr_matrix$r, type = "upper", order = "hclust", 
-        tl.col = "black", tl.srt = 45)
-
-col<- colorRampPalette(c("red", "grey", "blue"))(20)
-
-corrplot(corr_matrix$r, type = "upper", order = "hclust", 
-         tl.col = "black", tl.srt = 45, method="number", col=col)
-
-corrplot(corr_matrix$P, type = "upper", order = "hclust", 
-         tl.col = "black", tl.srt = 45, method="number", col=col)
+f <- flattenCorrMatrix(r.mat, p.mat)
+write.csv(f,"C://Users//Christian//Documents//GitHub//ML_FaultUnderstanding//analysis//correlation//output//Consent_KendallCorrelation_E2.csv")
 
 #----------------------------------------------------------------------
-
-# mat : is a matrix of data
-# ... : further arguments to pass to the native R cor.test function
-cor.mtest <- function(mat, ...) {
-  mat <- as.matrix(mat)
-  n <- ncol(mat)
-  p.mat<- matrix(NA, n, n)
-  r.mat<- matrix(NA, n, n)
-  diag(p.mat) <- 0
-  diag(r.mat) <- 1
-  for (i in 1:(n - 1)) {
-    for (j in (i + 1):n) {
-      tmp <- cor.test(mat[, i], mat[, j], method=c("kendall"), ...)
-      p.mat[i, j] <- p.mat[j, i] <- tmp$p.value
-      r.mat[i, j] <- r.mat[j, i] <- tmp$estimate
-    }
-  }
-  colnames(p.mat) <- rownames(p.mat) <- colnames(mat)
-  return(list(r.mat,p.mat))
-}
-# matrix of the p-value of the correlation
-list_mat <- cor.mtest(df_data)
-p.mat <- list_mat[[1]]
-r.mat <- list_mat[[2]]
-head(p.mat)
-head(r.mat)
+col<- colorRampPalette(c("red", "grey", "blue"))(20)
+corrplot(r.mat, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45, method="number", col=col)
 
 
 col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA"))
@@ -144,7 +142,7 @@ library("PerformanceAnalytics")
 chart.Correlation(df_data, histogram=TRUE, pch="+", method="kendall")
 
 #--------------------------------------------------------
-#HEAT MAP
+#HEAT MAP (Not USED)
 
 col<- colorRampPalette(c("blue", "white", "red"))(20)
 heatmap(x = r.mat, col = col, symm = TRUE)
