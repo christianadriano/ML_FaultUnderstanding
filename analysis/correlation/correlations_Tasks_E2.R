@@ -2,6 +2,8 @@
 Correlations in Tasks and Demographics attributes from E2
 
 TODO:
+ - Correlation of complexity measures with tasks attributes
+ - Correlation of complexity measures with demographics to analyses selection bias
  - Compute correlation matrix
  - Plot matrix
  - For the non-significant correlations, run TOST (assuming effect less than small)
@@ -20,10 +22,11 @@ library(corrplot)
 "Load data with treatment field (isBugCovering) and ground truth (answer correct)"
 source("C://Users//Christian//Documents//GitHub//CausalModel_FaultUnderstanding//data_loaders//load_ground_truth_E2.R")
 
-df_E2_ground$profession_level <- as.numeric(df_consent$profession_id)
+df_E2$profession_level <- as.numeric(df_consent$profession_id)
 
 #compute correlations between qualification_score, adjusted_score, profession_level,test_duration, age, years_programming 
-df_data <- df_E2_ground%>%select(adjusted_score, profession_level,test_duration, age, years_programming, durat)
+df_data <- df_E2%>%select(adjusted_score, profession_level,test_duration, age, years_programming, 
+                          duration_minutes,difficulty,confidence,explanation.size)
 df_data$profession_level <- 7-df_data$profession_level #so it is incremental (higher skill, larger level)
 
 #--------------------------------------
