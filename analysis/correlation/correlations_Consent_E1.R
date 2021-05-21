@@ -20,8 +20,7 @@ library(corrplot)
 
 "Load data with treatment field (isBugCovering) and ground truth (answer correct)"
 source("C://Users//Christian//Documents//GitHub//CausalModel_FaultUnderstanding//data_loaders//load_consent_create_indexes_E1.R")
-
-#df_consent$profession_level <- as.numeric(df_consent$profession_id)
+df_consent <- load_consent_create_indexes()
 
 #compute correlations between qualification_score, adjusted_score, profession_level,test_duration, age, years_programming 
 df_data <- df_consent%>%select(adjusted_score,test_duration, age, years_programming)
