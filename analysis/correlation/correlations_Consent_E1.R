@@ -6,6 +6,8 @@ TODO:
 (DONE)- Compute correlation matrix
 (DONE)- Plot matrix
 (DONE)- For the non-significant correlations, run TOST (assuming effect less than small)
+- Discuss the absence of  effect of age
+
 
 "
 #install.packages("TOSTER")
@@ -65,6 +67,18 @@ head(r.mat)
 # adjusted_score        age  -0.018539331  5.751414e-01
 # test_duration         age  -0.003175597  9.183911e-01
 
+"
+This indicates that age is not a factor that could be manipulated to interfere in 
+the efficacy (adjusted_score) and efficiency (test_duration). Because age cannot be determined by 
+any other feature that was part of the experiment, there is no risk that we have a
+confounding situation that is masking the relationship between age and adjusted_score and test_duration.
+
+
+
+"
+
+
+#----------------------------------------------------------
 
 #EQUIVALENCE TEST
 #Documentation https://github.com/Lakens/TOSTER/blob/master/tests/testthat/test-data_summary_equivalent.R
