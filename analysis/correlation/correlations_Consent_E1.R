@@ -6,8 +6,9 @@ TODO:
 (DONE)- Compute correlation matrix
 (DONE)- Plot matrix
 (DONE)- For the non-significant correlations, run TOST (assuming effect less than small)
-- Discuss the absence of  effect of age
-
+(DONE) Discuss the absence of a relationship of age with score and duration
+- Condition score on yoe so we can measure the relationship of age->score unconfounded by yoe,
+same for test_duration.
 
 "
 #install.packages("TOSTER")
@@ -73,6 +74,17 @@ the efficacy (adjusted_score) and efficiency (test_duration). Because age cannot
 any other feature that was part of the experiment, there is no risk that we have a
 confounding situation that is masking the relationship between age and adjusted_score and test_duration.
 
+Couldn't years of experience be a confounder? age<-yoe->score Not in a sense that yoe determines 
+age, but through selection bias, only people with a certain years of programming experience and age
+are more inclined to participate in the study. So, what might be happening, is that as yoe increases
+the score increases (tau= 0.17, p-value<0.05). However if yoe->age is positive (tau=0.13, p-value<0.05),
+than age also increases. However, if age has a negative real (unconfounded) correlation with score,
+then, age->score will be cancelled out by the yoe->age. To test this, we need to fix yoe, which
+is the same as conditioning.
+
+The age of these people are  This particular group has a relationship with age,
+so yoe->age. However, because yoe has a correlation with the score and duration, this effect might
+be masking the effect of age on score (age->score). e.g., 
 
 
 "
