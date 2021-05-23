@@ -19,6 +19,7 @@ library(corrplot)
 
 "Load data with treatment field (isBugCovering) and ground truth (answer correct)"
 source("C://Users//Christian//Documents//GitHub//CausalModel_FaultUnderstanding//data_loaders//load_consent_create_indexes_E2.R")
+df_consent <- load_consent_create_indexes()
 
 df_consent$profession_level <- as.numeric(df_consent$profession_id)
 
@@ -62,10 +63,9 @@ head(p.mat)
 head(r.mat)
 
 
-#The only two non-significant correlations are:
+#The only non-significant correlations are:
 #   row                column   cor            p
-# qualification_score   age  0.03906618 9.866124e-02
-# adjusted_score        age  0.03805823 1.076732e-01
+# adjusted_score        age  0.0266627 1.086810e-01
 
 
 #EQUIVALENCE TEST
