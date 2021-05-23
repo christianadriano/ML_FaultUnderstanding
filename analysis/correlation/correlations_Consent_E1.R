@@ -9,6 +9,7 @@ TODO:
 (DONE) Discuss the absence of a relationship of age with score and duration
 - Condition score on yoe so we can measure the relationship of age->score unconfounded by yoe,
 same for test_duration.
+- Explain and Discuss the Equivalence Test
 
 "
 #install.packages("TOSTER")
@@ -71,12 +72,17 @@ head(r.mat)
 "
 This indicates that age is not a factor that could be manipulated to interfere in 
 the efficacy (adjusted_score) and efficiency (test_duration). Because age cannot be determined by 
-any other feature that was part of the experiment, there is no risk that we have a
-confounding situation that is masking the relationship between age and adjusted_score and test_duration.
+any other feature that was part of the experiment, the imbalance can only originate from selection bias
+and not confounding. Hence, I investigate the type of selection bias that could lead to 
+masking the relationship of age with adjusted_score and test_duration. 
 
-Couldn't years of experience be a confounder? age<-yoe->score Not in a sense that yoe determines 
-age, but through selection bias, only people with a certain years of programming experience and age
-are more inclined to participate in the study. So, what might be happening, is that as yoe increases
+One plausible alternative is that year os experience could determine age via selection bias and
+score via a causal relationship, i.e., given the following graph: age<-yoe->score 
+
+Selection bias could emerge from certain people self-selecting to participate in the experiment.
+These people would have a particular distribution of years of programming experience and age.
+
+So, what might be happenin is that as yoe increases
 the score increases (tau= 0.17, p-value<0.05). However if yoe->age is positive (tau=0.13, p-value<0.05),
 than age also increases. However, if age has a negative real (unconfounded) correlation with score,
 then, age->score will be cancelled out by the yoe->age. To test this, we need to fix yoe, which
