@@ -10,6 +10,7 @@ TODO:
 - Condition score on yoe so we can measure the relationship of age->score unconfounded by yoe,
 same for test_duration.
 - Explain and Discuss the Equivalence Test
+- Choose a correlation graphical plot to be used
 
 "
 #install.packages("TOSTER")
@@ -132,9 +133,9 @@ results
 # -----------------------------------------------------------------------------------
 # Equivalence Bounds          Low           High         Lower           Upper        
 # -----------------------------------------------------------------------------------
-# adjusted_score    age    -0.3000000    0.3000000    -0.01226132      0.1365663   
+# test_duration    age    -0.3000000    0.3000000    -0.01226132      0.1365663   
 # -----------------------------------------------------------------------------------
-#Correlation CI crosses zero, hence the correlation is equivalente to zero.
+#Correlation CI crosses zero, hence the correlation is equivalent to zero.
 
 
 # ++++++++++++++++++++++++++++
